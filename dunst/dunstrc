@@ -1,0 +1,10 @@
+[global]
+  font = Source Code Pro Medium 10
+  allow_markup = yes
+  format = "<b>%s</b>\n%b"
+
+  word_wrap = yes
+  ignore_newline = no
+
+  padding = 8
+  horizontal_padding = 8

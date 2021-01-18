@@ -1,0 +1,15 @@
+super + shift + Return
+	kitty
+
+super + shift + w
+	firefox
+
+super + shift + m
+	thunderbird
+
+super + shift + n
+	kitty -e lf
+
+# Implement some soft of launch command
+super + z ; {w,m}
+	{firefox,thunderbird}

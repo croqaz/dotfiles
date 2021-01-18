@@ -1,0 +1,27 @@
+
+alias 'reload'="source $HOME/.zshrc"
+alias 'brewsky'='brew update && brew upgrade && brew cleanup -s --prune=3'
+alias 'apt-update'='sudo apt update && sudo apt autoclean && sudo apt autoremove'
+
+alias vi='nvim'
+alias vim='nvim'
+alias svim='sudoedit'
+
+alias open='xdg-open'
+alias dateslug='date "+%Y-%m-%d %H:%M"'
+alias dateiso='date -u +"%Y-%m-%dT%H:%M:%S.%Z"'
+
+alias ip="curl http://ipecho.net/plain; echo"
+# alias ip="dig +short myip.opendns.com resolver1.opendns.com resolver2.opendns.com"
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# Dev stuff
+alias 'py-env'='source ${HOME}/Dev/py-env8/bin/activate'
+# alias 'py-env9'='source ${HOME}/Dev/py-env9/bin/activate'
+alias 'rm-pyco'='rm -r `find . -name __pycache__` && rm -f `find . -type f -name "*.py[co]"`'
+
+alias kex='kubectl exec -it'
+
+# Docker images
+alias 'start-splash'='docker run -d --rm --name splash --net=host -p 8050:8050 --cpus 0.5 --memory-reservation 1GB scrapinghub/splash:3.4csp --disable-browser-caches'
+alias 'stop-splash'='docker stop splash'
