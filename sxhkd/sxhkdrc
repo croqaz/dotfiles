@@ -7,9 +7,30 @@ super + shift + w
 super + shift + m
 	thunderbird
 
+super + shift + g
+	atom
+
 super + shift + n
 	kitty -e lf
+
+super + shift + i
+	kitty -e htop
 
 # Implement some soft of launch command
 super + z ; {w,m}
 	{firefox,thunderbird}
+
+# Reload sxhkd config
+super + shift + k
+	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
+
+# Toggle master output sound
+XF86AudioMute
+	amixer -D pulse set Master Playback Switch toggle && notify-send "Toggle audio"
+
+# Lower/ Raise volume of current audio stream
+{XF86AudioLowerVolume,XF86AudioRaiseVolume}
+	pactl set-sink-volume 0 {-10%,+10%}
+
+# XF86MonBrightnessDown
+# XF86MonBrightnessUp

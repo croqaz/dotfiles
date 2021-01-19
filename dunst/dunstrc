@@ -1,10 +1,26 @@
 [global]
+  class = Dunst
   font = Source Code Pro Medium 10
-  allow_markup = yes
+  markup = yes
   format = "<b>%s</b>\n%b"
+  indicate_hidden = yes
 
   word_wrap = yes
   ignore_newline = no
 
   padding = 8
   horizontal_padding = 8
+  max_icon_size = 96
+  geometry = "300x25-40+40"
+  shrink = no
+
+  monitor = 0
+  follow = keyboard
+  idle_threshold = 0
+  show_age_threshold = 60
+
+  browser = firefox -new-tab
+
+[shortcuts]
+  close = ctrl+backspace
+  close_all = ctrl+shift+backspace
