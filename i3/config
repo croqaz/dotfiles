@@ -111,3 +111,8 @@ bar {
   workspace_buttons yes
   font pango:Hack Nerd Font, Font Awesome 5 Free 11
 }
+
+# Start the rest of the apps
+# exec --no-startup-id exec ...
+
+exec --no-startup-id exec picom -CG
