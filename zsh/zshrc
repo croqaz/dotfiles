@@ -8,8 +8,9 @@ setopt HIST_IGNORE_ALL_DUPS # remove older duplicate entries from history
 setopt HIST_REDUCE_BLANKS # remove superfluous blanks from history items
 setopt SHARE_HISTORY # share history between different instances of the shell
 
-export HISTSIZE=50000
-export SAVEHIST=50000
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=25000
+export SAVEHIST=25000
 
 # Change the $PATH
 export PATH="/home/linuxbrew/.linuxbrew/sbin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:$PATH"

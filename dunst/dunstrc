@@ -4,7 +4,9 @@
   markup = yes
   format = "<b>%s</b>\n%b"
   indicate_hidden = yes
+  show_indicators = yes
 
+  sort = yes
   word_wrap = yes
   ignore_newline = no
 
@@ -22,5 +24,5 @@
   browser = firefox -new-tab
 
 [shortcuts]
-  close = ctrl+backspace
-  close_all = ctrl+shift+backspace
+  close = ctrl+BackSpace
+  close_all = ctrl+shift+BackSpace
