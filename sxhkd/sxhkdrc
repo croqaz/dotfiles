@@ -1,3 +1,13 @@
+# Simple X Hotkey Daemon cfg
+# https://github.com/baskerville/sxhkd
+
+# Reload sxhkd config
+super + shift + k
+	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
+
+super + Return
+	alacritty
+
 super + shift + Return
 	kitty
 
@@ -11,26 +21,33 @@ super + shift + g
 	atom
 
 super + shift + n
-	kitty -e lf
+	alacritty -e lf
 
 super + shift + i
-	kitty -e htop
+	alacritty -e htop
 
-# Implement some soft of launch command
-super + z ; {w,m}
-	{firefox,thunderbird}
+super + shift + i
+	alacritty -e ipython
 
-# Reload sxhkd config
-super + shift + k
-	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
+# Implement some sort of launch command
+#super + z ; {w,m}
+#	{firefox,thunderbird}
 
 # Toggle master output sound
 XF86AudioMute
-	amixer -D pulse set Master Playback Switch toggle && notify-send "Toggle audio"
+	# amixer -D pulse set Master Playback Switch toggle && notify-send "Toggle audio"
+	# pactl set-sink-mute 0 toggle
+	amixer sset Master toggle; pkill -RTMIN+10 blocks
 
 # Lower/ Raise volume of current audio stream
-{XF86AudioLowerVolume,XF86AudioRaiseVolume}
-	pactl set-sink-volume 0 {-10%,+10%}
+XF86Audio{Raise,Lower}Volume
+	# pactl set-sink-volume 0 {-5%,+5%}
+	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
 
+# XF86LaunchA
+# XF86LaunchB
+# XF86AudioPrev
+# XF86AudioPlay
+# XF86AudioNext
 # XF86MonBrightnessDown
 # XF86MonBrightnessUp

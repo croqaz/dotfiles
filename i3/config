@@ -1,49 +1,52 @@
 # i3 config file (v4)
-#
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+# Template: https://github.com/i3/i3/blob/stable/etc/config
+# Reference: https://i3wm.org/docs/userguide.html
 
+# mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
-floating_modifier $mod
+
+# define some vars
+set $term --no-startup-id $TERM
+set $left h
+set $down j
+set $up k
+set $right l
+
 focus_follows_mouse no
 focus_on_window_activation urgent
-
-font pango:FuraCode Nerd Font 11
-
-# change focus with VI
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
-
-# change focus with arrows
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
-# move focused window with VI
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
-
-# move focused window with arrows
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
 set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
+set $ws2 "2 >"
+set $ws3 "3 >"
+set $ws4 "4 >"
+set $ws5 "5 >"
+set $ws6 "6 >"
+set $ws7 "7 >"
+set $ws8 "8 >"
+set $ws9 "9 >"
+
+# --- Key Bindings --- #
+
+# change focus, VI style
+bindsym $mod+$left  focus left
+bindsym $mod+$down  focus down
+bindsym $mod+$up    focus up
+bindsym $mod+$right focus right
+
+# focus the parent container
+#bindsym $mod+a focus parent
+# focus the child container
+#bindsym $mod+d focus child
+# toggle between floating/tiling containers
+bindsym $mod+s focus mode_toggle
+
+# move focused window, VI style
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
+bindsym $mod+Shift+$right move right
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -67,52 +70,129 @@ bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 
-workspace_auto_back_and_forth yes
-bindsym $mod+Tab workspace back_and_forth
+# workspace navigation
+bindsym $mod+Tab      workspace back_and_forth
+bindsym $mod+less     workspace prev
+bindsym $mod+greater  workspace next
+
+# fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# use Mouse+$mod to drag floating windows
+floating_modifier $mod
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change container layout (tabbed, toggle split)
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
 
 # toggle split orientation (horizontal, vertical)
-bindsym $mod+semicolon split toggle
-bindsym $mod+b split h
-bindsym $mod+v split v
+bindsym $mod+semicolon   split toggle
+bindsym $mod+b           split horizontal
+bindsym $mod+apostrophe  split horizontal ;; exec $term
+bindsym $mod+v split     vertical
+bindsym $mod+slash       split vertical ;; exec $term
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs out of X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
-# launch terminal
-bindsym $mod+Return exec i3-sensible-terminal
+# change gaps between windows (requires i3-gaps)
+bindsym $mod+s        gaps inner current plus 5
+bindsym $mod+Shift+s  gaps inner current minus 5
+bindsym $mod+z        gaps outer current plus 5
+bindsym $mod+Shift+z  gaps outer current minus 5
+bindsym $mod+Mod1+z   gaps inner current set 0; gaps outer current set 0
 
 # kill focused window
-bindsym $mod+q kill
+bindsym $mod+q        kill
+bindsym $mod+Shift+q  exec kill --no-startup-id -9 $(xdotool getwindowfocus getwindowpid)
 
-# start program launcher
-bindsym --release $mod+grave exec dmenu_run
+# reload the configuration file
+bindsym $mod+Shift+c  reload
+# restart i3 inplace  (preserves layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r  restart
+# exit i3 and log out
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Do you really want to exit i3?' -B 'Yes, exit i3' 'i3-msg exit'"
 
-# Fix floating windows
-for_window [window_role="pop-up"] floating enable
+# resize window (you can also use the mouse for that)
+mode "resize" {
+  # these trigger as soon as you enter the resize mode
+  bindsym $left   resize shrink width 10 px or 10 ppt
+  bindsym $down   resize grow height 10 px or 10 ppt
+  bindsym $up     resize shrink height 10 px or 10 ppt
+  bindsym $right  resize grow width 10 px or 10 ppt
+
+  # back to normal: Enter or Escape or $mod+r
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+  bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+set $mode_system System (l) lock, (o) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $locker i3lock
+mode "$mode_system" {
+  bindsym l exec --no-startup-id $locker, mode "default"
+  bindsym o exec --no-startup-id i3-msg exit, mode "default"
+  bindsym s exec --no-startup-id $locker && systemctl suspend, mode "default"
+  bindsym h exec --no-startup-id $locker && systemctl hibernate, mode "default"
+  bindsym r exec --no-startup-id systemctl reboot, mode "default"
+  bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+Pause mode "$mode_system"
+
+# disable window borders?
+for_window [class=".*"] border pixel 0
+
+# set floating windows
 for_window [window_role="bubble"] floating enable
+for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
-for_window [window_role="Preferences"] floating enable
+#
+for_window [window_role="(?i)preferences$"] floating enable
+#
+for_window [class="(?i)firefox" window_role="About"] floating enable
+for_window [class="(?i)pavucontrol"] floating enable
 
-for_window [class="Firefox" window_role="About"] floating enable
-for_window [class="Nightly" window_role="About"] floating enable
-for_window [class="Pavucontrol"] floating enable
-# for_window [class="Chromium"] floating enable
+# --- Beautify --- #
 
-# Display workspace bar
+set $font "Hack Nerd Font"
+font pango:$font 11
+
+# Gruvbox color scheme
+set $aqua     #689d68
+set $bg       #282828
+set $blue     #458588
+set $darkgray #1d2021
+set $gray     #a89984
+set $green    #98971a
+set $purple   #b16286
+set $red      #cc241d
+set $yellow   #d79921
+
+# class                 border|backgr|text|indicator|child_border
+client.focused          $blue $blue $darkgray $purple $darkgray
+client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+client.urgent           $red $red $white $red $red
+
+gaps inner 10
+gaps outer 10
+
+# --- Status Bar --- #
+
 bar {
   status_command i3status
   position top
   workspace_buttons yes
-  font pango:Hack Nerd Font, Font Awesome 5 Free 11
+  font pango:$font, Font Awesome 5 Free 11
 }
 
 # Start the rest of the apps
 # exec --no-startup-id exec ...
 
-exec --no-startup-id exec picom -CG
+exec --no-startup-id exec picom -CGb
