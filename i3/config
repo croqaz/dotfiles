@@ -41,6 +41,9 @@ bindsym $mod+$right focus right
 #bindsym $mod+d focus child
 # toggle between floating/tiling containers
 bindsym $mod+s focus mode_toggle
+# alt + tab focus windows
+bindsym Mod1+Tab focus next
+bindsym Mod1+Shift+Tab focus prev
 
 # move focused window, VI style
 bindsym $mod+Shift+$left  move left
@@ -95,10 +98,8 @@ bindsym $mod+v split     vertical
 bindsym $mod+slash       split vertical ;; exec $term
 
 # change gaps between windows (requires i3-gaps)
-bindsym $mod+s        gaps inner current plus 5
-bindsym $mod+Shift+s  gaps inner current minus 5
-bindsym $mod+z        gaps outer current plus 5
-bindsym $mod+Shift+z  gaps outer current minus 5
+bindsym $mod+z        gaps inner current plus 5
+bindsym $mod+Shift+z  gaps inner current minus 5
 bindsym $mod+Mod1+z   gaps inner current set 0; gaps outer current set 0
 
 # kill focused window
@@ -195,4 +196,6 @@ bar {
 # Start the rest of the apps
 # exec --no-startup-id exec ...
 
+exec --no-startup-id exec sxhkd -m 1
 exec --no-startup-id exec picom -CGb
+#exec --no-startup-id exec feh -bg-scale $HOME/Pictures/wall.jpg

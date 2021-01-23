@@ -2,8 +2,11 @@
 # https://github.com/baskerville/sxhkd
 
 # Reload sxhkd config
-super + shift + k
+control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
+
+super + space
+	dmenu_run -fn 'Hack-12'
 
 super + Return
 	alacritty
@@ -35,13 +38,10 @@ super + shift + i
 
 # Toggle master output sound
 XF86AudioMute
-	# amixer -D pulse set Master Playback Switch toggle && notify-send "Toggle audio"
-	# pactl set-sink-mute 0 toggle
 	amixer sset Master toggle; pkill -RTMIN+10 blocks
 
 # Lower/ Raise volume of current audio stream
-XF86Audio{Raise,Lower}Volume
-	# pactl set-sink-volume 0 {-5%,+5%}
+{XF86AudioRaiseVolume,XF86AudioLowerVolume}
 	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
 
 # XF86LaunchA
