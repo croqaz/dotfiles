@@ -5,6 +5,8 @@ alias rmv='rsync -hptv --progress --remove-source-files'
 alias reload="source $HOME/.zshrc"
 alias brewsky='brew update && brew upgrade && brew cleanup -s --prune=3'
 alias 'apt-update'='sudo apt update && sudo apt autoclean && sudo apt autoremove'
+
+# alias o='handlr open'
 alias pac='sudo pacman'
 
 alias vi=nvim
@@ -24,6 +26,7 @@ alias 'py-env'='source ${HOME}/Dev/py-env8/bin/activate'
 # alias 'py-env9'='source ${HOME}/Dev/py-env9/bin/activate'
 alias 'rm-pyco'='rm -r `find . -name __pycache__` && rm -f `find . -type f -name "*.py[co]"`'
 
+alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'
 
 # Docker images

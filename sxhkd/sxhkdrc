@@ -5,8 +5,11 @@
 control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
 
+super + Escape
+	i3lock -be -c 303030
+
 super + space
-	dmenu_run -fn 'Hack-12'
+	i3-dmenu-desktop --dmenu='dmenu_run -i -fn "Hack-12"'
 
 super + Return
 	alacritty

@@ -35,15 +35,16 @@ bindsym $mod+$down  focus down
 bindsym $mod+$up    focus up
 bindsym $mod+$right focus right
 
+# alt + tab focus windows
+bindsym Mod1+Tab focus next
+bindsym Mod1+Shift+Tab focus prev
+
 # focus the parent container
 #bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 # toggle between floating/tiling containers
 bindsym $mod+s focus mode_toggle
-# alt + tab focus windows
-bindsym Mod1+Tab focus next
-bindsym Mod1+Shift+Tab focus prev
 
 # move focused window, VI style
 bindsym $mod+Shift+$left  move left
@@ -102,6 +103,9 @@ bindsym $mod+z        gaps inner current plus 5
 bindsym $mod+Shift+z  gaps inner current minus 5
 bindsym $mod+Mod1+z   gaps inner current set 0; gaps outer current set 0
 
+bindsym $mod+t        border toggle
+bindsym $mod+Shift+t  bar mode toggle
+
 # kill focused window
 bindsym $mod+q        kill
 bindsym $mod+Shift+q  exec kill --no-startup-id -9 $(xdotool getwindowfocus getwindowpid)
@@ -145,7 +149,7 @@ mode "$mode_system" {
 bindsym $mod+Pause mode "$mode_system"
 
 # disable window borders?
-for_window [class=".*"] border pixel 0
+# for_window [class=".*"] border pixel 0
 
 # set floating windows
 for_window [window_role="bubble"] floating enable
@@ -164,6 +168,9 @@ for_window [class="(?i)pavucontrol"] floating enable
 set $font "Hack Nerd Font"
 font pango:$font 11
 
+gaps inner 10
+gaps outer 10
+
 # Gruvbox color scheme
 set $aqua     #689d68
 set $bg       #282828
@@ -180,9 +187,6 @@ client.focused          $blue $blue $darkgray $purple $darkgray
 client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
 client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
 client.urgent           $red $red $white $red $red
-
-gaps inner 10
-gaps outer 10
 
 # --- Status Bar --- #
 
