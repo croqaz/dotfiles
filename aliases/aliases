@@ -24,7 +24,7 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[
 # Dev stuff
 alias 'py-env'='source ${HOME}/Dev/py-env8/bin/activate'
 # alias 'py-env9'='source ${HOME}/Dev/py-env9/bin/activate'
-alias 'rm-pyco'='rm -r `find . -name __pycache__` && rm -f `find . -type f -name "*.py[co]"`'
+alias 'rm-pyco'='rm --interactive=once -r `find . -name __pycache__` && rm --interactive=once -f `find . -type f -name "*.py[co]"`'
 
 alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'

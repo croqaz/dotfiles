@@ -1,50 +1,3 @@
-ext() {
-  # Extract decompress file
-  case $1 in
-      *.tar.bz2)  tar xjf $1      ;;
-      *.tar.gz)   tar xzf $1      ;;
-      *.bz2)      bunzip2 $1      ;;
-      *.gz)       gunzip $1       ;;
-      *.tar)      tar xf $1       ;;
-      *.tbz2)     tar xjf $1      ;;
-      *.tgz)      tar xzf $1      ;;
-      *.zip)      unzip $1        ;;
-      *.7z)       7z x $1         ;; # requires p7zip
-      *.rar)      7z x $1         ;; # requires p7zip
-      *.iso)      7z x $1         ;; # requires p7zip
-      *.Z)        uncompress $1   ;;
-      *)          echo "'$1' cannot be extracted" ;;
-  esac
-}
-
-extract() {
-  for file in "$@"
-  do
-      if [ -f $file ] ; then
-          ext $file
-      else
-          echo "'$file' is not a valid file"
-      fi
-  done
-}
-
-mkextract() {
-  for file in "$@"
-  do
-      if [ -f $file ] ; then
-          local filename=${file%\.*}
-          mkdir -p $filename
-          cp $file $filename
-          cd $filename
-          ext $file
-          rm -f $file
-          cd -
-      else
-          echo "'$1' is not a valid file"
-      fi
-  done
-}
-
 pdfextract() {
   # PDF extract uses 3 arguments:
   #   $1 is the first page of the range to extract
@@ -57,3 +10,7 @@ pdfextract() {
      -sOutputFile=${3%.pdf}_p${1}-p${2}.pdf \
      ${3}
 }
+
+# Merge PDF files, preserving hyperlinks
+# Usage: `mergepdf input{1,2,3}.pdf`
+alias pdfmerge='gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile=_merged.pdf'
