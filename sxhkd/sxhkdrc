@@ -6,10 +6,11 @@ control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
 
 super + Escape
-	i3lock -be -c 303030
+	# requires i3-lock-color
+	i3lock -be -c 303030 --insidecolor=30303030 --blur 9 --clock --indicator --datestr="%Y-%m-%d" --timestr="%H:%M:%S"
 
 super + space
-	i3-dmenu-desktop --dmenu='dmenu_run -i -fn "Hack-12"'
+	j4-dmenu-desktop --dmenu="dmenu -i -fn Hack-12"
 
 super + Return
 	alacritty
@@ -34,10 +35,6 @@ super + shift + i
 
 super + shift + i
 	alacritty -e ipython
-
-# Implement some sort of launch command
-#super + z ; {w,m}
-#	{firefox,thunderbird}
 
 # Toggle master output sound
 XF86AudioMute
