@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Called by sxiv(1) after the external prefix key (C-x by default) is pressed.
+# The next key combo is passed as its first argument. Passed via stdin are the
+# images to act upon, one path per line: all marked images, if in thumbnail
+# mode and at least one image has been marked, otherwise the current image.
+# sxiv(1) blocks until this script terminates. It then checks which images
+# have been modified and reloads them.
+
+while read file
+do
+  case "$1" in
+    "C-c")
+      echo -n "$file" | xclip -selection clipboard ;;
+    "C-w")
+      xwallpaper --zoom "$file" ;;
+  esac
+done
