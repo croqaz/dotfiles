@@ -17,15 +17,15 @@ focus_on_window_activation urgent
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
-set $ws1 "1 ⮞"
-set $ws2 "2 ⮞"
-set $ws3 "3 ⮞"
-set $ws4 "4 ⮞"
-set $ws5 "5 ⮞"
-set $ws6 "6 ⮞"
-set $ws7 "7 ⮞"
-set $ws8 "8 ⮞"
-set $ws9 "9 ⮞"
+set $ws1 "1 ❱"
+set $ws2 "2 ❱"
+set $ws3 "3 ❱"
+set $ws4 "4 ❱"
+set $ws5 "5 ❱"
+set $ws6 "6 ❱"
+set $ws7 "7 ❱"
+set $ws8 "8 ❱"
+set $ws9 "9 ❱"
 
 # --- Key Bindings --- #
 
@@ -164,7 +164,7 @@ for_window [class="(?i)pavucontrol"] floating enable
 
 # --- Beautify --- #
 
-set $font "Hack Nerd Font"
+set $font "Inter Medium"
 font pango:$font 11
 
 gaps inner 10
