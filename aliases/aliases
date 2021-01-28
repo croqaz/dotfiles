@@ -13,10 +13,11 @@ alias vi=nvim
 alias vim=nvim
 alias svim=sudoedit
 
+alias img=sxiv
+
 alias dateslug='date "+%Y-%m-%d %H:%M"'
 alias dateiso='date -u +"%Y-%m-%dT%H:%M:%S.%Z"'
 
-alias ping=prettyping
 alias ip="curl http://ipecho.net/plain; echo"
 # alias ip="dig +short myip.opendns.com resolver1.opendns.com resolver2.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
