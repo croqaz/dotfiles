@@ -6,7 +6,7 @@
 set $mod Mod4
 
 # define some vars
-set $term --no-startup-id $TERM
+set $term --no-startup-id alacritty
 set $left h
 set $down j
 set $up k
@@ -88,14 +88,14 @@ floating_modifier $mod
 bindsym $mod+Shift+space floating toggle
 
 # change container layout (tabbed, toggle split)
-# bindsym $mod+w layout tabbed
+bindsym $mod+w layout toggle tabbed splith
 bindsym $mod+e layout toggle split
 
 # toggle split orientation (horizontal, vertical)
 bindsym $mod+semicolon   split toggle
+bindsym $mod+v           split vertical
 bindsym $mod+b           split horizontal
 bindsym $mod+apostrophe  split horizontal ;; exec $term
-bindsym $mod+v split     vertical
 bindsym $mod+slash       split vertical ;; exec $term
 
 # change gaps between windows (requires i3-gaps)
@@ -131,7 +131,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-set $mode_system System (l) lock, (o) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $mode_system System (l) lock, (o) logout, (s) suspend, (h) hibernate, (r) reboot, (u) shutdown
 set $locker i3lock
 mode "$mode_system" {
   bindsym l exec --no-startup-id $locker, mode "default"
@@ -139,7 +139,7 @@ mode "$mode_system" {
   bindsym s exec --no-startup-id $locker && systemctl suspend, mode "default"
   bindsym h exec --no-startup-id $locker && systemctl hibernate, mode "default"
   bindsym r exec --no-startup-id systemctl reboot, mode "default"
-  bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+  bindsym u exec --no-startup-id systemctl poweroff -i, mode "default"
 
   # back to normal: Enter or Escape
   bindsym Return mode "default"
@@ -164,8 +164,7 @@ for_window [class="(?i)pavucontrol"] floating enable
 
 # --- Beautify --- #
 
-set $font "Inter Medium"
-font pango:$font 11
+font pango:JetBrainsMono Nerd Font Bold 13
 
 gaps inner 10
 gaps outer 10
@@ -212,7 +211,7 @@ bar {
   status_command i3status
   position top
   workspace_buttons yes
-  font pango:$font, Font Awesome 5 Free 11
+  font pango:JetBrainsMono Nerd Font, Font Awesome 5 Free 12
 
   colors {
     background $black
