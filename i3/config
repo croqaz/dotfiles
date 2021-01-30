@@ -175,14 +175,14 @@ gaps outer 10
 
 # https://github.com/a-schaefers/i3-wm-gruvbox-theme/
 # Gruvbox colorscheme colors
-set $bg #282828
-set $red #cc241d
-set $green #98971a
+set $bg     #282828
+set $red    #cc241d
+set $green  #98971a
 set $yellow #d79921
-set $blue #458588
+set $blue   #458588
 set $purple #b16286
-set $aqua #689d68
-set $gray #a89984
+set $aqua   #689d68
+set $gray   #a89984
 set $darkgray #1d2021
 
 # blue gruvbox
@@ -201,16 +201,16 @@ bar {
   font pango:JetBrainsMono Nerd Font, Font Awesome 5 Free 12
 
   colors {
-      # bar bg color
-      background $bg
-      # text color used for blocks that don't have a color specified
-      statusline $yellow
-      #                   border    backgr    text
-      focused_workspace   $aqua     $aqua     $darkgray
-      inactive_workspace  $darkgray $darkgray $yellow
-      active_workspace    $darkgray $darkgray $yellow
-      urgent_workspace    $red      $red      $bg
-    }
+    # bar bg color
+    background $bg
+    # text color used for blocks that don't have a color specified
+    statusline $yellow
+    #                  border    backgr    text
+    focused_workspace  $blue     $blue     $darkgray
+    inactive_workspace $darkgray $darkgray $yellow
+    active_workspace   $darkgray $darkgray $yellow
+    urgent_workspace   $red      $red      $bg
+  }
 }
 
 # Start the rest of the apps
