@@ -1,0 +1,8 @@
+
+[mem_usage]
+command=free -m | sed -n '2{p;q}' | awk '{printf ("M %2.1fGiB/%2.1fGiB\n", ($3 / 1024), ($2 / 1024))}'
+interval=5
+
+[date_time]
+command=date "+%a, %d %b, %H:%M "
+interval=30
