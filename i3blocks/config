@@ -1,8 +1,24 @@
 
+[cpu_usage]
+command=scripts/cpu_usage.sh
+interval=2
+
 [mem_usage]
-command=free -m | sed -n '2{p;q}' | awk '{printf ("M %2.1fGiB/%2.1fGiB\n", ($3 / 1024), ($2 / 1024))}'
-interval=5
+command=scripts/mem_usage.sh
+interval=4
+
+[wireless]
+label= 
+# iwconfig wlan0 OR iw dev wlan0 link
+command=[[ -z "$(iwgetid -r)" ]] || awk '/^\s*wl/ { print int($3 * 100 / 70) "%" }' /proc/net/wireless
+interval=10
+
+[volume]
+command=scripts/vol_pulseaudio.sh -F '${SYMB} ${VOL}%'
+signal=10
+interval=once
 
 [date_time]
-command=date "+%a, %d %b, %H:%M "
-interval=30
+command=date "+%a %d %b, <b>%H:%M</b> "
+markup=pango
+interval=15
