@@ -6,8 +6,8 @@ control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
 
 # Requires i3-lock-color
-super + Escape
-	i3lock -be -c 303030 --insidecolor=30303030 --blur 9 --clock --indicator --datestr="%Y-%m-%d" --timestr="%H:%M:%S"
+# super + Escape
+# i3lock -be -c 303030 --insidecolor=30303030 --blur 9 --clock --indicator --datestr="%Y-%m-%d" --timestr="%H:%M:%S"
 
 super + space
 	j4-dmenu-desktop --dmenu="dmenu -i -fn Hack-11"

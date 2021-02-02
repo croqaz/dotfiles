@@ -1,0 +1,26 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+[aws]
+disabled = true
+[gcloud]
+disabled = true
+
+[helm]
+disabled = true
+
+[dotnet]
+disabled = true
+[java]
+disabled = true
+[perl]
+disabled = true
+[php]
+disabled = true
+
+[directory]
+truncation_length = 5
+
+[hostname]
+ssh_only = true
+disabled = true
