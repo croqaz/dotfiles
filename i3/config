@@ -140,8 +140,8 @@ mode "$mode_system" {
   bindsym s exec --no-startup-id $locker && systemctl suspend, mode "default"
   bindsym h exec --no-startup-id $locker && systemctl hibernate, mode "default"
   # Must allow regular users to execute reboot and poweroff
-  bindsym r exec --no-startup-id reboot now, mode "default"
-  bindsym u exec --no-startup-id shutdown now, mode "default"
+  bindsym r exec --no-startup-id systemctl reboot, mode "default"
+  bindsym u exec --no-startup-id systemctl poweroff -i, mode "default"
 
   # back to normal: Enter or Escape or Space
   bindsym Return  mode "default"
@@ -184,9 +184,8 @@ set $aqua   #689d68
 set $gray   #a89984
 set $darkgray #1d2021
 
-# blue gruvbox
 # class                 border    backgr    text      indicator child_border
-client.focused          $blue     $blue     $darkgray $purple   $darkgray
+client.focused          $aqua     $aqua     $darkgray $purple   $darkgray
 client.focused_inactive $darkgray $darkgray $yellow   $purple   $darkgray
 client.unfocused        $darkgray $darkgray $yellow   $purple   $darkgray
 client.urgent           $red      $red      $white    $red      $red
@@ -194,7 +193,7 @@ client.urgent           $red      $red      $white    $red      $red
 # --- Status Bar --- #
 
 bar {
-  status_command i3status
+  status_command i3blocks
   position top
   workspace_buttons yes
   font pango:JetBrainsMono Nerd Font, Font Awesome 5 Free 12
@@ -213,9 +212,12 @@ bar {
 }
 
 # Start the rest of the apps
-# exec --no-startup-id exec ...
+
+exec --no-startup-id exec xrandr --output HDMI-0 --mode 1920x1080 --rate 120
+exec --no-startup-id exec xset dpms 60 60 300
+exec --no-startup-id exec xss-lock -- $locker
 
 exec --no-startup-id exec sxhkd -m 1
 exec --no-startup-id exec picom -CGb
-exec --no-startup-id dunst
-exec --no-startup-id exec xwallpaper --zoom $HOME/Pictures/wall.jpg
+exec --no-startup-id exec dunst
+exec --no-startup-id exec xwallpaper --output HDMI-0 --zoom $HOME/Pictures/wall.jpg
