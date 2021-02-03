@@ -5,6 +5,7 @@ set encoding=utf-8
 
 " Show true colors
 if !has('gui_running')
+  syntax enable
   set t_Co=256      " Force 256 colors
   set termguicolors " Enable 24-bit color
 endif
@@ -20,7 +21,6 @@ set expandtab         " Expand tabs to spaces
 set gdefault          " Add the "g" flag to search/replace by default
 set history=900       " Increase the UNDO limit
 set hlsearch          " Highlight matching search patterns
-set showmatch         " Show matching brackets/parenthesis
 set ignorecase        " Case-insensitive search
 set incsearch         " Search as you type
 set laststatus=2      " Always show the status bar
@@ -33,6 +33,8 @@ set ruler             " Always show cursor position
 set scrolloff=2       " Show context above/ below cursorline
 set shiftwidth=2      " Normal mode indentation commands use 2 spaces
 set showcmd           " Show the (partial) command as it's being typed
+set showmatch         " Show matching brackets/parenthesis
+set showtabline=2     " Show lightline-bufferline
 set sidescrolloff=2   " Show next two columns scrolling
 set smartcase         " Case-sensitive search if any caps
 set softtabstop=4     " Insert mode tab and backspace use X spaces
@@ -44,14 +46,38 @@ set wildmenu          " Show list instead of just completing
 set wildignorecase    " Ignore case in file name completion
 set wildmode=list:longest,full " Command <Tab> completion, list matches, then longest common part, then all
 
-" filetype plugin indent on " ?
+set background=dark
+let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_bold=1
+let g:gruvbox_italic=1
+let g:gruvbox_undercurl=1
+colorscheme gruvbox
 
-syntax enable
-colorscheme srcery
+filetype plugin indent on
+autocmd FileType python setlocal ts=4 sts=4 sw=4
 
 let g:lightline = {
-\ 'colorscheme': 'srcery'
+\ 'colorscheme': 'gruvbox',
+\ 'active': {
+\   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ]
+\ },
+\ 'tabline': {
+\   'left': [ ['buffers'] ],
+\ },
+\ 'component_expand': {
+\   'buffers': 'lightline#bufferline#buffers'
+\ },
+\ 'component_type': {
+\   'buffers': 'tabsel'
 \ }
+\ }
+
+let g:lightline#bufferline#show_number=2
+let g:lightline#bufferline#composed_number_map = {
+\ 1:  '⑴ ', 2:  '⑵ ', 3:  '⑶ ', 4:  '⑷ ', 5:  '⑸ ',
+\ 6:  '⑹ ', 7:  '⑺ ', 8:  '⑻ ', 9:  '⑼ ', 10: '⑽ ',
+\ 11: '⑾ ', 12: '⑿ ', 13: '⒀ ', 14: '⒁ ', 15: '⒂ ',
+\ 16: '⒃ ', 17: '⒄ ', 18: '⒅ ', 19: '⒆ ', 20: '⒇ '}
 
 " -- Key mappings
 " Disable the arrow keys in NORMAL mode
