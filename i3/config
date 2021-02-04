@@ -213,8 +213,10 @@ bar {
 
 # Start the rest of the apps
 
+exec --no-startup-id exec xset r rate 400 50
+exec --no-startup-id exec xset dpms 180 180 300
+
 exec --no-startup-id exec xrandr --output HDMI-0 --mode 1920x1080 --rate 120
-exec --no-startup-id exec xset dpms 60 60 300
 exec --no-startup-id exec xss-lock -- $locker
 
 exec --no-startup-id exec sxhkd -m 1

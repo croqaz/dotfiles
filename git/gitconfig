@@ -7,19 +7,26 @@
 [core]
 	pager = delta
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
+
+[init]
+	defaultBranch = main
+[fetch]
+	prune = true
 [pull]
 	rebase = false
 [diff]
 	algorithm = patience
+[rebase]
+	autosquash = true
 
 [alias]
 	s    = status
 	co   = checkout
 	pu   = push
 	pl   = pull
-	pushf = push --force-with-lease
 	tags = tag -l
+	pushf = push --force-with-lease
 	branches = branch -a
 	remotes = remote -v
 	contrib = shortlog --summary --numbered
