@@ -220,4 +220,4 @@ exec --no-startup-id exec xss-lock -- $locker
 exec --no-startup-id exec sxhkd -m 1
 exec --no-startup-id exec picom -CGb
 exec --no-startup-id exec dunst
-exec --no-startup-id exec xwallpaper --output HDMI-0 --zoom $HOME/Pictures/wall.jpg
+exec --no-startup-id exec xwallpaper --zoom $HOME/Pictures/wall.jpg

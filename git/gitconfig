@@ -1,6 +1,8 @@
 [user]
 	name = Cristi Constantin
 	email = ...
+[credential]
+	helper = cache --timeout 28800
 
 [core]
 	pager = delta
@@ -12,7 +14,11 @@
 	algorithm = patience
 
 [alias]
-	s = status
+	s    = status
+	co   = checkout
+	pu   = push
+	pl   = pull
+	pushf = push --force-with-lease
 	tags = tag -l
 	branches = branch -a
 	remotes = remote -v
@@ -20,4 +26,3 @@
 	lg = log --graph --decorate=full --all
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	squash = "!f() { git reset --soft HEAD~${1}; }; f"
-	pushf = push --force-with-lease
