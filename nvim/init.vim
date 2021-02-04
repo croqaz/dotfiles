@@ -1,14 +1,11 @@
+" Inspiration ::
+" https://github.com/tpope/vim-sensible
+" https://github.com/thoughtbot/dotfiles
+
 execute pathogen#infect()
 
 set nocompatible  " No vi compatibility (this must be first)
 set encoding=utf-8
-
-" Show true colors
-if !has('gui_running')
-  syntax enable
-  set t_Co=256      " Force 256 colors
-  set termguicolors " Enable 24-bit color
-endif
 
 set autoindent        " New lines preserve the indentation of previous lines
 set autoread          " Reload files when changed on disk (ex: via `git checkout`)
@@ -27,7 +24,11 @@ set laststatus=2      " Always show the status bar
 set lazyredraw        " Don't update screen during macro or script execution
 set lcs=tab:»·,trail:· " Set characters to show for tabs and trailing whitespace
 set list              " Show trailing whitespace
+set modelines=0       " Disable modelines as a security precaution
 set mouse=a           " Enable mouse in all modes
+set nobackup          " Disable backups and swaps
+set noswapfile
+set nowritebackup
 set number            " Show line numbers
 set ruler             " Always show cursor position
 set scrolloff=2       " Show context above/ below cursorline
@@ -42,27 +43,43 @@ set tabstop=4         " Actual tabs occupy X characters
 set title             " Show the filename in the window titlebar
 set ttyfast           " Optimize for fast terminal connections
 set visualbell        " Flash the screen instead of beeping on errors
-set wildmenu          " Show list instead of just completing
 set wildignorecase    " Ignore case in file name completion
+set wildmenu          " Show list instead of just completing
 set wildmode=list:longest,full " Command <Tab> completion, list matches, then longest common part, then all
 
+" Show true colors
+set t_Co=256       " Force 256 colors
+set termguicolors  " Enable 24-bit color
 set background=dark
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_bold=1
-let g:gruvbox_italic=1
-let g:gruvbox_undercurl=1
-colorscheme gruvbox
+syntax enable
+
+" Visible line at column 100
+set textwidth=100
+set colorcolumn=+1
+
+let g:gruvbox_material_palette = 'mix'
+let g:gruvbox_material_background = 'hard'
+let g:gruvbox_material_enable_italic = 1
+let g:gruvbox_material_enable_bold = 1
+let g:gruvbox_material_better_performance = 1
+colorscheme gruvbox-material
 
 filetype plugin indent on
 autocmd FileType python setlocal ts=4 sts=4 sw=4
 
+" Markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_conceal = 0
+
+" Lightline status bar
 let g:lightline = {
-\ 'colorscheme': 'gruvbox',
+\ 'colorscheme': 'nord',
 \ 'active': {
 \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ]
 \ },
 \ 'tabline': {
-\   'left': [ ['buffers'] ],
+\   'left': [ ['buffers'] ], 'right': [ [] ]
 \ },
 \ 'component_expand': {
 \   'buffers': 'lightline#bufferline#buffers'
@@ -72,22 +89,13 @@ let g:lightline = {
 \ }
 \ }
 
+" Buffers tabs bar
 let g:lightline#bufferline#show_number=2
 let g:lightline#bufferline#composed_number_map = {
 \ 1:  '⑴ ', 2:  '⑵ ', 3:  '⑶ ', 4:  '⑷ ', 5:  '⑸ ',
 \ 6:  '⑹ ', 7:  '⑺ ', 8:  '⑻ ', 9:  '⑼ ', 10: '⑽ ',
 \ 11: '⑾ ', 12: '⑿ ', 13: '⒀ ', 14: '⒁ ', 15: '⒂ ',
 \ 16: '⒃ ', 17: '⒄ ', 18: '⒅ ', 19: '⒆ ', 20: '⒇ '}
-
-" -- Key mappings
-" Disable the arrow keys in NORMAL mode
-nnoremap <up>    <nop>
-nnoremap <down>  <nop>
-nnoremap <left>  <nop>
-nnoremap <right> <nop>
-
-" Double <Esc> clears search highlights
-nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 
 " Stuff to ignore when tab completing
 set wildignore=*.a,*.o,*.obj,*.exe,*.pdb,*.lib,*.manifest
@@ -107,3 +115,14 @@ set wildignore+=*.msi,*.crx,*.deb,*.vfd,*.apk,*.ipa,*.bin,*.msu
 set wildignore+=*.gba,*.sfc,*.078,*.nds,*.smd,*.smc
 set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
 set wildignore+=**/node_modules/**
+
+" -- Key mappings
+
+" Disable the arrow keys in NORMAL mode
+nnoremap <up>    <nop>
+nnoremap <down>  <nop>
+nnoremap <left>  <nop>
+nnoremap <right> <nop>
+
+" Double <Esc> clears search highlights
+nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
