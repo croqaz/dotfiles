@@ -8,11 +8,12 @@ set nocompatible  " No vi compatibility (this must be first)
 set encoding=utf-8
 
 set autoindent        " New lines preserve the indentation of previous lines
+set smartindent       " Automatically inserts indentation
+
 set autoread          " Reload files when changed on disk (ex: via `git checkout`)
 set backspace=2       " Use the smart version of backspace
 set backspace=indent,eol,start " Fixes common backspace problems
 set clipboard=unnamedplus " Yank and paste with the system clipboard
-set copyindent        " Copy prior indentation on autoindent
 set cursorline        " Highliht current line
 set expandtab         " Expand tabs to spaces
 set gdefault          " Add the "g" flag to search/replace by default
@@ -54,7 +55,7 @@ set background=dark
 syntax enable
 
 " Visible line at column 100
-set textwidth=100
+" set textwidth=100
 set colorcolumn=+1
 
 let g:gruvbox_material_palette = 'mix'
@@ -92,10 +93,8 @@ let g:lightline = {
 " Buffers tabs bar
 let g:lightline#bufferline#show_number=2
 let g:lightline#bufferline#composed_number_map = {
-\ 1:  '⑴ ', 2:  '⑵ ', 3:  '⑶ ', 4:  '⑷ ', 5:  '⑸ ',
-\ 6:  '⑹ ', 7:  '⑺ ', 8:  '⑻ ', 9:  '⑼ ', 10: '⑽ ',
-\ 11: '⑾ ', 12: '⑿ ', 13: '⒀ ', 14: '⒁ ', 15: '⒂ ',
-\ 16: '⒃ ', 17: '⒄ ', 18: '⒅ ', 19: '⒆ ', 20: '⒇ '}
+\ 1: '❶', 2: '❷', 3: '❸', 4: '❹', 5: '❺',
+\ 6:  '❻', 7:  '❼', 8:  '❽', 9:  '❾', 10: '❿'}
 
 " Stuff to ignore when tab completing
 set wildignore=*.a,*.o,*.obj,*.exe,*.pdb,*.lib,*.manifest

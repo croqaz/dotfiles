@@ -1,3 +1,7 @@
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+alias -g ......='../../../../..'
 
 alias rcp='rsync -hptv --progress'
 alias rmv='rsync -hptv --progress --remove-source-files'
