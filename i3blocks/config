@@ -1,7 +1,8 @@
 
 [cpu_usage]
-command=scripts/cpu_usage.sh
-interval=2
+command=scripts/cpu_usage/cpu_usage
+interval=persist
+markup=pango
 
 [mem_usage]
 command=scripts/mem_usage.sh

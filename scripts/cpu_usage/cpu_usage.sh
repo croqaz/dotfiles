@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
-
+#
+# CPU usage per core
+#
 # Cache in tmpfs to improve speed and reduce SSD load
 cache=/tmp/cpu_bars_cache
 
@@ -14,9 +16,9 @@ echo "$stats" | while read -r row; do
 	rest=${row#* }
 	total=${rest%% *}
 	idle=${rest##* }
-	# Numbers from 0 to 8
+	# Numbers from 0 to 9
 	printf "$(echo "$old" | awk '{if ($1 == id)
-		printf "%d\n", (1 - (idle - $3)  / (total - $2))*100 / 12.5}' \
+		printf "%d\n", (1 - (idle - $3)  / (total - $2)) * 9}' \
 		id="$id" total="$total" idle="$idle")"
 done; printf "\\n"
 
