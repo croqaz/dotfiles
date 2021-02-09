@@ -7,7 +7,7 @@ cache=/tmp/cpu_bars_cache
 stats=$(awk '/cpu[0-9]+/ {printf "%d %d %d\n", substr($1,4), ($2 + $3 + $4 + $5), $5}' /proc/stat)
 [ ! -f $cache ] && echo "$stats" > "$cache"
 old=$(cat "$cache")
-printf "C="
+printf "🅲="
 
 echo "$stats" | while read -r row; do
 	id=${row%% *}

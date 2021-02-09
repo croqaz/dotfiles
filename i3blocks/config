@@ -8,13 +8,13 @@ command=scripts/mem_usage.sh
 interval=4
 
 [wireless]
-label= 
+label= =
 # iwconfig wlan0 OR iw dev wlan0 link
 command=[[ -z "$(iwgetid -r)" ]] || awk '/^\s*wl/ { print int($3 * 100 / 70) "%" }' /proc/net/wireless
 interval=10
 
 [volume]
-command=scripts/vol_pulseaudio.sh -F '${SYMB} ${VOL}%'
+command=scripts/vol_pulseaudio.sh -F '${SYMB} =${VOL}%'
 signal=10
 interval=once
 
