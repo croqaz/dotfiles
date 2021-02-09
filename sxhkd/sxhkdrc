@@ -37,16 +37,18 @@ super + shift + i
 
 # Toggle master output sound
 XF86AudioMute
-	amixer sset Master toggle; pkill -RTMIN+10 blocks
+    amixer sset Master toggle; pkill -RTMIN+10 blocks
 
-# Lower/ Raise volume of current audio stream
+# Raise/ Lower volume of current audio stream
 {XF86AudioRaiseVolume,XF86AudioLowerVolume}
-	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
+    amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
+
+# Increase/ Decrease laptop screen brightness
+{XF86MonBrightnessUp,XF86MonBrightnessDown}
+    xbacklight -{inc,dec} 10 -steps 5 -time 1000
 
 # XF86LaunchA
 # XF86LaunchB
 # XF86AudioPrev
 # XF86AudioPlay
 # XF86AudioNext
-# XF86MonBrightnessDown
-# XF86MonBrightnessUp

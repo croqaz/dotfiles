@@ -55,7 +55,7 @@ set background=dark
 syntax enable
 
 " Visible line at column 100
-" set textwidth=100
+set textwidth=100
 set colorcolumn=+1
 
 let g:gruvbox_material_palette = 'mix'
@@ -72,6 +72,7 @@ autocmd FileType python setlocal ts=4 sts=4 sw=4
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_strikethrough = 1
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_math = 1
 
 " Lightline status bar
 let g:lightline = {
@@ -122,6 +123,9 @@ nnoremap <up>    <nop>
 nnoremap <down>  <nop>
 nnoremap <left>  <nop>
 nnoremap <right> <nop>
+
+" Leader+b to open buffers
+nnoremap <Leader>b :ls<CR>:b<Space>
 
 " Double <Esc> clears search highlights
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
