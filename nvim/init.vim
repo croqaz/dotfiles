@@ -6,6 +6,7 @@ execute pathogen#infect()
 
 set nocompatible  " No vi compatibility (this must be first)
 set encoding=utf-8
+set termencoding=utf-8
 
 set autoindent        " New lines preserve the indentation of previous lines
 set smartindent       " Automatically inserts indentation
@@ -14,7 +15,6 @@ set autoread          " Reload files when changed on disk (ex: via `git checkout
 set backspace=2       " Use the smart version of backspace
 set backspace=indent,eol,start " Fixes common backspace problems
 set clipboard=unnamedplus " Yank and paste with the system clipboard
-set cursorline        " Highliht current line
 set expandtab         " Expand tabs to spaces
 set gdefault          " Add the "g" flag to search/replace by default
 set history=900       " Increase the UNDO limit
@@ -39,6 +39,7 @@ set showmatch         " Show matching brackets/parenthesis
 set showtabline=2     " Show lightline-bufferline
 set sidescrolloff=2   " Show next two columns scrolling
 set smartcase         " Case-sensitive search if any caps
+set smarttab          " Insert tabs on the start of a line according to context
 set softtabstop=4     " Insert mode tab and backspace use X spaces
 set tabstop=4         " Actual tabs occupy X characters
 set title             " Show the filename in the window titlebar
@@ -54,7 +55,11 @@ set termguicolors  " Enable 24-bit color
 set background=dark
 syntax enable
 
-" Visible line at column 100
+set cursorline " Highlight current line
+highlight CursorLine term=reverse
+highlight CursorColumn term=reverse
+
+" Visible line at column X
 set textwidth=100
 set colorcolumn=+1
 
@@ -102,7 +107,7 @@ set wildignore=*.a,*.o,*.obj,*.exe,*.pdb,*.lib,*.manifest
 set wildignore+=*.so,*.dll,*.jar,*.class,*.dex,*.luac
 set wildignore+=*.pyc,*.pyo,*.gem,*.egg,*.egg-info/
 set wildignore+=*.zip,*.7z,*.rar,*.gz,*.tar,*.gzip,*.bz2,*.tgz,*.xz
-set wildignore+=*.DS_Store*
+set wildignore+=*.DS_Store*,*.bak,*/tmp/*
 set wildignore+=*.png,*.jpg,*.gif,*.bmp,*.tga,*.pcx,*.ppm,*.img,*.iso
 set wildignore+=*.swp,*/.Trash/**,*.dmg,*/.rbenv/**
 set wildignore+=*.app,*.git,.git,.hg,.svn
@@ -114,7 +119,7 @@ set wildignore+=*.ppt,*.pptx,*.docx,*.xlt,*.xls,*.xlsx,*.odt,*.wps
 set wildignore+=*.msi,*.crx,*.deb,*.vfd,*.apk,*.ipa,*.bin,*.msu
 set wildignore+=*.gba,*.sfc,*.078,*.nds,*.smd,*.smc
 set wildignore+=*.linux2,*.win32,*.darwin,*.freebsd,*.linux,*.android
-set wildignore+=**/node_modules/**
+set wildignore+=**/node_modules/**,*/__pycache__/
 
 " -- Key mappings
 
@@ -124,8 +129,17 @@ nnoremap <down>  <nop>
 nnoremap <left>  <nop>
 nnoremap <right> <nop>
 
+" Ctrl+s to save
+nnoremap <c-s> :w<CR>
+
+let mapleader=','
+
+" Leader+2/4 to change tabs
+nnoremap <Leader>2 :set tabstop=2  softtabstop=2 shiftwidth=2<CR>
+nnoremap <Leader>4 :set tabstop=4  softtabstop=4 shiftwidth=4<CR>
+
 " Leader+b to open buffers
 nnoremap <Leader>b :ls<CR>:b<Space>
 
-" Double <Esc> clears search highlights
-nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
+" <Esc> clears search highlights
+nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>

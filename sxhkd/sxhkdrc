@@ -12,7 +12,7 @@ super + Return
 	alacritty
 
 super + shift + Return
-	kitty
+	kitty --single-instance
 
 super + shift + w
 	firefox
