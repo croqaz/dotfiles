@@ -6,7 +6,7 @@ control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
 
 super + space
-	j4-dmenu-desktop --dmenu="dmenu -i -fn Hack-11"
+	j4-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono Nerd Font-14'"
 
 super + Return
 	alacritty
@@ -29,7 +29,7 @@ super + shift + n
 super + shift + i
 	alacritty -e htop
 
-super + shift + i
+super + shift + y
 	alacritty -e ipython
 
 @Print
