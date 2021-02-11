@@ -1,155 +1,190 @@
 // Licensed under the terms of the GNU GPL v3, or any later version.
 //
-// Copyright 2019 Nolan Leake <nolan@sigbus.net>
 // Copyright 2021 Cristi Constantin <cristi.constantin@sent.com>
 //
-// Loosely based on bandwidth2 (originally by Guillaume Coré <fridim@onfi.re>)
-// Also inspired by busybox/top.c
+// Initially based on i3blocks-contrib/cpu_usage2
+// Also inspired by procps/proc/sysinfo.c, busybox/procps/top.c
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <string.h>
 #include <unistd.h>
 #include <getopt.h>
 
-#define RED "#CC241D"
-#define ORANGE "#D65D0E"
+#define WARN_C "#CC241D"
+#define CRIT_C "#D65D0E"
+#define MAX_CPUS 10
+#define MAX_VALU 9.0
 
 typedef unsigned long long int ulli;
 
-void usage(char *argv[])
+struct ProcStat
 {
-  printf("Usage: %s "
-         "[-t seconds] [-w %%age] [-c %%age] [-d decimals] [-l label] [-h]\n",
-         argv[0]);
-  printf("\n");
-  printf("-t seconds\trefresh time (default is 1)\n");
-  printf("-d number\tNumber of decimal places for percentage (default: 2)\n");
-  printf("-l label\tLabel to print before the cpu usage (default: CPU)\n");
-  printf("-w %%\tSet warning (color orange) for cpu usage. (default: none)\n");
-  printf("-c %%\tSet critical (color red) for cpu usage. (default: none)\n");
-  printf("-h \t\tthis help\n");
-  printf("\n");
+    ulli old_used;
+    ulli old_total;
+    ulli new_used;
+    ulli new_total;
+};
+
+struct ProcStat proc_stats[MAX_CPUS];
+
+const char fmt[] = "cpu%[^ ] %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu";
+// largest CPU line I have seen is 63
+char line_buf[64];
+ulli used, user, nic, sys, idle, iowait, irq, sirq, steal, guest, nguest;
+double usage;
+char scpu;
+uint icpu;
+
+void help(char *argv[])
+{
+    printf("Usage: %s "
+           "[-t seconds] [-w %%age] [-c %%age] [-l label] [-h]\n",
+           argv[0]);
+    printf("\n");
+    printf("-t seconds\tSet refresh time (default is 1)\n");
+    printf("-l label\tLabel to print before the cpu usage (default: CPU)\n");
+    printf("-w \t\tSet warning color for CPU usage. (default: %s)\n", WARN_C);
+    printf("-c \t\tSet critical color for CPU usage. (default: %s)\n", CRIT_C);
+    printf("-h \t\tthis help\n");
+    printf("\n");
 }
 
-void display(const char *label, double used,
-             int const warning, int const critical, int const decimals)
+void display(const char *label, uint const warning, uint const critical)
 {
-  if (critical != 0 && used > critical) {
-    printf("%s<span color='%s'>", label, RED);
-  } else if (warning != 0 && used > warning) {
-    printf("%s<span color='%s'>", label, ORANGE);
-  } else {
     printf("%s<span>", label);
-  }
 
-  // Debug to see the numbers
-  // printf("%*.*lf", decimals + 2 + 1, decimals, used);
+    for (uint i = 0; i < MAX_CPUS; i++)
+    {
+        if (proc_stats[i].old_total < 1)
+        {
+            break;
+        }
+        usage = MAX_VALU *
+                (proc_stats[i].new_used - proc_stats[i].old_used) /
+                (proc_stats[i].new_total - proc_stats[i].old_total);
 
-  if (used < 0.5) {
-    printf("⓿");
-  } else if (used < 1.5) {
-    printf("❶");
-  } else if (used < 2.5) {
-    printf("❷");
-  } else if (used < 3.5) {
-    printf("❸");
-  } else if (used < 4.5) {
-    printf("❹");
-  } else {
-    printf("❺");
-  }
+        if (i > 0)
+        {
+            // space in between
+            printf(" ");
+        }
+        if (critical > 0 && usage >= critical)
+        {
+            printf("<span color='%s'>%i=%d</span> ", WARN_C, i, (int)usage);
+        }
+        else if (warning > 0 && usage >= warning)
+        {
+            printf("<span color='%s'>%i=%d</span> ", CRIT_C, i, (int)usage);
+        }
+        else
+        {
+            printf("%i=%d", i, (int)usage);
+        }
+    }
 
-  printf("</span>\n");
+    printf("</span>\n");
 }
 
-ulli get_usage(ulli *used_jiffies)
+void update_cpu_line(FILE *fp)
 {
-  FILE *fd = fopen("/proc/stat", "r");
-  ulli user, nice, sys, idle, iowait, irq, sirq, steal, guest, nguest;
+    if (!fgets(line_buf, sizeof(line_buf), fp) || line_buf[0] != 'c' /* not "cpu" */)
+    {
+        return;
+    }
+    int ret = sscanf(line_buf, fmt,
+                     &scpu, &user, &nic, &sys, &idle, &iowait, &irq, &sirq, &steal,
+                     &guest, &nguest);
+    if (ret > 10)
+    {
+        icpu = atoi(&scpu);
+        used = user + nic + sys + irq + sirq + steal + guest + nguest;
+        proc_stats[icpu].new_used = used;
+        proc_stats[icpu].new_total = used + idle + iowait;
+    }
+    return;
+}
 
-  if (!fd) {
-    perror("Couldn't open /proc/stat\n");
-    exit(EXIT_FAILURE);
-  }
-  if (fscanf(fd, "cpu  %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu",
-            &user, &nice, &sys, &idle, &iowait, &irq, &sirq,
-            &steal, &guest, &nguest) != 10) {
-    perror("Couldn't read jiffies from /proc/stat\n");
-    exit(EXIT_FAILURE);
-  }
-  fclose(fd);
-
-  *used_jiffies = user + nice + sys + irq + sirq + steal + guest + nguest;
-  return *used_jiffies + idle + iowait;
+void read_proc_stat()
+{
+    FILE *fp = fopen("/proc/stat", "r");
+    if (fp == NULL)
+    {
+        perror("Couldn't open /proc/stat\n");
+        exit(EXIT_FAILURE);
+    }
+    for (uint i = 0; i < MAX_CPUS + 2; i++)
+    {
+        // the function will only update matching lines
+        update_cpu_line(fp);
+    }
+    return;
 }
 
 int main(int argc, char *argv[])
 {
-  int warning = 3, critical = 4, t = 1, decimals = 1;
-  char *label = "🅲=";
-  char *envvar = NULL;
-  int c;
+    uint warning = (int)(0.9 * MAX_VALU);
+    uint critical = (int)(0.75 * MAX_VALU);
+    char *label = "";
+    char *envvar = NULL;
+    int c, t = 1;
 
-  envvar = getenv("REFRESH_TIME");
-  if (envvar)
-    t = atoi(envvar);
-  envvar = getenv("WARN_PERCENT");
-  if (envvar)
-    warning = atoi(envvar);
-  envvar = getenv("CRIT_PERCENT");
-  if (envvar)
-    critical = atoi(envvar);
-  envvar = getenv("DECIMALS");
-  if (envvar)
-    decimals = atoi(envvar);
-  envvar = getenv("LABEL");
-  if (envvar)
-    label = envvar;
+    envvar = getenv("REFRESH_TIME");
+    if (envvar)
+        t = atoi(envvar);
+    envvar = getenv("WARN_PERCENT");
+    if (envvar)
+        warning = atoi(envvar);
+    envvar = getenv("CRIT_PERCENT");
+    if (envvar)
+        critical = atoi(envvar);
+    envvar = getenv("LABEL");
+    if (envvar)
+        label = envvar;
 
-  while (c = getopt(argc, argv, "ht:w:c:d:l:"), c != -1) {
-    switch (c) {
-    case 't':
-      t = atoi(optarg);
-      break;
-    case 'w':
-      warning = atoi(optarg);
-      break;
-    case 'c':
-      critical = atoi(optarg);
-      break;
-    case 'd':
-      decimals = atoi(optarg);
-      break;
-    case 'l':
-      label = optarg;
-      break;
-    case 'h':
-      usage(argv);
-      return EXIT_SUCCESS;
+    while (c = getopt(argc, argv, "ht:w:c:d:l:"), c != -1)
+    {
+        switch (c)
+        {
+        case 't':
+            t = atoi(optarg);
+            break;
+        case 'w':
+            warning = atoi(optarg);
+            break;
+        case 'c':
+            critical = atoi(optarg);
+            break;
+        case 'l':
+            label = optarg;
+            break;
+        case 'h':
+            help(argv);
+            return EXIT_SUCCESS;
+        }
     }
-  }
 
-  ulli old_total;
-  ulli old_used;
+    // printf("Label=%s, W=%d, C=%d\n", label, warning, critical);
 
-  old_total = get_usage(&old_used);
+    read_proc_stat();
+    for (uint i = 0; i < MAX_CPUS; i++)
+    {
+        proc_stats[i].old_used = proc_stats[i].new_used;
+        proc_stats[i].old_total = proc_stats[i].new_total;
+    }
 
-  while (1) {
-    ulli used;
-    ulli total;
+    while (1)
+    {
+        sleep(t);
+        read_proc_stat();
+        display(label, warning, critical);
+        fflush(stdout);
 
-    sleep(t);
-    total = get_usage(&used);
+        for (uint i = 0; i < MAX_CPUS; i++)
+        {
+            proc_stats[i].old_used = proc_stats[i].new_used;
+            proc_stats[i].old_total = proc_stats[i].new_total;
+        }
+    }
 
-    display(label, 5.0 * (used - old_used) / (total - old_total),
-            warning, critical, decimals);
-
-    fflush(stdout);
-    old_total = total;
-    old_used = used;
-  }
-
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
