@@ -15,11 +15,11 @@
 
 typedef unsigned long long int ulli;
 
-char* label = "";
+char* label = "C=";
 char* delim = " ";
 
 // Todo: maybe allow user to change them
-const char* warn_c = "#D65D0E";
+const char* warn_c = "#FE8019";
 const char* crit_c = "#CC241D";
 
 uint warning = (int)(0.75 * MAX_VALU);
@@ -69,13 +69,16 @@ void display() {
         }
 
         if (critical > 0 && usage >= critical) {
-            printf("<span color='%s'>%i=%d</span>", crit_c, i, usage);
+            //printf("<span color='%s'>%i=%d</span>", crit_c, i, usage);
+            printf("<span color='%s'>%d</span>", crit_c, usage);
         }
         else if (warning > 0 && usage >= warning) {
-            printf("<span color='%s'>%i=%d</span>", warn_c, i, usage);
+            //printf("<span color='%s'>%i=%d</span>", warn_c, i, usage);
+            printf("<span color='%s'>%d</span>", warn_c, usage);
         }
         else {
-            printf("%i=%d", i, usage);
+            //printf("%i=%d", i, usage);
+            printf("%d", usage);
         }
     }
 
