@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    printf("Label=%s, Delim=%s, T=%f, W=%d, C=%d\n", label, delim, t, warning, critical);
+    // printf("Label=%s, Delim=%s, T=%f, W=%d, C=%d\n", label, delim, t, warning, critical);
 
     read_proc_stat();
     sync_new_old_stat();

@@ -1,11 +1,10 @@
 
 [cpu_usage]
-command=scripts/cpu_usage/cpu_usage
+command=$HOME/.config/i3blocks/scripts/cpu_usage/cpu_usage
 interval=persist
-markup=pango
 
 [mem_usage]
-command=scripts/mem_usage.sh
+command=$HOME/.config/i3blocks/scripts/$BLOCK_NAME
 interval=4
 
 [wireless]
