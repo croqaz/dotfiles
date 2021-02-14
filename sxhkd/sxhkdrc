@@ -9,10 +9,10 @@ super + space
 	j4-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono Nerd Font-14'"
 
 super + Return
-	alacritty
+	kitty --single-instance
 
 super + shift + Return
-	kitty --single-instance
+	alacritty
 
 super + shift + w
 	firefox

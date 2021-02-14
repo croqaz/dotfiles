@@ -2,6 +2,12 @@
 " https://github.com/tpope/vim-sensible
 " https://github.com/thoughtbot/dotfiles
 
+" My plugins ::
+" lightline
+" lightline-bufferline
+" gruvbox-material color theme
+" godlygeek/tabular
+" plasticboy/vim-markdown syntax
 execute pathogen#infect()
 
 set nocompatible  " No vi compatibility (this must be first)
@@ -62,6 +68,7 @@ highlight CursorColumn term=reverse
 " Visible line at column X
 set textwidth=100
 set colorcolumn=+1
+set wrap linebreak
 
 let g:gruvbox_material_palette = 'mix'
 let g:gruvbox_material_background = 'hard'
@@ -74,10 +81,11 @@ filetype plugin indent on
 autocmd FileType python setlocal ts=4 sts=4 sw=4
 
 " Markdown
+let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_strikethrough = 1
 let g:vim_markdown_conceal = 0
-let g:vim_markdown_math = 1
+" let g:vim_markdown_math = 1
 
 " Lightline status bar
 let g:lightline = {

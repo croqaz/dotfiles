@@ -1,26 +1,25 @@
-align=center
 
 [cpu_usage]
-command=$HOME/.config/i3blocks/scripts/cpu_usage/cpu_usage -l '❖·' -s ''
+command=HOME/.local/scripts/cpu_usage/cpu_usage -l '<big>❖</big>' -s ''
 interval=persist
 markup=pango
 
 [mem_usage]
-command=$HOME/.config/i3blocks/scripts/mem_usage.sh
+command=HOME/.local/scripts/mem_usage.sh
+markup=pango
 interval=2
 
 [wireless]
-label=
-# iwconfig wlan0 OR iw dev wlan0 link
-command=[[ -z "$(iwgetid -r)" ]] || awk '/^\s*wl/ { print int($3 * 100 / 70) "%" }' /proc/net/wireless
+command=HOME/.local/scripts/wifi_strength.sh
+markup=pango
 interval=10
 
 [volume]
-command=$HOME/.config/i3blocks/scripts/vol_pulseaudio.sh -F '${SYMB}${VOL}%'
+command=HOME/.local/scripts/vol_pulseaudio.sh -F '${SYMB} ${VOL}%'
 interval=10
 signal=10
 
 [date_time]
-command=date "+%a %d %b, <b>%H:%M</b> "
+command=date "+%a %d %b&#183;%H:%M "
 markup=pango
 interval=15

@@ -52,7 +52,7 @@ void help(char* argv[]) {
 
 void display() {
     static uint usage;
-    printf("%s<span>", label);
+    printf("%s<span font_family=\"Hack\" rise=\"1000\">", label);
 
     for (ushort i = 0; i < MAX_CPUS; i++) {
         if (proc_stats[i].old_total < 1) {
@@ -120,7 +120,7 @@ void read_proc_stat() {
     return;
 }
 
-inline void sync_new_old_stat() {
+void sync_new_old_stat() {
     for (ushort i = 0; i < MAX_CPUS; i++) {
         proc_stats[i].old_used = proc_stats[i].new_used;
         proc_stats[i].old_total = proc_stats[i].new_total;
