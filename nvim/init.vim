@@ -8,6 +8,8 @@
 " gruvbox-material color theme
 " godlygeek/tabular
 " plasticboy/vim-markdown syntax
+" junegunn/goyo.vim
+" junegunn/limelight.vim
 execute pathogen#infect()
 
 set nocompatible  " No vi compatibility (this must be first)
@@ -151,3 +153,7 @@ nnoremap <Leader>b :ls<CR>:b<Space>
 
 " <Esc> clears search highlights
 nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>
+
+" Limelight + Goyo
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
