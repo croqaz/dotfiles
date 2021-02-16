@@ -168,8 +168,8 @@ for_window [class="(?i)pavucontrol"] floating enable
 
 font pango:JetBrainsMono Nerd Font Bold 12
 
-gaps inner 10
-gaps outer 10
+gaps inner 5
+gaps outer 5
 
 # https://github.com/a-schaefers/i3-wm-gruvbox-theme/
 # Gruvbox colorscheme colors
@@ -194,7 +194,7 @@ client.urgent           $red      $red      $white    $red      $red
 bar {
   position top
   separator_symbol ":|:"
-  font pango:JetBrainsMono Nerd Font, Font Awesome 5 Free 12
+  font pango:JetBrainsMono Nerd Font, la-solid-900 12
   status_command i3blocks
 
   colors {

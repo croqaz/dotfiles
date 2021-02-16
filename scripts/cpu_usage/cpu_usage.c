@@ -52,7 +52,7 @@ void help(char* argv[]) {
 
 void display() {
     static uint usage;
-    printf("%s<span font_family=\"Hack\" rise=\"1000\">", label);
+    printf("%s<span>", label);
 
     for (ushort i = 0; i < MAX_CPUS; i++) {
         if (proc_stats[i].old_total < 1) {

@@ -1,6 +1,6 @@
 
 [cpu_usage]
-command=$HOME/.local/scripts/cpu_usage/cpu_usage -l '<big>❖</big>' -s ''
+command=$HOME/.local/scripts/cpu_usage/cpu_usage -l '𐋅 ' -s ''
 interval=persist
 markup=pango
 
@@ -20,6 +20,6 @@ interval=10
 signal=10
 
 [date_time]
-command=date "+%a %d %b&#183;%H:%M "
+command=date "+%a %d %b&#183;%H:%M "
 markup=pango
 interval=15
