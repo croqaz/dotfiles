@@ -6,14 +6,16 @@
 set $mod Mod4
 
 # define some vars
-set $term --no-startup-id alacritty
+set $term --no-startup-id kitty -1
 set $left h
 set $down j
 set $up k
 set $right l
 
 focus_follows_mouse no
-focus_on_window_activation urgent
+force_display_urgency_hint 500 ms
+focus_on_window_activation smart
+focus_wrapping yes
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
@@ -40,11 +42,9 @@ bindsym Mod1+Tab focus next
 bindsym Mod1+Shift+Tab focus prev
 
 # focus the parent container
-#bindsym $mod+a focus parent
+bindsym $mod+a focus parent
 # focus the child container
-#bindsym $mod+d focus child
-# toggle between floating/tiling containers
-#bindsym $mod+s focus mode_toggle
+bindsym $mod+d focus child
 
 # move focused window, VI style
 bindsym $mod+Shift+$left  move left
@@ -124,11 +124,12 @@ mode "resize" {
   bindsym $up     resize shrink height 5 px or 5 ppt
   bindsym $right  resize grow width 5 px or 5 ppt
 
-  # back to normal: Enter or Escape or r
-  bindsym Return  mode "default"
-  bindsym Escape  mode "default"
-  bindsym $mod+r  mode "default"
-  bindsym r       mode "default"
+  # back to normal
+  bindsym Control+C mode "default"
+  bindsym Return    mode "default"
+  bindsym Escape    mode "default"
+  bindsym $mod+r    mode "default"
+  bindsym r         mode "default"
 }
 bindsym $mod+r mode "resize"
 
@@ -140,31 +141,52 @@ mode "$mode_system" {
   bindsym s exec --no-startup-id $locker && systemctl suspend, mode "default"
   bindsym h exec --no-startup-id $locker && systemctl hibernate, mode "default"
   # Must allow regular users to execute reboot and poweroff
-  bindsym r exec --no-startup-id sudo reboot now, mode "default"
+  bindsym r exec --no-startup-id sudo reboot, mode "default"
   bindsym u exec --no-startup-id sudo shutdown now, mode "default"
-  # back to normal: Enter or Escape or Space
-  bindsym Return  mode "default"
-  bindsym Escape  mode "default"
-  bindsym Space   mode "default"
+
+  # back to normal
+  bindsym Control+C mode "default"
+  bindsym Return    mode "default"
+  bindsym Escape    mode "default"
+  bindsym Space     mode "default"
 }
 bindsym $mod+Escape mode "$mode_system"
 
-# disable window borders?
-# for_window [class=".*"] border pixel 0
+# --- Organize --- #
+
+exec --no-startup-id "$HOME/.local/scripts/monitors.sh --ei"
+exec --no-startup-id "$HOME/.local/scripts/monitors.sh --pe"
+# exec --no-startup-id "xrandr --output HDMI-0 --mode 1920x1080 --rate 75"
+
+workspace $ws1 output primary
+workspace $ws2 output primary
+
+workspace $ws3 output nonprimary
+workspace $ws4 output nonprimary
 
 # set floating windows
 for_window [window_role="bubble"] floating enable
-for_window [window_role="pop-up"] floating enable
+for_window [window_role="(?i)pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
-for_window [window_type="dialog"] floating enable
-for_window [window_type="menu"] floating enable
-#
+for_window [window_role="(?i)about"] floating enable
 for_window [window_role="(?i)preferences$"] floating enable
+#
+for_window [window_type="dialog"] border pixel 2
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] border pixel 2
+for_window [window_type="menu"] floating enable
 #
 for_window [class="(?i)firefox" window_role="About"] floating enable
 for_window [class="(?i)pavucontrol"] floating enable
+for_window [title="Volume Control"] floating enable
 
 # --- Beautify --- #
+
+hide_edge_borders vertical
+
+for_window [class="^xterm"] border pixel 1
+for_window [class="^kitty"] border pixel 1
+for_window [class="^Alacritty"] border pixel 1
 
 font pango:JetBrainsMono Nerd Font Bold 12
 
@@ -189,11 +211,13 @@ client.focused_inactive $darkgray $darkgray $yellow   $purple   $darkgray
 client.unfocused        $darkgray $darkgray $yellow   $purple   $darkgray
 client.urgent           $red      $red      $white    $red      $red
 
-# --- Status Bar --- #
+# --- Status Bars --- #
 
 bar {
   position top
-  separator_symbol ":|:"
+  output primary
+  tray_output primary
+  separator_symbol "::"
   font pango:JetBrainsMono Nerd Font, la-solid-900 12
   status_command i3blocks
 
@@ -210,16 +234,38 @@ bar {
   }
 }
 
+bar {
+  position top
+  output nonprimary
+  tray_output primary
+  font pango:JetBrainsMono Nerd Font
+
+  colors {
+    # bar bg color
+    background $bg
+    # text color used for blocks that don't have a color specified
+    statusline $yellow
+    #                  border    backgr    text
+    focused_workspace  $blue     $blue     $darkgray
+    inactive_workspace $darkgray $darkgray $yellow
+    active_workspace   $darkgray $darkgray $yellow
+    urgent_workspace   $red      $red      $bg
+  }
+}
+
 # Start the rest of the apps
 
-exec --no-startup-id exec xset r rate 400 50
-exec --no-startup-id exec xset dpms 180 180 300
+# Turn off screen after X seconds
+exec_always --no-startup-id "xset dpms 180 180 300"
+# Faster key repeat
+exec --no-startup-id "xset r rate 400 50"
 
-exec --no-startup-id exec xrandr --output HDMI-0 --mode 1920x1080 --rate 120
-exec --no-startup-id exec xss-lock -- $locker
+exec --no-startup-id "sxhkd -m 1"
+exec_always --no-startup-id picom
 
-exec --no-startup-id exec_always picom
+# Setup wallpaper and lock screen
+exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
+exec --no-startup-id "xss-lock -- $locker"
 
-exec --no-startup-id exec sxhkd -m 1
-exec --no-startup-id exec dunst
-exec --no-startup-id exec xwallpaper --zoom $HOME/Pictures/wall.jpg
+# Warm screen at night (Dublin Ireland)
+exec --no-startup-id "redshift -t 5700:3600 -l 53.356:-6.243"

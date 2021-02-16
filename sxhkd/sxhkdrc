@@ -3,7 +3,7 @@
 
 # Reload sxhkd config
 control + alt + k
-	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SXHKD config reloaded"
+	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SxHkD config reloaded"
 
 super + space
 	j4-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono Nerd Font-14'"
@@ -24,16 +24,19 @@ super + shift + g
 	atom
 
 super + shift + n
-	alacritty -e lf
+	kitty -1 -e nnn
 
 super + shift + i
-	alacritty -e htop
+	kitty -1 -e htop
 
 super + shift + y
-	alacritty -e ipython
+	kitty -1 -e ipython
 
 @Print
-	scrot -e 'mv $f ~/Pictures/' && notify-send "Screenshot saved"
+	scrot -q 85 -e 'mv $f ~/Pictures/' && notify-send "Screenshot saved"
+
+shift + @Print
+	scrot -q 90 -bu -e 'mv $f ~/Pictures/' && notify-send "Focused window saved"
 
 # Toggle master output sound
 XF86AudioMute
@@ -47,8 +50,8 @@ XF86AudioMute
 {XF86MonBrightnessUp,XF86MonBrightnessDown}
     xbacklight -{inc,dec} 10 -steps 5 -time 1000
 
-# XF86LaunchA
-# XF86LaunchB
-# XF86AudioPrev
-# XF86AudioPlay
-# XF86AudioNext
+# XF86AudioPlay playerctl play
+# XF86AudioStop playerctl stop
+# XF86AudioPause playerctl pause
+# XF86AudioPrev playerctl previous
+# XF86AudioNext playerctl next

@@ -1,6 +1,10 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
 
+[directory]
+truncation_length = 7
+truncation_symbol = "…/"
+
 [aws]
 disabled = true
 [gcloud]
@@ -17,9 +21,6 @@ disabled = true
 disabled = true
 [php]
 disabled = true
-
-[directory]
-truncation_length = 5
 
 [hostname]
 ssh_only = true

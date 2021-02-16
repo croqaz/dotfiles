@@ -1,3 +1,6 @@
+# Reference: https://dunst-project.org/documentation/
+# Also: https://wiki.archlinux.org/index.php/Dunst
+
 [global]
   class = Dunst
 
@@ -11,8 +14,8 @@
   #   %n  progress value if set without any extra characters
   #   %%  Literal %
   markup = yes
-  format = "<b>%s</b>\n%b"
-  font = Hack 14
+  format = "<b>%s %p</b>\n%b"
+  font = Hack 13
 
   sticky_history = yes
   indicate_hidden = yes
@@ -35,6 +38,8 @@
 
   dmenu = dmenu -p dunst:
   browser = firefox -new-tab
+
+  icon_path = /usr/share/icons/gnome/32x32/status/:/usr/share/icons/gnome/32x32/devices/
 
 [shortcuts]
     close = ctrl+space
