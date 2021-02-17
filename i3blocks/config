@@ -9,6 +9,12 @@ command=$HOME/.local/scripts/mem_usage.sh
 markup=pango
 interval=2
 
+[battery]
+command=$HOME/.local/scripts/battery.sh
+markup=pango
+instance=BAT0
+interval=30
+
 [wireless]
 command=$HOME/.local/scripts/wifi_strength.sh
 markup=pango

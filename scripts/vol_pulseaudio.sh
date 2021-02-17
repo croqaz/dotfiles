@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # Displays the default device, volume, and mute status for i3blocks
 # From: https://github.com/vivien/i3blocks-contrib/tree/master/volume-pulseaudio
 
@@ -49,7 +50,7 @@ while getopts F:Sf:adH:M:L:X:T:t:C:c:i:m:s:h opt; do
 		s) SCONTROL="$OPTARG" ;;
 		h) printf \
 "Usage: volume-pulseaudio [-S] [-F format] [-f format] [-p] [-a|-d] [-H symb] [-M symb]
-			[-L symb] [-X symb] [-T thresh] [-t thresh] [-C color] [-c color] [-i inter] 
+			[-L symb] [-X symb] [-T thresh] [-t thresh] [-C color] [-c color] [-i inter]
 			[-m mixer] [-s scontrol] [-h]
 Options:
 -F, -f\tOutput format (-F long format, -f short format) to use, with exposed variables:

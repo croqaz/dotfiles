@@ -68,9 +68,9 @@ highlight CursorLine term=reverse
 highlight CursorColumn term=reverse
 
 " Visible line at column X
-set textwidth=100
+set textwidth=99
 set colorcolumn=+1
-set wrap! linebreak
+set wrap linebreak
 
 let g:gruvbox_material_palette = 'mix'
 let g:gruvbox_material_background = 'hard'

@@ -1,6 +1,7 @@
 # i3 config file (v4)
 # Template: https://github.com/i3/i3/blob/stable/etc/config
 # Reference: https://i3wm.org/docs/userguide.html
+# Inspiration: https://github.com/regolith-linux/regolith-i3-gaps-config
 
 # mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
@@ -19,15 +20,15 @@ focus_wrapping yes
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
-set $ws1 "1 ❱"
-set $ws2 "2 ❱"
-set $ws3 "3 ❱"
-set $ws4 "4 ❱"
-set $ws5 "5 ❱"
-set $ws6 "6 ❱"
-set $ws7 "7 ❱"
-set $ws8 "8 ❱"
-set $ws9 "9 ❱"
+set $ws1 "1:λ ❱"
+set $ws2 "2:2 ❱"
+set $ws3 "3:3 ❱"
+set $ws4 "4:4 ❱"
+set $ws5 "5:5 ❱"
+set $ws6 "6:6 ❱"
+set $ws7 "7:7 ❱"
+set $ws8 "8:8 ❱"
+set $ws9 "9:Ω ❱"
 
 # --- Key Bindings --- #
 
@@ -79,6 +80,10 @@ bindsym $mod+Tab      workspace back_and_forth
 bindsym $mod+less     workspace prev
 bindsym $mod+greater  workspace next
 
+# multi monitor moving workspaces
+bindsym $mod+bracketleft  move workspace to output left
+bindsym $mod+bracketright move workspace to output right
+
 # fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
@@ -105,11 +110,12 @@ bindsym $mod+z        gaps inner current plus 5
 bindsym $mod+Shift+z  gaps inner current minus 5
 bindsym $mod+Mod1+z   gaps inner current set 0; gaps outer current set 0
 
+# toggle i3 bar
 bindsym $mod+t        bar mode toggle
 
 # kill focused window
-bindsym $mod+q        kill
-bindsym $mod+Shift+q  exec kill --no-startup-id -9 $(xdotool getwindowfocus getwindowpid)
+bindsym $mod+q        [con_id="__focused__"] kill
+bindsym $mod+Shift+q  [con_id="__focused__"] exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)
 
 # reload the configuration file
 bindsym $mod+Shift+c  reload
@@ -164,6 +170,12 @@ workspace $ws2 output primary
 workspace $ws3 output nonprimary
 workspace $ws4 output nonprimary
 
+assign [class="(?i)firefox"]   $ws2
+assign [class="(?i)chromium"]  $ws3
+assign [class="(?i)thunderbird"] $ws4
+
+floating_maximum_size -1 x -1
+
 # set floating windows
 for_window [window_role="bubble"] floating enable
 for_window [window_role="(?i)pop-up"] floating enable
@@ -176,6 +188,7 @@ for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] border pixel 2
 for_window [window_type="menu"] floating enable
 #
+for_window [class="Yad" instance="yad"] floating enable
 for_window [class="(?i)firefox" window_role="About"] floating enable
 for_window [class="(?i)pavucontrol"] floating enable
 for_window [title="Volume Control"] floating enable
@@ -188,10 +201,10 @@ for_window [class="^xterm"] border pixel 1
 for_window [class="^kitty"] border pixel 1
 for_window [class="^Alacritty"] border pixel 1
 
-font pango:JetBrainsMono Nerd Font Bold 12
+font pango:JetBrainsMono Nerd Font Bold 10
 
-gaps inner 5
-gaps outer 5
+gaps inner 8
+gaps outer 4
 
 # https://github.com/a-schaefers/i3-wm-gruvbox-theme/
 # Gruvbox colorscheme colors
@@ -218,8 +231,9 @@ bar {
   output primary
   tray_output primary
   separator_symbol "::"
-  font pango:JetBrainsMono Nerd Font, la-solid-900 12
+  font pango:JetBrainsMono Nerd Font 12
   status_command i3blocks
+  strip_workspace_numbers yes
 
   colors {
     # bar bg color
@@ -238,7 +252,8 @@ bar {
   position top
   output nonprimary
   tray_output primary
-  font pango:JetBrainsMono Nerd Font
+  font pango:JetBrainsMono Nerd Font 12
+  strip_workspace_numbers yes
 
   colors {
     # bar bg color
@@ -261,11 +276,12 @@ exec_always --no-startup-id "xset dpms 180 180 300"
 exec --no-startup-id "xset r rate 400 50"
 
 exec --no-startup-id "sxhkd -m 1"
-exec_always --no-startup-id picom
+exec_always --no-startup-id picom -CGb
+exec_always --no-startup-id flashfocus
 
-# Setup wallpaper and lock screen
-exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
+# Setup lock screen and wallpaper
 exec --no-startup-id "xss-lock -- $locker"
+exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
 
 # Warm screen at night (Dublin Ireland)
 exec --no-startup-id "redshift -t 5700:3600 -l 53.356:-6.243"

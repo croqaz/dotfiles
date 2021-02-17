@@ -38,6 +38,9 @@ super + shift + y
 shift + @Print
 	scrot -q 90 -bu -e 'mv $f ~/Pictures/' && notify-send "Focused window saved"
 
+super + x
+	flash_window # flashfocus
+
 # Toggle master output sound
 XF86AudioMute
     amixer sset Master toggle; pkill -RTMIN+10 blocks
