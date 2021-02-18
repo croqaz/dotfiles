@@ -20,15 +20,15 @@ focus_wrapping yes
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
-set $ws1 "1:λ ❱"
-set $ws2 "2:2 ❱"
-set $ws3 "3:3 ❱"
-set $ws4 "4:4 ❱"
-set $ws5 "5:5 ❱"
-set $ws6 "6:6 ❱"
-set $ws7 "7:7 ❱"
-set $ws8 "8:8 ❱"
-set $ws9 "9:Ω ❱"
+set $ws1 "1:α ❱"
+set $ws2 "2:β ❱"
+set $ws3 "3:γ ❱"
+set $ws4 "4:δ ❱"
+set $ws5 "5:ε ❱"
+set $ws6 "6:ζ ❱"
+set $ws7 "7:η ❱"
+set $ws8 "8:ψ ❱"
+set $ws9 "9:ω ❱"
 
 # --- Key Bindings --- #
 
@@ -90,7 +90,7 @@ bindsym $mod+f fullscreen toggle
 # use Mouse+$mod to drag floating windows
 floating_modifier $mod
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+f floating toggle
 # toggle tiling / sticky
 # bindsym $mod+Shift+s sticky toggle
 
@@ -164,6 +164,7 @@ exec --no-startup-id "$HOME/.local/scripts/monitors.sh --ei"
 exec --no-startup-id "$HOME/.local/scripts/monitors.sh --pe"
 # exec --no-startup-id "xrandr --output HDMI-0 --mode 1920x1080 --rate 75"
 
+# Usually xrandr is slow and these don't take effect
 workspace $ws1 output primary
 workspace $ws2 output primary
 
@@ -191,6 +192,7 @@ for_window [window_type="menu"] floating enable
 for_window [class="Yad" instance="yad"] floating enable
 for_window [class="(?i)firefox" window_role="About"] floating enable
 for_window [class="(?i)pavucontrol"] floating enable
+for_window [class="(?i)zoom"]       floating enable
 for_window [title="Volume Control"] floating enable
 
 # --- Beautify --- #

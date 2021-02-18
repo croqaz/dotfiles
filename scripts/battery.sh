@@ -65,6 +65,8 @@ elif [ "$CHARGE_STATE" == "discharging" ]; then
     CHARGE_ICON=$_SYMBOL_DIRECTION_DOWN
 elif [ "$CHARGE_STATE" == "charging" ]; then
     CHARGE_ICON=$_SYMBOL_DIRECTION_UP
+elif [ "$CHARGE_STATE" == "fully-charged" ]; then
+    CHARGE_ICON=""
 else
     CHARGE_ICON=$_SYMBOL_UNKNOWN
 fi
@@ -77,7 +79,11 @@ else
 	ICON_SPAN="<span>$LABEL_ICON"
 fi
 
-echo "${ICON_SPAN}${_SPACE}${BATT_PERCENT}% ${CHARGE_ICON}</span>"
+if [ "$BATT_PERCENT" == 100 ]; then
+	echo "${ICON_SPAN}${_SPACE}${BATT_PERCENT}%</span>"
+else
+	echo "${ICON_SPAN}${_SPACE}${BATT_PERCENT}% ${CHARGE_ICON}</span>"
+fi
 
 # Handle click events
 # if [[ "x${BUTTON}" == "x1" ]]; then

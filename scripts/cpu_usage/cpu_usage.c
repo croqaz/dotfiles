@@ -19,8 +19,8 @@ char* label = "C=";
 char* delim = " ";
 
 // Todo: maybe allow user to change them
-const char* warn_c = "#FE8019";
-const char* crit_c = "#CC241D";
+const char* warn_c = "#AF3A03";
+const char* crit_c = "#9D0006";
 
 uint warning = (int)(0.75 * MAX_VALU);
 uint critical = (int)(0.9 * MAX_VALU);
