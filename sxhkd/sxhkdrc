@@ -6,7 +6,7 @@ control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SxHkD config reloaded"
 
 super + space
-	j4-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono Nerd Font-14'"
+	rofi -modi "drun,run" -show drun
 
 super + Return
 	kitty --single-instance

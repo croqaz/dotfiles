@@ -20,15 +20,15 @@ focus_wrapping yes
 
 # Define names for default workspaces
 # Use vars to avoid repeating the names in multiple places
-set $ws1 "1:α ❱"
-set $ws2 "2:β ❱"
-set $ws3 "3:γ ❱"
-set $ws4 "4:δ ❱"
-set $ws5 "5:ε ❱"
-set $ws6 "6:ζ ❱"
-set $ws7 "7:η ❱"
-set $ws8 "8:ψ ❱"
-set $ws9 "9:ω ❱"
+set $ws1 "1:1 ❱"
+set $ws2 "2:2 ❱"
+set $ws3 "3:3 ❱"
+set $ws4 "4:4 ❱"
+set $ws5 "5:5 ❱"
+set $ws6 "6:6 ❱"
+set $ws7 "7:7 ❱"
+set $ws8 "8:8 ❱"
+set $ws9 "9:9 ❱"
 
 # --- Key Bindings --- #
 
@@ -39,8 +39,8 @@ bindsym $mod+$up    focus up
 bindsym $mod+$right focus right
 
 # alt + tab focus windows
-bindsym Mod1+Tab focus next
-bindsym Mod1+Shift+Tab focus prev
+bindsym Mod1+Tab focus prev
+bindsym Mod1+Shift+Tab focus next
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -286,4 +286,4 @@ exec --no-startup-id "xss-lock -- $locker"
 exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
 
 # Warm screen at night (Dublin Ireland)
-exec --no-startup-id "redshift -t 5700:3600 -l 53.356:-6.243"
+exec --no-startup-id "redshift -l 53.356:-6.243"
