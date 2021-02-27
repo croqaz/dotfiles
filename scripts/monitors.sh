@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-INTERN=eDP1
-EXTERN=DP2
+INTERN=eDP-1
+EXTERN=DP-1
 
 while [[ "$#" -gt 0 ]]; do
 	case $1 in
@@ -20,10 +20,11 @@ done
 case $option in
 
 	"extern")
-		echo "Monitor extern only with fallback"
 		if xrandr -q | grep "$EXTERN disconnected"; then
+			echo "Extern monitor is disconnected, using intern"
 			xrandr --output "$EXTERN" --off --output "$INTERN" --auto
 		else
+			echo "Monitor extern only"
 			xrandr --output "$INTERN" --off --output "$EXTERN" --auto
 		fi
     ;;
@@ -39,8 +40,12 @@ case $option in
 	;;
 
 	"pe")
-		echo "Monitor primary extern"
-		xrandr --output "$EXTERN" --primary
+		if xrandr -q | grep "$EXTERN disconnected"; then
+			echo "Extern monitor is disconnected"
+		else
+			echo "Monitor primary extern"
+			xxrandr --output "$EXTERN" --primary
+		fi
 	;;
 
 	"pi")
@@ -49,13 +54,21 @@ case $option in
 	;;
 
 	"ei")
-		echo "Monitor extern-intern"
-		xrandr --output "$EXTERN" --auto --left-of "$INTERN" --auto
+		if xrandr -q | grep "$EXTERN connected"; then
+			echo "Monitor extern-intern"
+			xrandr --output "$EXTERN" --auto --left-of "$INTERN" --auto
+		else
+			echo "Extern monitor is disconnected"
+		fi
 	;;
 
 	"ie")
-		echo "Monitor intern-extern"
-		xrandr --output "$INTERN" --auto --left-of "$EXTERN" --auto
+		if xrandr -q | grep "$EXTERN connected"; then
+			echo "Monitor intern-extern"
+			xrandr --output "$INTERN" --auto --left-of "$EXTERN" --auto
+		else
+			echo "Extern monitor is disconnected"
+		fi
 	;;
 
 	*) echo "Option not implemented: $option"; exit 1 ;;
