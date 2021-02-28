@@ -43,11 +43,11 @@ super + x
 
 # Toggle master output sound
 XF86AudioMute
-    amixer sset Master toggle; pkill -RTMIN+10 blocks
+    pactl set-sink-mute '@DEFAULT_SINK@' toggle; pkill -RTMIN+10 blocks
 
 # Raise/ Lower volume of current audio stream
 {XF86AudioRaiseVolume,XF86AudioLowerVolume}
-    amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
+    pactl set-sink-volume '@DEFAULT_SINK@' {+,-}2500; pkill -RTMIN+10 blocks
 
 # Increase/ Decrease laptop screen brightness
 {XF86MonBrightnessUp,XF86MonBrightnessDown}
