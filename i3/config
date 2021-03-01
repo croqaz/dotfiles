@@ -139,30 +139,10 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-set $mode_system System (l) lock, (o) logout, (s) suspend, (h) hibernate, (r) reboot, (u) shutdown
-set $locker i3lock -be -c 303030
-mode "$mode_system" {
-  bindsym l exec --no-startup-id $locker, mode "default"
-  bindsym o exec --no-startup-id i3-msg exit, mode "default"
-  bindsym s exec --no-startup-id $locker && systemctl suspend, mode "default"
-  bindsym h exec --no-startup-id $locker && systemctl hibernate, mode "default"
-  # Must allow regular users to execute reboot and poweroff
-  bindsym r exec --no-startup-id sudo reboot, mode "default"
-  bindsym u exec --no-startup-id sudo shutdown now, mode "default"
-
-  # back to normal
-  bindsym Control+C mode "default"
-  bindsym Return    mode "default"
-  bindsym Escape    mode "default"
-  bindsym Space     mode "default"
-}
-bindsym $mod+Escape mode "$mode_system"
-
 # --- Organize --- #
 
 exec --no-startup-id "$HOME/.local/scripts/monitors.sh --ei"
-exec --no-startup-id "$HOME/.local/scripts/monitors.sh --pe"
-# exec --no-startup-id "xrandr --output HDMI-0 --mode 1920x1080 --rate 75"
+exec --no-startup-id "xrandr --output $EXTERN_SCREEN --mode 1920x1080 --rate 75"
 
 # Usually xrandr is slow and these don't take effect
 workspace $ws1 output primary
@@ -230,31 +210,10 @@ client.urgent           $red      $red      $white    $red      $red
 
 bar {
   position top
-  output primary
   tray_output primary
   separator_symbol "::"
   font pango:JetBrainsMono Nerd Font 12
   status_command i3blocks
-  strip_workspace_numbers yes
-
-  colors {
-    # bar bg color
-    background $bg
-    # text color used for blocks that don't have a color specified
-    statusline $yellow
-    #                  border    backgr    text
-    focused_workspace  $blue     $blue     $darkgray
-    inactive_workspace $darkgray $darkgray $yellow
-    active_workspace   $darkgray $darkgray $yellow
-    urgent_workspace   $red      $red      $bg
-  }
-}
-
-bar {
-  position top
-  output nonprimary
-  tray_output primary
-  font pango:JetBrainsMono Nerd Font 12
   strip_workspace_numbers yes
 
   colors {
@@ -278,8 +237,7 @@ exec_always --no-startup-id "xset dpms 180 180 300"
 exec --no-startup-id "xset r rate 400 50"
 
 exec --no-startup-id "sxhkd -m 1"
-exec_always --no-startup-id picom -CGb
-exec_always --no-startup-id flashfocus
+exec_always --no-startup-id picom -b
 
 # Setup lock screen and wallpaper
 exec --no-startup-id "xss-lock -- $locker"

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-B='#00000000'  # blank
-C='#ffffffFF'  # clear ish
-D='#0A7ACAFF'  # default
-T='#569cd6FF'  # text
-W='#F44747FF'  # wrong
-V='#FFAF00FF'  # verifying
+B='#55555555'  # blank
+C='#0AAEB3FF'  # clear ish
+D='#2C78BFFF'  # default
+T='#0AAEB3FF'  # text
+W='#FF5F00FF'  # wrong
+V='#519F50FF'  # verifying
 VT='#608B4EFF'
 BW='#1E1E1EFF'
 
@@ -13,11 +13,11 @@ i3lock \
 --radius 75 \
 --indpos="w/2:h/2" \
 --timepos="w/2:h/2-200" \
---datepos="w/2:h/2-160" \
+--datepos="w/2:h/2-120" \
 --greeterpos="w/2:h/2" \
 --insidevercolor=$B   \
 --ringvercolor=$V     \
---ring-width=6 \
+--ring-width=6        \
 \
 --insidewrongcolor=$W \
 --ringwrongcolor=$C   \
@@ -36,14 +36,14 @@ i3lock \
 --bshlcolor=$W        \
 \
 --screen 1            \
---blur 15             \
+--blur 24             \
 --clock               \
 --indicator           \
---timestr="%I:%M:%S %p"  \
---datestr="%A %d %b"     \
+--timestr="%H:%M"     \
+--datestr="%A %d %b"  \
 --wrongtext="incorrect!" \
 --veriftext="verifying"  \
---timesize=75  \
---datesize=30  \
+--timesize=90  \
+--datesize=45  \
 --verifsize=20 \
 --wrongsize=20

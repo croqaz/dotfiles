@@ -5,6 +5,9 @@
 control + alt + k
 	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SxHkD config reloaded"
 
+super + Escape
+	$HOME/.local/scripts/system.sh
+
 super + space
 	rofi -modi "drun,run" -show drun
 

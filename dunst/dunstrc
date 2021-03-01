@@ -15,7 +15,7 @@
   #   %%  Literal %
   markup = yes
   format = "<b>%s %p</b>\n%b"
-  font = Hack 13
+  font = Hack 12
 
   sticky_history = yes
   indicate_hidden = yes
@@ -28,7 +28,7 @@
   padding = 8
   horizontal_padding = 8
   max_icon_size = 96
-  geometry = "300x30-10+30"
+  geometry = "300x30-12+34"
   shrink = no
 
   monitor = 0
