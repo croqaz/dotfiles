@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 c=$(echo -e "Lock\nLogout\nSuspend\nReboot\nShutdown" | rofi -dmenu -i \
-  -only-match -p '>' -lines 7 -width 20 -format s)
+    -p '>' -lines 7 -width 20 -format s)
 echo $c
 
 case $c in
@@ -28,4 +28,6 @@ case $c in
   Shutdown)
     systemctl poweroff -i
   ;;
+
+  *) echo "Invalid: $c"; exit 1 ;;
 esac

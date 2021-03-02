@@ -235,12 +235,14 @@ bar {
 exec_always --no-startup-id "xset dpms 180 180 300"
 # Faster key repeat
 exec --no-startup-id "xset r rate 400 50"
+# Keyboard layout
+exec --no-startup-id "setxkbmap -model pc101 -layout us -variant altgr-intl -option -option lv3=ralt_switch -option compose=rctrl -option terminate=ctrl_alt_bksp"
 
 exec --no-startup-id "sxhkd -m 1"
 exec_always --no-startup-id picom -b
 
 # Setup lock screen and wallpaper
-exec --no-startup-id "xss-lock -- $locker"
+exec --no-startup-id "xss-lock -- $HOME/.local/scripts/lock.sh"
 exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
 
 # Warm screen at night (Dublin Ireland)

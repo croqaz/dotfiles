@@ -80,6 +80,7 @@ let g:gruvbox_material_better_performance = 1
 colorscheme gruvbox-material
 
 filetype plugin indent on
+autocmd FileType sh,make set noexpandtab!
 autocmd FileType python setlocal ts=4 sts=4 sw=4
 
 " Markdown
