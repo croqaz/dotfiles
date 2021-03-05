@@ -9,7 +9,7 @@ super + Escape
 	$HOME/.local/scripts/system.sh
 
 super + space
-	rofi -modi "drun,run" -show drun
+	rofi -show-icons -combi-modi window,drun -show combi -modi combi
 
 super + Return
 	kitty --single-instance
@@ -46,18 +46,15 @@ super + x
 
 # Toggle master output sound
 XF86AudioMute
-    pactl set-sink-mute '@DEFAULT_SINK@' toggle; pkill -RTMIN+10 blocks
+	pactl set-sink-mute '@DEFAULT_SINK@' toggle; pkill -RTMIN+10 blocks
 
 # Raise/ Lower volume of current audio stream
 {XF86AudioRaiseVolume,XF86AudioLowerVolume}
-    pactl set-sink-volume '@DEFAULT_SINK@' {+,-}2500; pkill -RTMIN+10 blocks
+	pactl set-sink-volume '@DEFAULT_SINK@' {+,-}5%; pkill -RTMIN+10 blocks
 
 # Increase/ Decrease laptop screen brightness
 {XF86MonBrightnessUp,XF86MonBrightnessDown}
-    xbacklight -{inc,dec} 10 -steps 5 -time 1000
+	xbacklight -{inc,dec} 10 -steps 5 -time 1000
 
-# XF86AudioPlay playerctl play
-# XF86AudioStop playerctl stop
-# XF86AudioPause playerctl pause
-# XF86AudioPrev playerctl previous
-# XF86AudioNext playerctl next
+{XF86AudioPlay,XF86AudioPause,XF86AudioStop,XF86AudioPrev,XF86AudioNext}
+	playerctl {play,pause,stop,previous,next}
