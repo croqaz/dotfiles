@@ -44,7 +44,7 @@ case $option in
 			echo "Extern monitor is disconnected"
 		else
 			echo "Monitor primary extern"
-			xxrandr --output "$EXTERN_SCREEN" --primary
+			xrandr --output "$EXTERN_SCREEN" --primary
 		fi
 	;;
 

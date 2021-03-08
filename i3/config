@@ -141,7 +141,7 @@ bindsym $mod+r mode "resize"
 
 # --- Organize --- #
 
-exec --no-startup-id "$HOME/.local/scripts/monitors.sh --ei"
+exec --no-startup-id "$HOME/.local/scripts/monitors.sh --pe && $HOME/.local/scripts/monitors.sh --ei"
 exec --no-startup-id "xrandr --output $EXTERN_SCREEN --mode 1920x1080 --rate 75"
 
 # Usually xrandr is slow and these don't take effect
@@ -231,15 +231,14 @@ bar {
 
 # Start the rest of the apps
 
-# Turn off screen after X seconds
-exec_always --no-startup-id "xset dpms 180 180 300"
-# Faster key repeat
-exec --no-startup-id "xset r rate 400 50"
+# Turn off screen after X seconds and faster key repeat
+exec_always --no-startup-id "xset dpms 180 180 300  &&  xset r rate 400 40"
 # Keyboard layout
 exec --no-startup-id "setxkbmap -model pc101 -layout us -variant altgr-intl -option -option lv3=ralt_switch -option compose=rctrl -option terminate=ctrl_alt_bksp"
 
 exec --no-startup-id "sxhkd -m 1"
-exec_always --no-startup-id picom -b
+exec_always --no-startup-id "picom -b"
+# exec_always --no-startup-id "systemctl --user restart dunst"
 
 # Setup lock screen and wallpaper
 exec --no-startup-id "xss-lock -- $HOME/.local/scripts/lock2.sh"

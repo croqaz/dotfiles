@@ -1,0 +1,5 @@
+setxkbmap -model pc101 -layout us -variant altgr-intl -option \
+  -option lv3=ralt_switch -option compose=rctrl -option terminate=ctrl_alt_bksp
+xset dpms 180 180 300
+xset r rate 400 50
+exec i3

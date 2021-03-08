@@ -1,0 +1,17 @@
+export EDITOR='nvim'
+export VISUAL=$EDITOR
+export TERM='alacritty'
+export PAGER='less'
+export BROWSER='firefox'
+
+# Screen names
+export INTERN_SCREEN=eDP-1
+export EXTERN_SCREEN=DP-1
+
+# Useful for notifications
+systemctl --user import-environment DISPLAY
+
+# Setup language
+if [[ -z "$LANG" ]]; then
+  export LANG='en_US.UTF-8'
+fi

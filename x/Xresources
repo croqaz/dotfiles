@@ -1,6 +1,3 @@
-!! Set default font and font size:
-!! *.font: monospace:size=10
-
 !! Srcery color scheme
 ! special
 *.foreground:   #fce8c3
