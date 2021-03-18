@@ -134,6 +134,9 @@ set wildignore+=**/node_modules/**,*/__pycache__/
 
 " -- Key mappings
 
+" <Esc> clears search highlights
+nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>
+
 " Disable the arrow keys in NORMAL mode
 nnoremap <up>    <nop>
 nnoremap <down>  <nop>
@@ -143,6 +146,17 @@ nnoremap <right> <nop>
 " Ctrl+s to save
 nnoremap <c-s> :w<CR>
 
+" Make Y act like all the other capital variants
+nnoremap Y y$
+
+" Useful cmd shortcuts
+cnoremap <C-a>  <Home>
+cnoremap <C-b>  <Left>
+cnoremap <C-f>  <Right>
+cnoremap <C-d>  <Delete>
+cnoremap <M-b>  <S-Left>
+cnoremap <M-f>  <S-Right>
+
 let mapleader=','
 
 " Leader+2/4 to change tabs
@@ -151,9 +165,6 @@ nnoremap <Leader>4 :set tabstop=4  softtabstop=4 shiftwidth=4<CR>
 
 " Leader+b to open buffers
 nnoremap <Leader>b :ls<CR>:b<Space>
-
-" <Esc> clears search highlights
-nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>
 
 " Limelight + Goyo
 autocmd! User GoyoEnter Limelight

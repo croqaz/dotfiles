@@ -22,11 +22,14 @@
 
 [alias]
 	s    = status
+	ci   = commit --verbose
 	co   = checkout
 	pu   = push
 	pl   = pull
 	tags = tag -l
-	pushf = push --force-with-lease
+	pusf = push --force-with-lease
+	unstage = reset HEAD --
+	uncommit = reset --soft HEAD~1
 	branches = branch -a
 	remotes = remote -v
 	contrib = shortlog --summary --numbered
