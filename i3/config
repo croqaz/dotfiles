@@ -5,13 +5,10 @@
 
 # mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
+set $meh Control+Shift+Mod1
 
 # define some vars
 set $term --no-startup-id kitty -1
-set $left h
-set $down j
-set $up k
-set $right l
 
 focus_follows_mouse no
 force_display_urgency_hint 500 ms
@@ -30,50 +27,50 @@ set $ws7 "7:7 ❱"
 set $ws8 "8:8 ❱"
 set $ws9 "9:9 ❱"
 
-# --- Key Bindings --- #
+# --- New Key Bindings --- #
 
-# change focus, VI style
-bindsym $mod+$left  focus left
-bindsym $mod+$down  focus down
-bindsym $mod+$up    focus up
-bindsym $mod+$right focus right
-
-# alt + tab focus windows
-bindsym Mod1+Tab focus prev
-bindsym Mod1+Shift+Tab focus next
+# change focus using arrows
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
 
 # focus the parent container
 bindsym $mod+a focus parent
 # focus the child container
 bindsym $mod+d focus child
 
-# move focused window, VI style
-bindsym $mod+Shift+$left  move left
-bindsym $mod+Shift+$down  move down
-bindsym $mod+Shift+$up    move up
-bindsym $mod+Shift+$right move right
+# alt + tab focus windows inside workspace
+bindsym Mod1+Tab focus prev
+bindsym Mod1+Shift+Tab focus next
 
-# switch to workspace
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
-bindsym $mod+5 workspace $ws5
-bindsym $mod+6 workspace $ws6
-bindsym $mod+7 workspace $ws7
-bindsym $mod+8 workspace $ws8
-bindsym $mod+9 workspace $ws9
+# move focused window using arrows
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# switch to specific workspace
+bindsym $mod+q workspace $ws1
+bindsym $mod+w workspace $ws2
+bindsym $mod+e workspace $ws3
+bindsym $mod+r workspace $ws4
+bindsym $mod+t workspace $ws5
+bindsym $mod+y workspace $ws6
+bindsym $mod+u workspace $ws7
+bindsym $mod+i workspace $ws8
+bindsym $mod+o workspace $ws9
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8
-bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+q move container to workspace $ws1
+bindsym $mod+Shift+w move container to workspace $ws2
+bindsym $mod+Shift+e move container to workspace $ws3
+bindsym $mod+Shift+r move container to workspace $ws4
+bindsym $mod+Shift+t move container to workspace $ws5
+bindsym $mod+Shift+y move container to workspace $ws6
+bindsym $mod+Shift+u move container to workspace $ws7
+bindsym $mod+Shift+i move container to workspace $ws8
+bindsym $mod+Shift+o move container to workspace $ws9
 
 # workspace navigation
 bindsym $mod+Tab      workspace back_and_forth
@@ -81,79 +78,69 @@ bindsym $mod+less     workspace prev
 bindsym $mod+greater  workspace next
 
 # multi monitor moving workspaces
-bindsym $mod+bracketleft  move workspace to output left
-bindsym $mod+bracketright move workspace to output right
+bindsym $mod+Home move workspace to output left
+bindsym $mod+End  move workspace to output right
 
-# fullscreen mode for the focused container
+# fullscreen mode for focused container
 bindsym $mod+f fullscreen toggle
 
 # use Mouse+$mod to drag floating windows
 floating_modifier $mod
-# toggle tiling / floating
+# toggle window tiling / floating
 bindsym $mod+Shift+f floating toggle
-# toggle tiling / sticky
-# bindsym $mod+Shift+s sticky toggle
+# focus toggle between floating / tiling
+bindsym $mod+Mod1+f  focus mode_toggle
 
 # change container layout (tabbed, toggle split)
-bindsym $mod+w layout toggle tabbed splith
-bindsym $mod+e layout toggle split
+bindsym $mod+x layout toggle tabbed split
+bindsym $mod+s layout toggle split
 
-# toggle split orientation (horizontal, vertical)
-bindsym $mod+semicolon   split toggle
-bindsym $mod+v           split vertical
-bindsym $mod+b           split horizontal
-bindsym $mod+apostrophe  split horizontal ;; exec $term
-bindsym $mod+slash       split vertical ;; exec $term
-
-# change gaps between windows (requires i3-gaps)
-bindsym $mod+z        gaps inner current plus 5
-bindsym $mod+Shift+z  gaps inner current minus 5
-bindsym $mod+Mod1+z   gaps inner current set 0; gaps outer current set 0
+# toggle split orientation (vertical, horizontal)
+bindsym $mod+semicolon  split toggle
+bindsym $mod+v          split vertical
+bindsym $mod+b          split horizontal
 
 # toggle i3 bar
-bindsym $mod+t        bar mode toggle
+bindsym $meh+t  bar mode toggle
+
+# change gaps between windows (requires i3-gaps)
+bindsym $mod+z         gaps inner current plus 5
+bindsym $mod+Shift+z   gaps inner current minus 5
+bindsym $mod+Control+z gaps inner current set 0; gaps outer current set 0
 
 # kill focused window
-bindsym $mod+q        [con_id="__focused__"] kill
-bindsym $mod+Shift+q  [con_id="__focused__"] exec --no-startup-id kill -9 $(xdotool getwindowfocus getwindowpid)
+bindsym $meh+q       [con_id="__focused__"] kill
+bindsym $meh+$mod+q  [con_id="__focused__"] exec --no-startup-id \
+        kill -9 $(xdotool getwindowfocus getwindowpid)
 
 # reload the configuration file
-bindsym $mod+Shift+c  reload
+bindsym $meh+c       reload
 # restart i3 inplace  (preserves layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r  restart
+bindsym $meh+$mod+r  restart
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
   # these trigger as soon as you enter the resize mode
-  bindsym $left   resize shrink width 5 px or 5 ppt
-  bindsym $down   resize grow height 5 px or 5 ppt
-  bindsym $up     resize shrink height 5 px or 5 ppt
-  bindsym $right  resize grow width 5 px or 5 ppt
+  bindsym Left   resize shrink width 5 px or 5 ppt
+  bindsym Down   resize grow height 5 px or 5 ppt
+  bindsym Up     resize shrink height 5 px or 5 ppt
+  bindsym Right  resize grow width 5 px or 5 ppt
 
   # back to normal
   bindsym Control+C mode "default"
   bindsym Return    mode "default"
   bindsym Escape    mode "default"
-  bindsym $mod+r    mode "default"
   bindsym r         mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $meh+r mode "resize"
 
 # --- Organize --- #
 
 exec --no-startup-id "$HOME/.local/scripts/monitors.sh --pe && $HOME/.local/scripts/monitors.sh --ei"
-exec --no-startup-id "xrandr --output $EXTERN_SCREEN --mode 1920x1080 --rate 75"
-
-# Usually xrandr is slow and these don't take effect
-workspace $ws1 output primary
-workspace $ws2 output primary
-
-workspace $ws3 output nonprimary
-workspace $ws4 output nonprimary
+exec --no-startup-id "xrandr --output $EXTERN_SCREEN --mode 1920x1080 --rate 120"
 
 assign [class="(?i)firefox"]   $ws2
-assign [class="(?i)chromium"]  $ws3
-assign [class="(?i)thunderbird"] $ws4
+assign [class="(?i)chromium"]  $ws9
 
 floating_maximum_size -1 x -1
 
@@ -211,7 +198,7 @@ client.urgent           $red      $red      $white    $red      $red
 bar {
   position top
   tray_output primary
-  separator_symbol "::"
+  separator_symbol ":|:"
   font pango:JetBrainsMono Nerd Font 12
   status_command i3blocks
   strip_workspace_numbers yes

@@ -14,17 +14,14 @@ super + space
 super + Return
 	kitty --single-instance
 
-super + shift + Return
-	alacritty
+#super + shift + w
+#	firefox
 
-super + shift + w
-	firefox
+#super + shift + m
+#	thunderbird
 
-super + shift + m
-	thunderbird
-
-super + shift + g
-	atom
+#super + shift + e
+#	emacs
 
 super + shift + n
 	kitty -1 -e nnn
@@ -40,9 +37,6 @@ super + shift + y
 
 shift + @Print
 	scrot -q 90 -bu -e 'mv $f ~/Pictures/' && notify-send "Focused window saved"
-
-super + x
-	flash_window # flashfocus
 
 # Toggle master output sound
 XF86AudioMute
