@@ -143,6 +143,9 @@ nnoremap <down>  <nop>
 nnoremap <left>  <nop>
 nnoremap <right> <nop>
 
+" Easy esc from ins
+imap jk <esc>
+
 " Ctrl+s to save
 nnoremap <c-s> :w<CR>
 

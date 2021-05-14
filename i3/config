@@ -5,7 +5,7 @@
 
 # mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
-set $meh Control+Shift+Mod1
+set $meh Control+Shift
 
 # define some vars
 set $term --no-startup-id kitty -1
@@ -87,9 +87,9 @@ bindsym $mod+f fullscreen toggle
 # use Mouse+$mod to drag floating windows
 floating_modifier $mod
 # toggle window tiling / floating
-bindsym $mod+Shift+f floating toggle
+bindsym $mod+Control+f floating toggle
 # focus toggle between floating / tiling
-bindsym $mod+Mod1+f  focus mode_toggle
+bindsym $mod+Shift+f  focus mode_toggle
 
 # change container layout (tabbed, toggle split)
 bindsym $mod+x layout toggle tabbed split
@@ -101,11 +101,11 @@ bindsym $mod+v          split vertical
 bindsym $mod+b          split horizontal
 
 # toggle i3 bar
-bindsym $meh+t  bar mode toggle
+bindsym $mod+Control+t  bar mode toggle
 
 # change gaps between windows (requires i3-gaps)
 bindsym $mod+z         gaps inner current plus 5
-bindsym $mod+Shift+z   gaps inner current minus 5
+# bindsym $mod+Shift+z gaps inner current minus 5
 bindsym $mod+Control+z gaps inner current set 0; gaps outer current set 0
 
 # kill focused window
@@ -114,8 +114,8 @@ bindsym $meh+$mod+q  [con_id="__focused__"] exec --no-startup-id \
         kill -9 $(xdotool getwindowfocus getwindowpid)
 
 # reload the configuration file
-bindsym $meh+c       reload
-# restart i3 inplace  (preserves layout/session, can be used to upgrade i3)
+bindsym $meh+$mod+c  reload
+# restart i3 inplace (preserves layout/session, can be used to upgrade i3)
 bindsym $meh+$mod+r  restart
 
 # resize window (you can also use the mouse for that)
@@ -130,9 +130,9 @@ mode "resize" {
   bindsym Control+C mode "default"
   bindsym Return    mode "default"
   bindsym Escape    mode "default"
-  bindsym r         mode "default"
+  bindsym z         mode "default"
 }
-bindsym $meh+r mode "resize"
+bindsym $mod+Shift+z mode "resize"
 
 # --- Organize --- #
 

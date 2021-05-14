@@ -1,7 +1,7 @@
 @import "/usr/share/rofi/themes/gruvbox-dark.rasi"
 window {
     modi: "window,drun,run";
-    font: "JetBrainsMono Nerd Font 16";
+    font: "Hack 16";
 }
 * {
   scrollbar: false;
