@@ -38,3 +38,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Emacs special rules
+emacs/
+!emacs/init.el
+!emacs/early-init.el
