@@ -31,7 +31,8 @@
 
 ;; Disable startup features
 (setq inhibit-startup-screen t
-      inhibit-startup-message t)
+      inhibit-startup-message t
+      initial-scratch-message ";; scratch\n")
 
 ;; Suppress GUI features
 (setq use-dialog-box nil)

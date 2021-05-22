@@ -1,13 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs loaded in %s with %d garbage collections."
-                     (format "%.2f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
-
 (setq user-full-name "Cristi Ctin"
       user-mail-address "john@doe.com")
 
@@ -45,6 +37,9 @@
 (when (featurep 'menu-bar)   (menu-bar-mode 0))
 (when (featurep 'scroll-bar) (scroll-bar-mode 0))
 
+;; (setq-default left-margin-width 10)
+;; (setq-default right-margin-width 10)
+
 ;; Set window title
 (setq-default frame-title-format '("%F - %b"))
 
@@ -79,8 +74,8 @@
                            (?\{ . ?\})
                            (?\( . ?\))
                            (?\[ . ?\])
-			               (?\" . ?\")
-			               ))
+                           (?\" . ?\")
+                           ))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -90,6 +85,8 @@
             (electric-pair-mode t)
             ;; Highlight current line
             (global-hl-line-mode t)
+            ;; Display column number in modeline
+            (column-number-mode t)
             ;; Typed text replaces the selection
             (delete-selection-mode t)
             ))
@@ -117,6 +114,10 @@
               display-line-numbers-widen t
               display-line-numbers-type 'absolute)
 
+
+;; Use zsh as default term shell
+(setq explicit-shell-file-name "zsh")
+
 ;; All automatic configurations in separate file
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (unless (file-exists-p custom-file)
@@ -129,7 +130,7 @@
 (setq package-enable-at-startup nil)
 ;; use-package automatically invokes straight.el
 (setq straight-use-package-by-default t
-      straight-check-for-modifications nil
+      straight-check-for-modifications '(check-on-save)
       straight-vc-git-default-protocol 'https)
 ;; straight.el bootstrap code
 (defvar bootstrap-version)
@@ -173,6 +174,9 @@
 ;;   (auto-compile-on-load-mode)
 ;;   (auto-compile-on-save-mode))
 
+(use-package diminish
+  :defer t)
+
 ;; Dired config
 ;;
 (use-package dired
@@ -187,15 +191,15 @@
         ;; Human readable units
         dired-listing-switches "-alh -v --group-directories-first"))
 
+(use-package diredfl
+  :hook (dired-mode . diredfl-mode))
+
 ;; Asynchronous processing lib
 ;;
 (use-package async
   :init
-  (dired-async-mode 1)
-  (async-bytecomp-package-mode 1))
-
-(use-package diminish
-  :defer t)
+  (dired-async-mode t)
+  (async-bytecomp-package-mode t))
 
 ;; Enable visual-line almost everywhere
 ;;
@@ -231,11 +235,6 @@
 ;;   :config
 ;;   (global-auto-revert-mode t))
 
-;; Nice color theme
-;; (use-package kaolin-themes
-;;   :config
-;;   (load-theme 'kaolin-galaxy t))
-
 (use-package doom-themes
   :init
   ;; Global settings (defaults)
@@ -249,13 +248,18 @@
   ;; Corrects (and improves) org-mode's native fontification
   (doom-themes-org-config))
 
-;; ;; Nice terminal
-;; (use-package vterm
-;;   :defer t
-;;   ;; :commands (vterm
-;;   ;;            vterm-other-window)
-;;   (:map vterm-mode-map
-;;         ("C-c C-c" . vterm-send-C-c)))
+
+;; Nice terminal
+;;
+(use-package vterm
+  :commands (vterm
+             vterm-other-window)
+  :bind
+  (:map vterm-mode-map
+        ("C-c C-c" . vterm-send-C-c))
+  :config
+  (evil-set-initial-state 'vterm-mode 'emacs))
+
 
 ;; Evil Mode
 ;;
@@ -267,6 +271,7 @@
         evil-want-keybinding nil
         evil-want-integration t)
   :config
+  (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
   (evil-mode t))
 
 (use-package undo-tree
@@ -279,7 +284,7 @@
 (use-package evil-collection
   :after (evil magit)
   :config
-  (evil-collection-init 'magit))
+  (evil-collection-init))
 
 ;; Select and edit matches interactively
 ;;
@@ -351,7 +356,7 @@
     ";"  'eval-expression
     ":"  'counsel-M-x
     ;;
-    "b" '(:ignore t :wk "B")
+    "b" '(:ignore t :wk "Buffer")
     "bB"  'ibuffer-other-window
     "bI"  'counsel-ibuffer
     "bb"  'ivy-switch-buffer
@@ -361,7 +366,7 @@
     "br"  'revert-buffer
     "bx"  'kill-current-buffer
     ;;
-    "c" '(:ignore t :wk "C")
+    "c" '(:ignore t :wk "Comment")
     "cl"  'comment-line
     "cr"  'comment-or-uncomment-region
     ;;
@@ -387,33 +392,34 @@
     "iu"  'counsel-unicode-char
     "iy"  'counsel-yank-pop
     ;;
-    "n" '(:ignore t :wk "N")
+    "n" '(:ignore t :wk "Narrow")
     "nf"  'narrow-to-defun
     "np"  'narrow-to-page
     "nr"  'narrow-to-region
     "nw"  'widen
     ;;
     "o" '(:ignore t :wk "O")
-    "op" 'treemacs
+    "op"  'treemacs
     ;;
     "t" '(:ignore t :wk "T")
-    "tF" 'toggle-frame-fullscreen
-    "tn" 'centaur-tabs-forward
-    "tp" 'centaur-tabs-backward
+    "tF"  'toggle-frame-fullscreen
+    "tn"  'centaur-tabs-forward
+    "tp"  'centaur-tabs-backward
     ;;
-    "w" '(:ignore t :wk "W")
-    "wB" #'balance-windows-area
-    "wb" #'balance-windows
-    "wk" #'kill-buffer-and-window
-    "wo" #'delete-other-windows
-    "wp" #'evil-window-prev
-    "ws" #'evil-window-split
-    "wv" #'evil-window-vsplit
-    "ww" #'evil-window-next
-    "wx" #'evil-window-delete
+    "w" '(:ignore t :wk "Window")
+    "wB"  'balance-windows-area
+    "wT"  'tear-off-window
+    "wb"  'balance-windows
+    "wk"  'kill-buffer-and-window
+    "wo"  'delete-other-windows
+    "wp"  'evil-window-prev
+    "ws"  'evil-window-split
+    "wv"  'evil-window-vsplit
+    "ww"  'evil-window-next
+    "wx"  'evil-window-delete
     ;;
-    "x" '(:ignore t :wk "Text manip")
-    "xl" #'sort-lines))
+    "x" '(:ignore t :wk "Text")
+    "xl"  'sort-lines))
 
 (use-package which-key
   :diminish
@@ -438,7 +444,7 @@
   :init
   (setq centaur-tabs-height 26
         centaur-tabs-style "bar"
-        centaur-tabs-set-bar 'left
+        centaur-tabs-set-bar 'over
         centaur-tabs-close-button "✕"
         centaur-tabs-modified-marker "•"
         centaur-tabs-gray-out-icons 'buffer
@@ -646,6 +652,22 @@ kill all magit buffers for this repo."
           search-ring regexp-search-ring)) ; persist searches
   )
 
+;; Save Emacs Session
+;; (use-package desktop
+;;   :bind ("C-c s" . desktop-save-in-desktop-dir)
+;;   :init
+;;   (setq desktop-files-not-to-save "^$"
+;;         desktop-load-locked-desktop t
+;;         desktop-path '("~/.emacs.default/"))
+;;   (desktop-save-mode t)
+;;   (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+;;   (add-to-list 'desktop-modes-not-to-save 'help-mode)
+;;   (add-to-list 'desktop-modes-not-to-save 'magit-mode)
+;;   (add-to-list 'desktop-modes-not-to-save 'special-mode)
+;;   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+;;   (add-to-list 'desktop-modes-not-to-save 'completion-list-mode))
+
+
 ;; Org Mode
 ;;
 (use-package org
@@ -668,8 +690,8 @@ kill all magit buffers for this repo."
         ;; No TOC
         org-export-with-toc nil
         ;; Turn on native code fontification
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t
+        ;; org-src-fontify-natively t
+        ;; org-src-tab-acts-natively t
         org-cycle-separator-lines 1
         ;; Indentation per level in number of characters
         org-indent-indentation-per-level 1
@@ -710,12 +732,19 @@ kill all magit buffers for this repo."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 ;; Performance improvements
 ;; GC runs less often, which speeds up some operations
-;; The final values are intentionally defined at the end of the file
-(setq gc-cons-threshold 33554432 ; 32MB
-      gc-cons-percentage 0.2)
-
+(add-hook 'after-init-hook
+          (lambda ()
+            (setq gc-cons-threshold 33554432 ; 32MB
+                  gc-cons-percentage 0.2)))
 
 ;;; init.el ends here
