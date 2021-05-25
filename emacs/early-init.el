@@ -4,11 +4,12 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;; Disable some visual elements
+(add-to-list 'default-frame-alist '(border-width . 0))
 (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
 (add-to-list 'default-frame-alist '(menu-bar-lines . 0))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(horizontal-scroll-bars . nil))
-;; Disable WM decorations
+;; Disable all WM decorations
 ;; (add-to-list 'default-frame-alist '(undecorated . t))
 
 ;; Ignore X resources

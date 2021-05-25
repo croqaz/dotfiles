@@ -166,7 +166,7 @@ for_window [title="Volume Control"] floating enable
 
 hide_edge_borders vertical
 
-for_window [class="^xterm"] border pixel 1
+for_window [class="^Emacs"] border pixel 0
 for_window [class="^kitty"] border pixel 1
 for_window [class="^Alacritty"] border pixel 1
 

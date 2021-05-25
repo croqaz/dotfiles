@@ -23,13 +23,11 @@
 
 ;; Display Emojis
 (set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'prepend)
+(set-fontset-font t 'symbol (font-spec :family "Symbola") nil 'prepend)
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 
 ;; Ask y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
-
-;; Don't stretch the cursor to fit wide characters
-(setq-default x-stretch-cursor nil)
 
 ;; Supress GUI features #2
 (when (featurep 'tooltip)    (tooltip-mode 0))
@@ -37,38 +35,47 @@
 (when (featurep 'menu-bar)   (menu-bar-mode 0))
 (when (featurep 'scroll-bar) (scroll-bar-mode 0))
 
+(set-fringe-mode 4) ;; some breathing room
 ;; (setq-default left-margin-width 10)
-;; (setq-default right-margin-width 10)
 
 ;; Set window title
 (setq-default frame-title-format '("%F - %b"))
 
-;; Default major mode
-(setq-default major-mode 'text-mode)
+;; Enable the visible bell
+(setq visible-bell t)
+
+;; Nicer naming buffers for files with identical names
+;; (require 'uniquify)
+(setq uniquify-buffer-name-style 'reverse
+      uniquify-separator " • "
+      uniquify-ignore-buffers-re "^\\*")
 
 ;; Resolve symlinks when opening files
-(setq find-file-visit-truename t)
-;; Suppress warning messages for symlinked files
-(setq find-file-suppress-same-file-warnings t)
+;; (require 'files)
+(setq find-file-visit-truename t
+      find-file-suppress-same-file-warnings t)
+
+;; Maximum nr of bytes to read from subprocess in a single chunk
+(setq read-process-output-max 8192)
 
 ;; More performant rapid scrolling over unfontified regions
 (setq-default fast-but-imprecise-scrolling t
-              mouse-wheel-progressive-speed nil)
-
-;; Hide cursor in other windows
-(setq-default cursor-in-non-selected-windows nil)
+              mouse-wheel-progressive-speed nil
+              mouse-wheel-scroll-amount '(2 ((shift) . hscroll)))
 
 ;; More scroll settings
 (setq hscroll-margin 1
       scroll-margin 1
-      auto-window-vscroll nil
-      mouse-wheel-scroll-amount '(2 ((shift) . hscroll)))
+      auto-window-vscroll nil)
+
+;; Hide cursor in other windows
+(setq-default cursor-in-non-selected-windows nil)
+
+;; Don't stretch the cursor to fit wide characters
+(setq-default x-stretch-cursor nil)
 
 ;; All commands work normally
 (setq-default disabled-command-function nil)
-
-;; Enable shifted motion keys
-(setq-default shift-select-mode t)
 
 (setq electric-pair-pairs '(
                            (?\{ . ?\})
@@ -85,14 +92,7 @@
             (electric-pair-mode t)
             ;; Highlight current line
             (global-hl-line-mode t)
-            ;; Display column number in modeline
-            (column-number-mode t)
-            ;; Typed text replaces the selection
-            (delete-selection-mode t)
             ))
-
-;; Enable the visible bell
-(setq visible-bell t)
 
 ;; Maximum length of kill ring before old elements are thrown away
 (setq kill-ring-max 100)
@@ -103,20 +103,10 @@
 ;; Spaces vs tabs
 (setq-default indent-tabs-mode nil
               tab-always-indent nil
-              default-tab-width 4
               tab-width 4)
 
-;; Line numbers
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'conf-mode-hook #'display-line-numbers-mode)
-;;
-(setq-default display-line-numbers-width 3
-              display-line-numbers-widen t
-              display-line-numbers-type 'absolute)
-
-
-;; Use zsh as default term shell
-(setq explicit-shell-file-name "zsh")
+;; Default major mode
+(setq-default major-mode 'text-mode)
 
 ;; All automatic configurations in separate file
 (setq custom-file (concat user-emacs-directory "custom.el"))
@@ -160,28 +150,21 @@
         use-package-expand-minimally t))
 (eval-when-compile (require 'use-package))
 
-;; (use-package auto-compile
-;;   :demand t
-;;   :init
-;;   (progn
-;;     (setq load-prefer-newer t)
-;;     (setq auto-compile-mode-line-counter t)
-;;     (setq auto-compile-source-recreate-deletes-dest t)
-;;     (setq auto-compile-toggle-deletes-nonlib-dest t)
-;;     (setq auto-compile-update-autoloads t))
-;;   :hook (auto-compile-inhibit-compile . auto-compile-inhibit-compile-detached-git-head)
-;;   :config
-;;   (auto-compile-on-load-mode)
-;;   (auto-compile-on-save-mode))
+(defmacro use-feature (name &rest args)
+  "Like `use-package' but with straight and ensure disabled.
+NAME and ARGS are in `use-package'."
+  (declare (indent defun))
+  `(use-package ,name
+     :straight nil
+     :ensure nil
+     ,@args))
 
 (use-package diminish
   :defer t)
 
 ;; Dired config
 ;;
-(use-package dired
-  :ensure nil
-  :straight nil
+(use-feature dired
   :init
   ;; Always delete and copy recursively
   (setq dired-recursive-deletes 'top
@@ -191,6 +174,7 @@
         ;; Human readable units
         dired-listing-switches "-alh -v --group-directories-first"))
 
+;; Colourful dired
 (use-package diredfl
   :hook (dired-mode . diredfl-mode))
 
@@ -201,27 +185,33 @@
   (dired-async-mode t)
   (async-bytecomp-package-mode t))
 
-;; Enable visual-line almost everywhere
+;; Enable visual-line, line and column almost everywhere
 ;;
-(use-package simple
-  :ensure nil
-  :straight nil
-  :init
-  (setq-default fill-column 100
-                word-wrap t)
+(use-feature simple
+  :custom
+  (fill-column 100)
+  (display-line-numbers-width 3)
+  (display-line-numbers-widen t)
+  (display-line-numbers-type 'absolute)
   :hook
   (prog-mode . visual-line-mode)
-  (text-mode . visual-line-mode))
+  (text-mode . visual-line-mode)
+  (prog-mode . display-line-numbers-mode)
+  (text-mode . display-line-numbers-mode)
+  (prog-mode . column-number-mode)
+  (text-mode . column-number-mode))
 
-;; Highlight trailing space-like characters
-(use-package whitespace
-  :ensure nil
-  :straight nil
-  :hook
-  (prog-mode . whitespace-mode)
-  (text-mode . whitespace-mode)
+;; Highlight space-like characters
+;;
+(use-feature whitespace
   :custom
-  (whitespace-style '(face empty indentation::space tab trailing)))
+  (whitespace-style '(face spaces tabs empty trailing))
+  :hook
+  ;;(text-mode . whitespace-mode)
+  (prog-mode . whitespace-mode))
+
+;; Trim whitespaces on save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; ;; Automatically refresh the buffer when the file changes
 ;; ;;
@@ -251,9 +241,9 @@
 
 ;; Nice terminal
 ;;
+;; Use zsh as default term shell
+(setq-default explicit-shell-file-name "zsh")
 (use-package vterm
-  :commands (vterm
-             vterm-other-window)
   :bind
   (:map vterm-mode-map
         ("C-c C-c" . vterm-send-C-c))
@@ -266,25 +256,26 @@
 (use-package evil
   :init
   (setq evil-respect-visual-line-mode t
+        evil-kill-on-visual-paste nil
+        evil-shift-width 2
         evil-undo-system 'undo-tree
         evil-want-fine-undo t
-        evil-want-keybinding nil
-        evil-want-integration t)
+        evil-want-integration t
+        evil-want-keybinding nil)
   :config
   (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
   (evil-mode t))
 
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init t))
+
 (use-package undo-tree
+  :hook (after-init . global-undo-tree-mode)
   :init
   (setq undo-tree-visualizer-diff t
-        undo-tree-visualizer-timestamps t)
-  :config
-  (global-undo-tree-mode t))
-
-(use-package evil-collection
-  :after (evil magit)
-  :config
-  (evil-collection-init))
+        undo-tree-visualizer-timestamps t))
 
 ;; Select and edit matches interactively
 ;;
@@ -321,7 +312,6 @@
   :after evil
   :bind ("C-=" . er/expand-region))
 
-
 (use-package popup-kill-ring
   :after evil
   :bind ("C-M-y" . popup-kill-ring))
@@ -336,9 +326,16 @@
   (prog-mode . yas-minor-mode)
   (text-mode . yas-minor-mode)
   :custom
-  (yas-verbosity 2)
+  (yas-verbosity 3)
   :config
   (yas-reload-all))
+
+;; (use-package doom-snippets
+;;   :after yasnippet
+;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
+
+(use-package auto-yasnippet
+  :defer t)
 
 
 ;; General keys
@@ -355,6 +352,8 @@
     "!"  'shell-command
     ";"  'eval-expression
     ":"  'counsel-M-x
+   ;" "  'counsel-file-jump
+    "."  'counsel-projectile-find-file
     ;;
     "b" '(:ignore t :wk "Buffer")
     "bB"  'ibuffer-other-window
@@ -377,9 +376,9 @@
     "Fo"  'other-frame
     ;;
     "f" '(:ignore t :wk "File")
-    "f."  'find-file
     "fd"  'dired
-    "fr"  'recentf-open-files
+    "ff"  'counsel-find-file
+    "fr"  'counsel-recentf
     "fs"  'save-buffer
     ;;
     "g" '(:ignore t :wk "G")
@@ -401,10 +400,15 @@
     "o" '(:ignore t :wk "O")
     "op"  'treemacs
     ;;
+    "s" '(:ignore t :wk "Show")
+    "sr"  'counsel-evil-registers
+    ;;
     "t" '(:ignore t :wk "T")
+    "t."  'vterm
     "tF"  'toggle-frame-fullscreen
     "tn"  'centaur-tabs-forward
     "tp"  'centaur-tabs-backward
+    "tt"  'vterm-other-window
     ;;
     "w" '(:ignore t :wk "Window")
     "wB"  'balance-windows-area
@@ -464,21 +468,6 @@
   (doom-modeline-mode t))
 
 
-(defun +magit/quit (&optional kill-buffer)
-  "Bury the current magit buffer.
-If KILL-BUFFER, kill this buffer instead of burying it.
-If the buried/killed magit buffer was the last magit buffer open for this repo,
-kill all magit buffers for this repo."
-  (interactive "P")
-  (let ((topdir (magit-toplevel)))
-    (funcall magit-bury-buffer-function kill-buffer)
-    (or (cl-find-if (lambda (win)
-                      (with-selected-window win
-                        (and (derived-mode-p 'magit-mode)
-                             (equal magit--default-directory topdir))))
-                    (window-list))
-        (+magit/quit-all))))
-
 (defun +magit/quit-all ()
   "Kill all magit buffers for the current repository."
   (interactive)
@@ -502,11 +491,11 @@ kill all magit buffers for this repo."
   :init
   (setq magit-refresh-status-buffer nil
         magit-save-repository-buffers nil
-        magit-revision-insert-related-refs nil)
+        magit-revision-insert-related-refs nil
+        magit-bury-buffer-function #'magit-mode-quit-window)
   :config
   ;; Clean up after magit by killing leftover magit buffers and reverting
   ;; affected buffers (or at least marking them as need-to-be-reverted).
-  (define-key magit-mode-map "q" #'+magit/quit)
   (define-key magit-mode-map "Q" #'+magit/quit-all)
   ;; Close transient with ESC
   (define-key transient-map [escape] #'transient-quit-one)
@@ -530,8 +519,6 @@ kill all magit buffers for this repo."
                     :key #'symbol-name)))
   (setq indicate-buffer-boundaries nil
         indicate-empty-lines nil)
-  ;; Subtle diff indicators in the fringe
-  (if (fboundp 'fringe-mode) (fringe-mode '4))
   :config
   ;; Thin fringe bitmaps
   (define-fringe-bitmap 'git-gutter-fr:added [224]
@@ -552,62 +539,97 @@ kill all magit buffers for this repo."
 
 ;; Minibuffer completion tools
 (use-package ivy
-  :diminish
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (ivy-mode 1))
+  :hook (after-init . ivy-mode)
+  :init
+  (setq ivy-wrap t
+        ivy-fixed-height-minibuffer t
+        ivy-sort-max-size 7500
+        ivy-use-selectable-prompt t
+        ivy-use-virtual-buffers t))
 
 (use-package counsel
-  :diminish
   :after ivy
+  :init
+  (general-def
+    [remap apropos]                  #'counsel-apropos
+    [remap bookmark-jump]            #'counsel-bookmark
+    [remap describe-bindings]        #'counsel-descbinds
+    [remap describe-face]            #'counsel-faces
+    [remap describe-function]        #'counsel-describe-function
+    [remap describe-variable]        #'counsel-describe-variable
+    [remap describe-symbol]          #'counsel-describe-symbol
+    [remap evil-show-registers]      #'counsel-evil-registers
+    [remap evil-show-marks]          #'counsel-mark-ring
+    [remap find-file]                #'counsel-find-file
+    [remap find-library]             #'counsel-find-library
+    [remap imenu]                    #'counsel-imenu
+    [remap info-lookup-symbol]       #'counsel-info-lookup-symbol
+    [remap load-theme]               #'counsel-load-theme
+    [remap locate]                   #'counsel-locate
+    [remap org-goto]                 #'counsel-org-goto
+    [remap org-set-tags-command]     #'counsel-org-tag
+    [remap recentf-open-files]       #'counsel-recentf
+    [remap set-variable]             #'counsel-set-variable
+    [remap swiper]                   #'counsel-grep-or-swiper
+    [remap unicode-chars-list-chars] #'counsel-unicode-char
+    [remap yank-pop]                 #'counsel-yank-pop)
   :config
+  ;; Integrate with helpful
+  (setq counsel-describe-function-function #'helpful-callable
+        counsel-describe-variable-function #'helpful-variable)
   (counsel-mode 1))
 
 (use-package swiper
   :after ivy)
 
 (use-package ivy-rich
-  :diminish
   :after counsel
+  :init
+  (setq ivy-rich-parse-remote-buffer nil)
   :config
-  (ivy-rich-mode 1))
+  (ivy-rich-mode t)
+  (ivy-rich-project-root-cache-mode t))
+
+
+(use-package company
+  ;; :hook (after-init . global-company-mode)
+  :disabled  ;; !!
+  :init
+  (setq company-minimum-prefix-length 2
+        company-require-match 'never
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-tooltip-limit 14
+        company-global-modes
+        '(not message-mode
+              help-mode
+              vterm-mode
+              minibuffer-inactive-mode)
+        company-frontends
+        '(company-pseudo-tooltip-frontend ;; always show candidates in overlay tooltip
+          company-echo-metadata-frontend) ;; show selected candidate docs in echo area
+        company-auto-complete nil
+        company-auto-complete-chars nil))
+
+;; (use-package company-emoji
+;;   (add-to-list 'company-backends 'company-emoji))
 
 
 ;; Projects
 (use-package projectile
   :defer t
   :init
-  (setq projectile-project-search-path '("~/Dev/zyte/" "~/org/" "~/.emacs.default/"))
+  (setq projectile-project-search-path '("~/Dev/zyte/"
+                                         "~/Dev/dotfiles/"
+                                         "~/org/"))
   (setq projectile-completion-system 'ivy))
 
-;; Tree
-(use-package treemacs
-  :defer t
+(use-package counsel-projectile
+  :after (counsel projectile)
   :init
-  (setq treemacs-follow-after-init t
-        treemacs-follow-mode nil
-        treemacs-sorting 'alphabetic-case-insensitive-asc
-        treemacs-width 24) ;; Width of the treemacs window
-  :config
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
-  :bind
-  (:map global-map
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t T"   . treemacs-display-current-project-exclusively)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+  ;; No highlighting visited files
+  (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 
-(use-package treemacs-evil
-  :after (treemacs evil))
-
-;; Tree + Projects = Love
-(use-package treemacs-projectile
-  :after (treemacs projectile))
-
-(use-package treemacs-icons-dired
-  :after (treemacs dired)
-  :config (treemacs-icons-dired-mode))
 
 
 ;; Very helpful
@@ -618,6 +640,8 @@ kill all magit buffers for this repo."
              helpful-key
              helpful-macro
              helpful-command)
+  :init
+  (setq apropos-do-all t)
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable))
@@ -630,7 +654,7 @@ kill all magit buffers for this repo."
               recentf-auto-cleanup nil
               recentf-exclude
               '("\\.?cache" ".cask" "url" "bookmarks" "COMMIT_EDITMSG\\'"
-                "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+                "\\.\\(?:gz\\|zip\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
                 "\\.last$" "/G?TAGS$" "/.elfeed/" "~$" "\\.log$"
                 "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/persp-confs/"
                 (lambda (file) (file-in-directory-p file package-user-dir))))
@@ -696,12 +720,16 @@ kill all magit buffers for this repo."
         ;; Indentation per level in number of characters
         org-indent-indentation-per-level 1
         ;; Turn on indent for all org files
-        org-startup-indented t))
+        org-startup-indented t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages '(
+                               (shell . t)
+                               (python . t))
+   ))
 
 (use-package evil-org
-  :after (evil org)
-  :config
-  (add-hook 'org-mode-hook 'evil-org-mode))
+  :after org
+  :hook ((org-mode . evil-org-mode)))
 
 
 (use-package markdown-mode
@@ -716,14 +744,81 @@ kill all magit buffers for this repo."
 
 (use-package evil-markdown
   :straight (:type git :host github :repo "Somelauw/evil-markdown")
-  :after (evil markdown)
+  :after markdown
+  :hook ((markdown-mode . evil-markdown-mode)))
+
+
+(setq my-python "~/Dev/py-env8/bin/python")
+
+(use-package flycheck
+  :init
+  (setq flycheck-python-flake8-executable my-python
+        flycheck-python-pylint-executable my-python)
+  ;; Don't recheck on idle as often
+  (setq flycheck-idle-change-delay 2.5)
+  ;; Display errors a little quicker
+  (setq flycheck-display-errors-delay 0.5))
+
+
+;; The package is "python" but the mode is "python-mode"
+(use-feature python
+  :defer t
+  :mode ("\\.py\\'" . python-mode)
+  :hook
+  (python-mode . flycheck-mode)
+  (python-mode . company-mode)
+  (python-mode . yas-minor-mode))
+
+(use-package elpy
+  :after python
+  :init
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"
+        elpy-rpc-python-command my-python
+        elpy-rpc-virtualenv-path 'current
+        python-indent-guess-indent-offset-verbose nil
+        python-shell-prompt-detect-failure-warning nil)
+  (advice-add 'python-mode :before 'elpy-enable)
   :config
-  (add-hook 'markdown-mode-hook 'evil-markdown-mode))
+  (when (load "flycheck" t t)
+    ;; Remove flymake mode from modules
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+
+;; Tree
+;;
+(use-package treemacs
+  :defer t
+  :init
+  (setq treemacs-follow-after-init t
+        treemacs-follow-mode nil
+        treemacs-sorting 'alphabetic-case-insensitive-asc
+        treemacs-width 24) ;; Width of the treemacs window
+  :config
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+  :bind
+  (:map global-map
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t T"   . treemacs-display-current-project-exclusively)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after (treemacs evil))
+
+;; Tree + Projects = Love
+(use-package treemacs-projectile
+  :after (treemacs projectile))
+
+(use-package treemacs-icons-dired
+  :after (treemacs dired)
+  :config (treemacs-icons-dired-mode))
 
 
 (use-package beacon
-  :config
-  (beacon-mode 1))
+  :hook (emacs-startup . beacon-mode))
 
 
 ;; Helpers
@@ -745,6 +840,7 @@ kill all magit buffers for this repo."
 (add-hook 'after-init-hook
           (lambda ()
             (setq gc-cons-threshold 33554432 ; 32MB
-                  gc-cons-percentage 0.2)))
+                  gc-cons-percentage 0.2)
+            (garbage-collect)))
 
 ;;; init.el ends here
