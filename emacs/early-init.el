@@ -1,4 +1,4 @@
-;;; early-init.el -*- lexical-binding: t; -*-
+;;; early-init.el --- Early Init File -*- lexical-binding: t -*-
 ;;
 ;; THIS FILE IS TANGLED, DON'T EDIT
 

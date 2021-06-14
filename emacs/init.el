@@ -11,7 +11,7 @@
 (defconst my-lisp-dir (concat my-emacs-d "lisp")
   "My lisp folder.")
 
-;; All commands work normally
+;; Disable novice, all commands work normally
 (setq-default disabled-command-function nil)
 
 ;; UTF encoding everywhere
@@ -34,18 +34,21 @@
 (when (featurep 'menu-bar)   (menu-bar-mode 0))
 (when (featurep 'scroll-bar) (scroll-bar-mode 0))
 (setq use-dialog-box nil)
+(setq use-file-dialog nil)
 
 ;; Space on the left side, for git gutter
-(set-fringe-mode '(4 . 0))
+(set-fringe-mode '(5 . 0))
 
 ;; Set window title
 (setq-default frame-title-format '("%F - %b"))
 
-(setq my-font "JetBrains Mono Light-11")
-(set-face-attribute 'default nil :font my-font)
+(setq my-font "JetBrains Mono Light")
+(set-face-attribute 'default nil :family my-font :height 110)
+(set-face-attribute 'fixed-pitch nil :family my-font :height 110)
+(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 110)
 (set-frame-font my-font nil t)
 
-;; Display Emojis
+;; Display symbols and emojis
 (set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'prepend)
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 
@@ -53,6 +56,8 @@
       uniquify-separator " • "
       uniquify-ignore-buffers-re "^\\*")
 
+;; Show a symbol at the start and end of the buffer
+(setq indicate-buffer-boundaries '((top . left) (bottom . left)))
 ;; Hide cursor in other windows
 (setq-default cursor-in-non-selected-windows nil)
 
@@ -65,10 +70,12 @@
               mouse-wheel-scroll-amount '(2 ((shift) . hscroll)))
 
 ;; More scroll settings
-(setq hscroll-margin 1
-      scroll-margin 1
+(setq scroll-margin 1
+      scroll-conservatively 0
       auto-window-vscroll nil)
 
+;; Disable bidirectional writing
+(setq bidi-inhibit-bpa t)
 (setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
 
@@ -95,8 +102,6 @@
             (show-paren-mode t)
             ;; Auto-match parentheses
             (electric-pair-mode t)
-            ;; Highlight current line
-            (global-hl-line-mode t)
             ))
 
 ;; Enable/ disable debug
@@ -163,6 +168,48 @@ NAME and ARGS are in `use-package'."
   ;; Corrects (and improves) org-mode's native fontification
   (doom-themes-org-config))
 
+;; (use-package modus-themes
+;;   :init
+;;   (setq modus-themes-slanted-constructs t
+;;         modus-themes-bold-constructs t
+;;         modus-themes-fringes 'subtle
+;;         modus-themes-no-mixed-fonts t
+;;         modus-themes-scale-headings t
+;;         modus-themes-subtle-line-numbers t)
+;;   (setq modus-themes-mode-line 'borderless-3d)
+;;   (setq modus-themes-org-blocks 'tinted-gray)
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :custom
+;;   (modus-themes-operandi-color-overrides
+;;    '((bg-main . "#FAFAFA")
+;;      (fg-main . "#101010")
+;;      (fg-window-divider-inner . "#FAFAFA")))
+;;   (modus-themes-vivendi-color-overrides
+;;    '((bg-main . "#101010")
+;;      (fg-main . "#FAFAFA")
+;;      (fg-window-divider-inner . "#101010")))
+;;   :config
+;;   (modus-themes-load-operandi)
+;;   ;; (modus-themes-load-vivendi)
+;;   :bind ("<f5>" . modus-themes-toggle))
+
+;; (setq modus-themes-vivendi-color-overrides nil)
+;; (setq modus-themes-vivendi-color-overrides
+;;       '((bg-main . "#282828") (fg-main . "#fdf4c1")
+;;         (bg-dim . "#32302f") (fg-dim . "#f4e8ba")
+;;         (bg-alt . "#3c3836") (fg-alt . "#ebdbb2")
+;;         (bg-hl-line . "#191628")
+;;         (bg-active . "#282e46")
+;;         (bg-inactive . "#1a1e39")
+;;         (bg-region . "#393a53")
+;;         (bg-header . "#202037")
+;;         (bg-tab-bar . "#262b41")
+;;         (bg-tab-active . "#120f18")
+;;         (bg-tab-inactive . "#3a3a5a")
+;;         (fg-unfocused . "#9a9aab")))
+;; (load-theme 'modus-vivendi t)
+
 ;; Resolve symlinks when opening files
 (use-feature files
   :init
@@ -171,16 +218,21 @@ NAME and ARGS are in `use-package'."
         find-file-suppress-same-file-warnings t))
 
 ;; Builtin dired config
-;; Extra options will be enabled from evil-collection
 (use-feature dired
   :init
   ;; Always delete and copy recursively
   (setq dired-recursive-deletes 'top
         dired-recursive-copies 'always
+        dired-dwim-target t
         ;; Ask if destination dirs should get created when copying/removing
         dired-create-destination-dirs 'ask
         ;; Human readable units
-        dired-listing-switches "-alh -v --group-directories-first"))
+        dired-listing-switches "-alh -v --group-directories-first")
+  :config
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+  (define-key dired-mode-map (kbd "^") (lambda () (find-alternate-file ".."))))
+
+(use-feature dired-x)
 
 ;; Colourful dired
 (use-package diredfl
@@ -192,7 +244,7 @@ NAME and ARGS are in `use-package'."
 
 (use-package vterm
   :defer t
-  :commands vterm-mode
+  :commands (vterm vterm-other-window)
   :bind
   (:map vterm-mode-map
         ("C-c C-c" . vterm-send-C-c))
@@ -204,9 +256,10 @@ NAME and ARGS are in `use-package'."
 (use-feature simple
   :custom
   (fill-column 100)
-  (display-line-numbers-width 3)
-  (display-line-numbers-widen t)
+  (display-line-numbers-grow-only t)
   (display-line-numbers-type 'absolute)
+  (display-line-numbers-widen t)
+  (display-line-numbers-width 3)
   :hook
   (prog-mode . visual-line-mode)
   (text-mode . visual-line-mode)
@@ -227,6 +280,16 @@ NAME and ARGS are in `use-package'."
   ;; Trim whitespaces on save
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
+;; Highlight the current line
+;;
+(use-feature hl-line
+  :hook
+  (dired-mode . hl-line-mode)
+  (prog-mode . hl-line-mode)
+  (text-mode . hl-line-mode)
+  :custom
+  (hl-line-sticky-flag nil))
+
 ;; Automatically refresh the buffer when the file changes
 ;; Not enabled yet
 ;;
@@ -240,23 +303,42 @@ NAME and ARGS are in `use-package'."
 (use-package evil
   :init
   (setq evil-respect-visual-line-mode t
-        evil-kbd-macro-suppress-motion-error t
         evil-kill-on-visual-paste nil
         evil-shift-width 2
         evil-undo-system 'undo-tree
-        evil-split-window-below  t ;; move cursor below after split
-        evil-vsplit-window-right t ;; move cursor right after split
-        evil-want-fine-undo   t ;; remember changes in insert mode
-        evil-want-integration t ;; load evil-integration
+        evil-kbd-macro-suppress-motion-error t
+        evil-move-cursor-back nil
+        evil-split-window-below  t  ;; move cursor below after split
+        evil-vsplit-window-right t  ;; move cursor right after split
+        evil-want-fine-undo   t     ;; remember changes in insert mode
+        evil-want-integration t     ;; load evil-integration
+        evil-want-Y-yank-to-eol t
         evil-want-keybinding nil)
   :config
   (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
+  ;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (evil-mode t))
 
 (use-package evil-collection
   :after evil
+  :custom
+  (evil-collection-mode-list '(dired
+                               flycheck
+                               apropos
+                               help
+                               helpful
+                               info
+                               magit
+                               man
+                               simple
+                               ))
   :config
-  (evil-collection-init t))
+  (evil-collection-init))
+
+;; Will re-use these keys
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  (define-key evil-motion-state-map (kbd "RET") nil))
 
 (use-package undo-tree
   :hook (after-init . global-undo-tree-mode)
@@ -299,16 +381,26 @@ NAME and ARGS are in `use-package'."
   :after evil
   :bind ("C-=" . er/expand-region))
 
+;; Pretty eye candy 🍬
+(use-package evil-goggles
+  :after evil
+  :config
+  (evil-goggles-mode)
+  (evil-goggles-use-diff-faces))
+
 (use-package company
+  :defer 5
   :hook
-  (text-mode . company-mode)
+  ;; (text-mode . company-mode)
   (prog-mode . company-mode)
   :init
   (setq company-minimum-prefix-length 2
         company-require-match 'never
         company-selection-wrap-around t
         company-tooltip-align-annotations t
+        company-dabbrev-ignore-case t
         company-tooltip-limit 14
+        company-tooltip-maximum-width 50
         company-global-modes
         '(not message-mode
               help-mode
@@ -320,49 +412,20 @@ NAME and ARGS are in `use-package'."
         company-auto-complete nil
         company-auto-complete-chars nil))
 
-(use-package company-emoji
-  :after company
-  (add-to-list 'company-backends 'company-emoji))
-
 (use-package yasnippet
-  :commands (yas-minor-mode-on
-             yas-expand
-             yas-expand-snippet
-             yas-lookup-snippet
-             yas-insert-snippet)
-  :hook
-  (prog-mode . yas-minor-mode)
-  (text-mode . yas-minor-mode)
-  (window-setup . yas-reload-all)
-  :bind
-  (:map yas-minor-mode-map
-        ("TAB" . nil)
-        ([tab] . nil))
+  :disabled
+  ;; :commands yas-global-mode
   :custom
   (yas-verbosity 3))
 
 ;; Loading the doom snippets takes forever
 ;; (use-package doom-snippets
 ;;   :after yasnippet
+;;   :hook (window-setup . yas-reload-all)
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 (use-package auto-yasnippet
   :defer t)
-
-;; Try to solve company vs. yasnippet conflicts
-(defun company-yasnippet-or-completion ()
-  "Solve company / yasnippet conflicts."
-  (interactive)
-  (let ((yas-fallback-behavior
-         (apply 'company-complete-common nil)))
-    (yas-expand)))
-
-(add-hook 'company-mode-hook
-          (lambda ()
-            (substitute-key-definition
-             'company-complete-common
-             'company-yasnippet-or-completion
-             company-active-map)))
 
 ;; Very helpful
 (use-package helpful
@@ -377,8 +440,9 @@ NAME and ARGS are in `use-package'."
   (setq apropos-do-all t)
   :custom
   ;; Integrate with counsel
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable))
+  (counsel-describe-function-function  #'helpful-callable)
+  (counsel-describe-symbol-function    #'helpful-symbol)
+  (counsel-describe-variable-function  #'helpful-variable))
 
 ;; Incredibly useful
 (use-package which-key
@@ -388,7 +452,7 @@ NAME and ARGS are in `use-package'."
   (setq which-key-sort-order 'which-key-key-order-alpha
         which-key-sort-uppercase-first nil
         which-key-popup-type 'minibuffer
-        which-key-add-column-padding 1
+        which-key-add-column-padding 2
         which-key-allow-evil-operators t
         which-key-idle-delay 1.5
         which-key-min-display-lines 5
@@ -444,25 +508,28 @@ NAME and ARGS are in `use-package'."
 (use-package savehist
   :hook (emacs-startup . savehist-mode)
   :init
-  (setq history-length 1000
+  (setq history-length 10000
         savehist-autosave-interval nil     ; save on kill only
         savehist-save-minibuffer-history t
         savehist-file (expand-file-name "etc/savehist" my-emacs-d)
         savehist-additional-variables
         '(kill-ring                        ; persist clipboard
           register-alist                   ; persist macros
-          mark-ring global-mark-ring       ; persist marks
           search-ring regexp-search-ring)) ; persist searches
   )
 
-;; Save Emacs Session
-;; (use-package desktop
+;; ;; Save Emacs Session
+;; (use-feature desktop
 ;;   :bind ("C-c s" . desktop-save-in-desktop-dir)
+;;   :hook
+;;   (after-init . desktop-read)
+;;   (after-init . desktop-save-mode)
 ;;   :init
 ;;   (setq desktop-files-not-to-save "^$"
 ;;         desktop-load-locked-desktop t
+;;         desktop-restore-eager 3
+;;         desktop-restore-frames nil
 ;;         desktop-path '("~/.emacs.default/"))
-;;   (desktop-save-mode t)
 ;;   (add-to-list 'desktop-modes-not-to-save 'dired-mode)
 ;;   (add-to-list 'desktop-modes-not-to-save 'help-mode)
 ;;   (add-to-list 'desktop-modes-not-to-save 'magit-mode)
@@ -490,11 +557,14 @@ NAME and ARGS are in `use-package'."
         ;; Show entities in \name form
         org-pretty-entities nil
         ;; Hide the emphasis marker characters
-        org-hide-emphasis-markers t
         org-ellipsis "…"
+        org-hide-emphasis-markers t
+        org-edit-src-content-indentation 0
+        org-tags-column -66
         ;; invisible region before inserting or deleting a char
         org-catch-invisible-edits 'smart
-        org-support-shift-select 'always
+        ;; shift-cursor commands select text when possible
+        org-support-shift-select t
         ;; Link is to the current directory below, otherwise fully qualify the link
         org-link-file-path-type 'relative
         ;; Keep track of when a certain TODO item was marked as done
@@ -502,6 +572,7 @@ NAME and ARGS are in `use-package'."
         ;; No TOC
         org-export-with-toc nil
         ;; Turn on native code fontification
+        org-confirm-babel-evaluate nil
         org-src-fontify-natively t
         org-src-tab-acts-natively t
         org-cycle-separator-lines 1
@@ -519,8 +590,10 @@ NAME and ARGS are in `use-package'."
   ;; Enable these babel languages:
   (org-babel-do-load-languages
    'org-babel-load-languages '(
+                               (emacs-lisp . t)
                                (shell . t)
-                               (python . t))
+                               (python . t)
+                               (ruby . t))
    ))
 
 (use-package evil-org
@@ -530,6 +603,7 @@ NAME and ARGS are in `use-package'."
 (use-package markdown-mode
   :defer t
   :mode ("README\\(?:\\.md\\)?\\'" . gfm-mode)
+  :commands (markdown-mode gfm-mode)
   :init
   (setq markdown-command "multimarkdown"
         markdown-asymmetric-header t
@@ -560,7 +634,6 @@ NAME and ARGS are in `use-package'."
             (kill-buffer buf)))))))
 
 (use-package magit
-  :defer 5
   :init
   (setq magit-refresh-status-buffer nil
         magit-save-repository-buffers nil
@@ -584,7 +657,7 @@ NAME and ARGS are in `use-package'."
 (use-package git-gutter-fringe
   :after magit
   :init
-  (setq git-gutter:disabled-modes '(fundamental-mode image-mode pdf-view-mode))
+  (setq git-gutter:disabled-modes '(fundamental-mode vterm-mode image-mode pdf-view-mode))
   ;; Only enable the backends that are available, so it doesn't have to check
   ;; when opening each buffer
   (setq git-gutter:handled-backends
@@ -593,14 +666,14 @@ NAME and ARGS are in `use-package'."
                     :key #'symbol-name)))
   (setq indicate-buffer-boundaries nil
         indicate-empty-lines nil)
-  :config
-  ;; Thin fringe bitmaps
-  (define-fringe-bitmap 'git-gutter-fr:added [224]
-    nil nil '(top repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224]
-    nil nil '(top repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-    nil nil 'bottom)
+  ;; :config
+  ;; ;; Thin fringe bitmaps
+  ;; (define-fringe-bitmap 'git-gutter-fr:added [224]
+  ;;   nil nil '(top repeated))
+  ;; (define-fringe-bitmap 'git-gutter-fr:modified [224]
+  ;;   nil nil '(top repeated))
+  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
+  ;;   nil nil 'bottom)
   ;; Enable only for specific modes
   (add-hook 'prog-mode-hook 'git-gutter-mode)
   (add-hook 'org-mode-hook 'git-gutter-mode)
@@ -617,6 +690,9 @@ NAME and ARGS are in `use-package'."
   (setq flycheck-idle-change-delay 2.5)
   ;; Display errors a little quicker
   (setq flycheck-display-errors-delay 0.5))
+
+;; (use-package reformatter
+;;  :defer t)
 
 ;; My custom python path
 (setq my-python "~/Dev/py-env8/bin/python")
@@ -641,12 +717,27 @@ NAME and ARGS are in `use-package'."
         python-indent-guess-indent-offset-verbose nil
         python-shell-prompt-detect-failure-warning nil)
   (advice-add 'python-mode :before 'elpy-enable)
+  ;; (reformatter-define black :program "black")
+  ;; (reformatter-define yapf :program "yapf"
+  ;;  :args '("--style='{based_on_style: yapf, column_limit: 100}'"))
   :config
   (when (load "flycheck" t t)
     ;; Remove flymake and django mode from modules
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (setq elpy-modules (delq 'elpy-module-django elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+(use-package js2-mode
+  :defer t
+  :mode ("\\.js\\'" . js2-mode)
+  :init
+  (setq css-indent-offset 4
+        js-indent-level 4
+        javascript-indent-level 4
+        typescript-indent-level 4)
+  (setq js2-mode-assume-strict t
+        js2-strict-missing-semi-warning nil
+        js2-strict-trailing-comma-warning nil))
 
 ;; I don't want ESC as a modifier
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -671,7 +762,9 @@ NAME and ARGS are in `use-package'."
     "b" '(:ignore t :wk "Buffer")
     "bB"  'ibuffer-other-window
     "bI"  'counsel-ibuffer
-    "bb"  'ivy-switch-buffer
+    "bM"  '((lambda () (switch-to-buffer "*Messages*")) :which-key "messages-buffer")
+    "bS"  '((lambda () (switch-to-buffer "*scratch*"))  :which-key "scratch-buffer")
+    "bb"  'counsel-switch-buffer
     "bk"  'kill-buffer
     "bn"  'next-buffer
     "bp"  'previous-buffer
@@ -689,9 +782,11 @@ NAME and ARGS are in `use-package'."
     "Fo"  'other-frame
     ;;
     "f" '(:ignore t :wk "File")
-    "fd"  'dired
-    "ff"  'counsel-find-file
-    "fr"  'counsel-recentf
+    "fD"  'counsel-dired-jump
+    "fd"  'counsel-dired
+    "ff"  'counsel-find-file  ;; visit or create file
+    "fg"  'counsel-git        ;; find file in the current Git repo
+    "fr"  'counsel-recentf    ;; find a file in recentf list
     "fs"  'save-buffer
     ;;
     "g" '(:ignore t :wk "G")
@@ -713,6 +808,7 @@ NAME and ARGS are in `use-package'."
     "o" '(:ignore t :wk "O")
     "op"  'treemacs
     "ot"  'org-babel-tangle
+    "oT"  'org-babel-tangle-file
     ;;
     "t" '(:ignore t :wk "T")
     "t."  'vterm
@@ -727,7 +823,11 @@ NAME and ARGS are in `use-package'."
     "wB"  'balance-windows-area
     "wT"  'tear-off-window
     "wb"  'balance-windows
-    "wk"  'kill-buffer-and-window
+    "wd"  'kill-buffer-and-window
+    "wh"  'evil-window-left
+    "wj"  'evil-window-down
+    "wk"  'evil-window-up
+    "wl"  'evil-window-right
     "wo"  'delete-other-windows
     "wp"  'evil-window-prev
     "ws"  'evil-window-split
@@ -736,35 +836,37 @@ NAME and ARGS are in `use-package'."
     "wx"  'evil-window-delete
     ;;
     "x" '(:ignore t :wk "Text")
+    "xh"  'mark-whole-buffer
+    "xs"  'counsel-grep-or-swiper
     "xl"  'sort-lines))
 
-(use-package treemacs
-  :defer t
-  :init
-  (setq treemacs-follow-after-init t
-        treemacs-follow-mode nil
-        treemacs-sorting 'alphabetic-case-insensitive-asc
-        treemacs-width 24) ;; Width of the treemacs window
-  :config
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
-  :bind
-  (:map global-map
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t T"   . treemacs-display-current-project-exclusively)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+;; (use-package treemacs
+;;   :defer t
+;;   :init
+;;   (setq treemacs-follow-after-init t
+;;         treemacs-follow-mode nil
+;;         treemacs-sorting 'alphabetic-case-insensitive-asc
+;;         treemacs-width 24) ;; Width of the treemacs window
+;;   :config
+;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+;;   :bind
+;;   (:map global-map
+;;         ("C-x t 1"   . treemacs-delete-other-windows)
+;;         ("C-x t t"   . treemacs)
+;;         ("C-x t T"   . treemacs-display-current-project-exclusively)
+;;         ("C-x t C-t" . treemacs-find-file)
+;;         ("C-x t M-t" . treemacs-find-tag)))
 
-(use-package treemacs-evil
-  :after treemacs)
+;; (use-package treemacs-evil
+;;   :after treemacs)
 
-(use-package treemacs-icons-dired
-  :after treemacs
-  :config (treemacs-icons-dired-mode))
+;; (use-package treemacs-icons-dired
+;;   :after treemacs
+;;   :config (treemacs-icons-dired-mode))
 
-;; Tree + Projects = Love
-(use-package treemacs-projectile
-  :after (treemacs projectile))
+;; ;; Tree + Projects = Love
+;; (use-package treemacs-projectile
+;;   :after (treemacs projectile))
 
 (use-package all-the-icons)
 
@@ -791,9 +893,15 @@ NAME and ARGS are in `use-package'."
         doom-modeline-gnus nil
         doom-modeline-mu4e nil))
 
-;; Cursor with visual effects
-(use-package beacon
-  :hook (after-init . beacon-mode))
+;; Dimm inactive buffers
+(use-package dimmer
+  :hook (after-init . dimmer-mode)
+  :custom
+  (dimmer-use-colorspace :rgb)
+  (dimmer-adjustment-mode :both)
+  :config
+  (dimmer-configure-magit)
+  (dimmer-configure-which-key))
 
 ;; Ask y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
