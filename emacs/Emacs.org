@@ -189,7 +189,7 @@ Other small aesthetic improvements.
                             (?\" . ?\")
                             ))
 
-(add-hook 'after-init-hook
+(add-hook 'emacs-startup-hook
           (lambda ()
             ;; Visualize matching parens
             (show-paren-mode t)
@@ -375,6 +375,7 @@ Asynchronous processing lib.
 ;; Enable visual-line, line and column almost everywhere
 ;;
 (use-feature simple
+  :defer t
   :custom
   (fill-column 100)
   (display-line-numbers-grow-only t)
@@ -392,18 +393,19 @@ Asynchronous processing lib.
 ;; Highlight space-like characters
 ;;
 (use-feature whitespace
+  :defer t
   :custom
   (whitespace-style '(face tabs empty trailing))
   :hook
   (text-mode . whitespace-mode)
   (prog-mode . whitespace-mode)
-  :config
   ;; Trim whitespaces on save
-  (add-hook 'before-save-hook 'delete-trailing-whitespace))
+  (before-save . delete-trailing-whitespace))
 
 ;; Highlight the current line
 ;;
 (use-feature hl-line
+  :defer t
   :hook
   (dired-mode . hl-line-mode)
   (prog-mode . hl-line-mode)
@@ -441,7 +443,6 @@ Asynchronous processing lib.
         evil-want-keybinding nil)
   :config
   (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
-  ;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (evil-mode t))
 
 (use-package evil-collection
@@ -569,7 +570,7 @@ It uses pluggable back-ends and front-ends to retrieve and display completion ca
 #+begin_src emacs-lisp
 ;; Very helpful
 (use-package helpful
-  :defer t
+  :defer 2
   :commands (helpful-callable
              helpful-function
              helpful-variable
@@ -685,17 +686,17 @@ Save recent files, history and sessions.
 ** Projects
 
 #+begin_src emacs-lisp
-(use-package projectile
-  :defer t
-  :init
-  (setq projectile-project-search-path '("~/Dev/" "~/org/"))
-  (setq projectile-completion-system 'ivy))
+;; (use-package projectile
+;;   :defer t
+;;   :init
+;;   (setq projectile-project-search-path '("~/Dev/" "~/org/"))
+;;   (setq projectile-completion-system 'ivy))
 
-(use-package counsel-projectile
-  :after projectile
-  :init
-  ;; No highlighting visited files
-  (ivy-set-display-transformer #'counsel-projectile-find-file nil))
+;; (use-package counsel-projectile
+;;   :after projectile
+;;   :init
+;;   ;; No highlighting visited files
+;;   (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 #+end_src
 
 ** Org-mode
@@ -826,18 +827,20 @@ Save recent files, history and sessions.
                     :key #'symbol-name)))
   (setq indicate-buffer-boundaries nil
         indicate-empty-lines nil)
-  ;; :config
-  ;; ;; Thin fringe bitmaps
-  ;; (define-fringe-bitmap 'git-gutter-fr:added [224]
-  ;;   nil nil '(top repeated))
-  ;; (define-fringe-bitmap 'git-gutter-fr:modified [224]
-  ;;   nil nil '(top repeated))
-  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-  ;;   nil nil 'bottom)
+  :config
+  ;; Thin fringe bitmaps
+  (define-fringe-bitmap 'git-gutter-fr:added [224]
+    nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224]
+    nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
+    nil nil 'bottom)
+
   ;; Enable only for specific modes
   (add-hook 'prog-mode-hook 'git-gutter-mode)
   (add-hook 'org-mode-hook 'git-gutter-mode)
   (add-hook 'markdown-mode-hook 'git-gutter-mode)
+
   ;; Update git-gutter when using magit commands
   (advice-add #'magit-stage-file   :after #'+vc-gutter-update-h)
   (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h)
@@ -851,6 +854,7 @@ I only use Flycheck for programming modes and I specifically call it.
 
 #+begin_src emacs-lisp
 (use-package flycheck
+  :defer 3
   :init
   ;; Don't recheck on idle too often
   (setq flycheck-idle-change-delay 2.5)
@@ -858,17 +862,11 @@ I only use Flycheck for programming modes and I specifically call it.
   (setq flycheck-display-errors-delay 0.5))
 #+end_src
 
-** Formatters
-
-#+begin_src emacs-lisp
-;; (use-package reformatter
-;;  :defer t)
-#+end_src
-
 ** Python
 
 Using the builtin Python mode + Elpy.
 I'm not entirely sure if I need both.
+
 TODO: try lsp-mode instead of Elpy.
 
 #+begin_src emacs-lisp
@@ -907,8 +905,6 @@ TODO: try lsp-mode instead of Elpy.
 #+end_src
 
 ** Javascript
-
-o
 
 #+begin_src emacs-lisp
 (use-package js2-mode
