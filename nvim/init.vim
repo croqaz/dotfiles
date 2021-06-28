@@ -134,25 +134,36 @@ set wildignore+=**/node_modules/**,*/__pycache__/
 
 " -- Key mappings
 
-" <Esc> clears search highlights
-nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>
-
 " Disable the arrow keys in NORMAL mode
 nnoremap <up>    <nop>
 nnoremap <down>  <nop>
 nnoremap <left>  <nop>
 nnoremap <right> <nop>
 
-" Easy esc from ins
-imap jk <esc>
+" <Esc> clears search highlights
+nnoremap <silent> <Esc> <Esc>:nohlsearch<CR><Esc>
 
-" Ctrl+s to save
-nnoremap <c-s> :w<CR>
+" Easy esc from insert
+imap jk <esc>
 
 " Make Y act like all the other capital variants
 nnoremap Y y$
 
-" Useful cmd shortcuts
+" Make n always search forward and N backward
+nnoremap <expr> n 'Nn'[v:searchforward]
+nnoremap <expr> N 'nN'[v:searchforward]
+
+" Make ; always "find" forward and , backward
+nnoremap <expr> ; getcharsearch().forward ? ';' : ','
+nnoremap <expr> , getcharsearch().forward ? ',' : ';'
+
+" Make <c-j>, <c-k>, <c-l>, and <c-h> scroll the screen.
+nnoremap <c-j> <c-e>
+nnoremap <c-k> <c-y>
+nnoremap <c-l> zl
+nnoremap <c-h> zh
+
+" Useful shortcuts in cmd mode
 cnoremap <C-a>  <Home>
 cnoremap <C-b>  <Left>
 cnoremap <C-f>  <Right>

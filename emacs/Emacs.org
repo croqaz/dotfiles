@@ -117,9 +117,9 @@
 
 #+begin_src emacs-lisp
 (setq my-font "JetBrains Mono Light")
-(set-face-attribute 'default nil :family my-font :height 110)
-(set-face-attribute 'fixed-pitch nil :family my-font :height 110)
-(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 110)
+(set-face-attribute 'default nil :family my-font :height 105)
+(set-face-attribute 'fixed-pitch nil :family my-font :height 105)
+(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 105)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
@@ -467,10 +467,17 @@ Asynchronous processing lib.
   (define-key evil-motion-state-map (kbd "RET") nil))
 
 (use-package undo-tree
-  :hook (after-init . global-undo-tree-mode)
+  :hook
+  (prog-mode . undo-tree-mode)
+  (text-mode . undo-tree-mode)
   :init
   (setq undo-tree-visualizer-diff t
         undo-tree-visualizer-timestamps t))
+
+(use-package origami
+  :hook
+  (prog-mode . origami-mode)
+  (text-mode . origami-mode))
 
 ;; Select and edit matches interactively
 ;;
@@ -829,12 +836,12 @@ Save recent files, history and sessions.
         indicate-empty-lines nil)
   :config
   ;; Thin fringe bitmaps
-  (define-fringe-bitmap 'git-gutter-fr:added [224]
-    nil nil '(top repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224]
-    nil nil '(top repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-    nil nil 'bottom)
+  (define-fringe-bitmap 'git-gutter-fr:added
+    [224] nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified
+    [224] nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted
+    [128 192 224 240] nil nil 'bottom)
 
   ;; Enable only for specific modes
   (add-hook 'prog-mode-hook 'git-gutter-mode)
@@ -907,6 +914,10 @@ TODO: try lsp-mode instead of Elpy.
 ** Javascript
 
 #+begin_src emacs-lisp
+(use-package yaml-mode
+  :defer t
+  :mode ("\\.ya?ml\\'" . js2-mode))
+
 (use-package js2-mode
   :defer t
   :mode ("\\.js\\'" . js2-mode)
@@ -1094,6 +1105,29 @@ TODO: try lsp-mode instead of Elpy.
   :config
   (dimmer-configure-magit)
   (dimmer-configure-which-key))
+#+end_src
+
+** Utils
+
+#+begin_src emacs-lisp
+;; From: https://www.emacswiki.org/emacs/SortWords
+;;
+(defun sort-words (reverse beg end)
+  "Sort words in region alphabetically, in REVERSE if negative.
+Prefixed with negative \\[universal-argument], sorts in reverse.
+The variable `sort-fold-case' determines whether alphabetic case
+affects the sort order."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+
+(defalias 'sw 'sort-words)
+
+(defun sort-symbols (reverse beg end)
+  "Sort symbols in region alphabetically, in REVERSE if negative."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
+
+(defalias 'ss 'sort-symbols)
 #+end_src
 
 ** Extra
