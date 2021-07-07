@@ -181,6 +181,7 @@ Other small aesthetic improvements.
 ;; Spaces vs tabs
 (setq-default indent-tabs-mode nil
               tab-always-indent nil
+              default-tab-width 4
               tab-width 4)
 
 (setq electric-pair-pairs '((?\{ . ?\})
@@ -874,8 +875,6 @@ I only use Flycheck for programming modes and I specifically call it.
 Using the builtin Python mode + Elpy.
 I'm not entirely sure if I need both.
 
-TODO: try lsp-mode instead of Elpy.
-
 #+begin_src emacs-lisp
 ;; My custom python path
 (setq my-python "~/Dev/py-env8/bin/python")
@@ -887,7 +886,12 @@ TODO: try lsp-mode instead of Elpy.
   :hook
   (python-mode . flycheck-mode)
   (python-mode . company-mode)
-  (python-mode . yas-minor-mode))
+  (python-mode . yas-minor-mode)
+  :init
+  (setq python-indent 4)
+  (setq python-indent-offset 4)
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
 (use-package elpy
   :after python
@@ -909,6 +913,38 @@ TODO: try lsp-mode instead of Elpy.
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (setq elpy-modules (delq 'elpy-module-django elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+
+;; Emacs Language Server Protocol client
+;; https://emacs-lsp.github.io/lsp-mode
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration)
+  :custom
+  (lsp-diagnostics-provider :flycheck)
+  (lsp-disabled-clients '((python-mode . pyls)))
+  (lsp-enable-folding nil)
+  (lsp-enable-text-document-color nil)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  :init
+  (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
+  :config
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.mypy_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.pytest_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\data\\'"))
+
+;; (use-package lsp-ivy
+;;   :after lsp-mode)
+
+;; https://github.com/microsoft/pyright
+(use-package lsp-pyright
+  :hook
+  (python-mode . (lambda ()
+                   (require 'lsp-pyright)
+                   (lsp-deferred))))
 #+end_src
 
 ** Javascript
@@ -1085,7 +1121,34 @@ TODO: try lsp-mode instead of Elpy.
         centaur-tabs-gray-out-icons 'buffer
         centaur-tabs-set-modified-marker t)
   :config
-  (centaur-tabs-headline-match))
+  (centaur-tabs-headline-match)
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules."
+    (list
+     (cond
+      ((or (string-equal "*" (substring (buffer-name) 0 1))
+           (memq major-mode '(help-mode
+                              helpful-mode
+                              info-mode
+                              man-mode)))
+       "Emacs")
+      ((or
+        (derived-mode-p 'dired-mode)
+        (derived-mode-p 'image-mode))
+       "Explore")
+      ((or (derived-mode-p 'text-mode)
+           (derived-mode-p 'prog-mode)
+           (derived-mode-p 'org-mode)
+           (memq major-mode '(org-src-mode
+                              org-agenda-mode
+                              org-beamer-mode
+                              org-indent-mode
+                              org-bullets-mode
+                              org-cdlatex-mode)))
+       "Editing")
+      (t
+       (centaur-tabs-get-group-name (current-buffer)))))
+    ))
 
 ;; Bottom mode-line
 (use-package doom-modeline
@@ -1120,14 +1183,28 @@ affects the sort order."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\w+" "\\&" beg end))
 
-(defalias 'sw 'sort-words)
-
 (defun sort-symbols (reverse beg end)
   "Sort symbols in region alphabetically, in REVERSE if negative."
   (interactive "*P\nr")
   (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
 
+(defalias 'sw 'sort-words)
 (defalias 'ss 'sort-symbols)
+
+;; From: https://www.emacswiki.org/emacs/InsertingTodaysDate
+;;
+(defun date-now (arg)
+   (interactive "P")
+   (insert (if arg
+               (format-time-string "%d.%m.%Y")
+             (format-time-string "%Y-%m-%d"))))
+
+(defun timestamp-now ()
+   (interactive)
+   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
+
+(defalias 'dt 'date-now)
+(defalias 'ts 'timestamp-now)
 #+end_src
 
 ** Extra

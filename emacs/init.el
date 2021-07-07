@@ -43,9 +43,9 @@
 (setq-default frame-title-format '("%F - %b"))
 
 (setq my-font "JetBrains Mono Light")
-(set-face-attribute 'default nil :family my-font :height 110)
-(set-face-attribute 'fixed-pitch nil :family my-font :height 110)
-(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 110)
+(set-face-attribute 'default nil :family my-font :height 105)
+(set-face-attribute 'fixed-pitch nil :family my-font :height 105)
+(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 105)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
@@ -88,6 +88,7 @@
 ;; Spaces vs tabs
 (setq-default indent-tabs-mode nil
               tab-always-indent nil
+              default-tab-width 4
               tab-width 4)
 
 (setq electric-pair-pairs '((?\{ . ?\})
@@ -96,7 +97,7 @@
                             (?\" . ?\")
                             ))
 
-(add-hook 'after-init-hook
+(add-hook 'emacs-startup-hook
           (lambda ()
             ;; Visualize matching parens
             (show-paren-mode t)
@@ -254,6 +255,7 @@ NAME and ARGS are in `use-package'."
 ;; Enable visual-line, line and column almost everywhere
 ;;
 (use-feature simple
+  :defer t
   :custom
   (fill-column 100)
   (display-line-numbers-grow-only t)
@@ -271,18 +273,19 @@ NAME and ARGS are in `use-package'."
 ;; Highlight space-like characters
 ;;
 (use-feature whitespace
+  :defer t
   :custom
   (whitespace-style '(face tabs empty trailing))
   :hook
   (text-mode . whitespace-mode)
   (prog-mode . whitespace-mode)
-  :config
   ;; Trim whitespaces on save
-  (add-hook 'before-save-hook 'delete-trailing-whitespace))
+  (before-save . delete-trailing-whitespace))
 
 ;; Highlight the current line
 ;;
 (use-feature hl-line
+  :defer t
   :hook
   (dired-mode . hl-line-mode)
   (prog-mode . hl-line-mode)
@@ -316,7 +319,6 @@ NAME and ARGS are in `use-package'."
         evil-want-keybinding nil)
   :config
   (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
-  ;; (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (evil-mode t))
 
 (use-package evil-collection
@@ -341,10 +343,17 @@ NAME and ARGS are in `use-package'."
   (define-key evil-motion-state-map (kbd "RET") nil))
 
 (use-package undo-tree
-  :hook (after-init . global-undo-tree-mode)
+  :hook
+  (prog-mode . undo-tree-mode)
+  (text-mode . undo-tree-mode)
   :init
   (setq undo-tree-visualizer-diff t
         undo-tree-visualizer-timestamps t))
+
+(use-package origami
+  :hook
+  (prog-mode . origami-mode)
+  (text-mode . origami-mode))
 
 ;; Select and edit matches interactively
 ;;
@@ -429,7 +438,7 @@ NAME and ARGS are in `use-package'."
 
 ;; Very helpful
 (use-package helpful
-  :defer t
+  :defer 2
   :commands (helpful-callable
              helpful-function
              helpful-variable
@@ -537,17 +546,17 @@ NAME and ARGS are in `use-package'."
 ;;   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 ;;   (add-to-list 'desktop-modes-not-to-save 'completion-list-mode))
 
-(use-package projectile
-  :defer t
-  :init
-  (setq projectile-project-search-path '("~/Dev/" "~/org/"))
-  (setq projectile-completion-system 'ivy))
+;; (use-package projectile
+;;   :defer t
+;;   :init
+;;   (setq projectile-project-search-path '("~/Dev/" "~/org/"))
+;;   (setq projectile-completion-system 'ivy))
 
-(use-package counsel-projectile
-  :after projectile
-  :init
-  ;; No highlighting visited files
-  (ivy-set-display-transformer #'counsel-projectile-find-file nil))
+;; (use-package counsel-projectile
+;;   :after projectile
+;;   :init
+;;   ;; No highlighting visited files
+;;   (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 
 (use-package org
   :defer t
@@ -666,18 +675,20 @@ NAME and ARGS are in `use-package'."
                     :key #'symbol-name)))
   (setq indicate-buffer-boundaries nil
         indicate-empty-lines nil)
-  ;; :config
-  ;; ;; Thin fringe bitmaps
-  ;; (define-fringe-bitmap 'git-gutter-fr:added [224]
-  ;;   nil nil '(top repeated))
-  ;; (define-fringe-bitmap 'git-gutter-fr:modified [224]
-  ;;   nil nil '(top repeated))
-  ;; (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-  ;;   nil nil 'bottom)
+  :config
+  ;; Thin fringe bitmaps
+  (define-fringe-bitmap 'git-gutter-fr:added
+    [224] nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified
+    [224] nil nil '(top repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted
+    [128 192 224 240] nil nil 'bottom)
+
   ;; Enable only for specific modes
   (add-hook 'prog-mode-hook 'git-gutter-mode)
   (add-hook 'org-mode-hook 'git-gutter-mode)
   (add-hook 'markdown-mode-hook 'git-gutter-mode)
+
   ;; Update git-gutter when using magit commands
   (advice-add #'magit-stage-file   :after #'+vc-gutter-update-h)
   (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h)
@@ -685,14 +696,12 @@ NAME and ARGS are in `use-package'."
   (add-hook 'focus-in-hook #'git-gutter:update-all-windows))
 
 (use-package flycheck
+  :defer 3
   :init
   ;; Don't recheck on idle too often
   (setq flycheck-idle-change-delay 2.5)
   ;; Display errors a little quicker
   (setq flycheck-display-errors-delay 0.5))
-
-;; (use-package reformatter
-;;  :defer t)
 
 ;; My custom python path
 (setq my-python "~/Dev/py-env8/bin/python")
@@ -704,7 +713,12 @@ NAME and ARGS are in `use-package'."
   :hook
   (python-mode . flycheck-mode)
   (python-mode . company-mode)
-  (python-mode . yas-minor-mode))
+  (python-mode . yas-minor-mode)
+  :init
+  (setq python-indent 4)
+  (setq python-indent-offset 4)
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
 (use-package elpy
   :after python
@@ -726,6 +740,42 @@ NAME and ARGS are in `use-package'."
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (setq elpy-modules (delq 'elpy-module-django elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+
+;; Emacs Language Server Protocol client
+;; https://emacs-lsp.github.io/lsp-mode
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration)
+  :custom
+  (lsp-diagnostics-provider :flycheck)
+  (lsp-disabled-clients '((python-mode . pyls)))
+  (lsp-enable-folding nil)
+  (lsp-enable-text-document-color nil)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  :init
+  (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
+  :config
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.mypy_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.pytest_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\data\\'"))
+
+;; (use-package lsp-ivy
+;;   :after lsp-mode)
+
+;; https://github.com/microsoft/pyright
+(use-package lsp-pyright
+  :hook
+  (python-mode . (lambda ()
+                   (require 'lsp-pyright)
+                   (lsp-deferred))))
+
+(use-package yaml-mode
+  :defer t
+  :mode ("\\.ya?ml\\'" . js2-mode))
 
 (use-package js2-mode
   :defer t
@@ -882,7 +932,34 @@ NAME and ARGS are in `use-package'."
         centaur-tabs-gray-out-icons 'buffer
         centaur-tabs-set-modified-marker t)
   :config
-  (centaur-tabs-headline-match))
+  (centaur-tabs-headline-match)
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules."
+    (list
+     (cond
+      ((or (string-equal "*" (substring (buffer-name) 0 1))
+           (memq major-mode '(help-mode
+                              helpful-mode
+                              info-mode
+                              man-mode)))
+       "Emacs")
+      ((or
+        (derived-mode-p 'dired-mode)
+        (derived-mode-p 'image-mode))
+       "Explore")
+      ((or (derived-mode-p 'text-mode)
+           (derived-mode-p 'prog-mode)
+           (derived-mode-p 'org-mode)
+           (memq major-mode '(org-src-mode
+                              org-agenda-mode
+                              org-beamer-mode
+                              org-indent-mode
+                              org-bullets-mode
+                              org-cdlatex-mode)))
+       "Editing")
+      (t
+       (centaur-tabs-get-group-name (current-buffer)))))
+    ))
 
 ;; Bottom mode-line
 (use-package doom-modeline
@@ -902,6 +979,39 @@ NAME and ARGS are in `use-package'."
   :config
   (dimmer-configure-magit)
   (dimmer-configure-which-key))
+
+;; From: https://www.emacswiki.org/emacs/SortWords
+;;
+(defun sort-words (reverse beg end)
+  "Sort words in region alphabetically, in REVERSE if negative.
+Prefixed with negative \\[universal-argument], sorts in reverse.
+The variable `sort-fold-case' determines whether alphabetic case
+affects the sort order."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\w+" "\\&" beg end))
+
+(defun sort-symbols (reverse beg end)
+  "Sort symbols in region alphabetically, in REVERSE if negative."
+  (interactive "*P\nr")
+  (sort-regexp-fields reverse "\\(\\sw\\|\\s_\\)+" "\\&" beg end))
+
+(defalias 'sw 'sort-words)
+(defalias 'ss 'sort-symbols)
+
+;; From: https://www.emacswiki.org/emacs/InsertingTodaysDate
+;;
+(defun date-now (arg)
+   (interactive "P")
+   (insert (if arg
+               (format-time-string "%d.%m.%Y")
+             (format-time-string "%Y-%m-%d"))))
+
+(defun timestamp-now ()
+   (interactive)
+   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
+
+(defalias 'dt 'date-now)
+(defalias 'ts 'timestamp-now)
 
 ;; Ask y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
