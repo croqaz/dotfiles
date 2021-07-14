@@ -157,43 +157,43 @@ NAME and ARGS are in `use-package'."
   (dired-async-mode t)
   (async-bytecomp-package-mode t))
 
-(use-package doom-themes
-  :init
-  (setq doom-theme 'doom-sourcerer
-        doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  :config
-  (load-theme doom-theme t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Corrects (and improves) org-mode's native fontification
-  (doom-themes-org-config))
-
-;; (use-package modus-themes
+;; (use-package doom-themes
 ;;   :init
-;;   (setq modus-themes-slanted-constructs t
-;;         modus-themes-bold-constructs t
-;;         modus-themes-fringes 'subtle
-;;         modus-themes-no-mixed-fonts t
-;;         modus-themes-scale-headings t
-;;         modus-themes-subtle-line-numbers t)
-;;   (setq modus-themes-mode-line 'borderless-3d)
-;;   (setq modus-themes-org-blocks 'tinted-gray)
-;;   ;; Load the theme files before enabling a theme
-;;   (modus-themes-load-themes)
-;;   :custom
-;;   (modus-themes-operandi-color-overrides
-;;    '((bg-main . "#FAFAFA")
-;;      (fg-main . "#101010")
-;;      (fg-window-divider-inner . "#FAFAFA")))
-;;   (modus-themes-vivendi-color-overrides
-;;    '((bg-main . "#101010")
-;;      (fg-main . "#FAFAFA")
-;;      (fg-window-divider-inner . "#101010")))
+;;   (setq doom-theme 'doom-sourcerer
+;;         doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 ;;   :config
-;;   (modus-themes-load-operandi)
-;;   ;; (modus-themes-load-vivendi)
-;;   :bind ("<f5>" . modus-themes-toggle))
+;;   (load-theme doom-theme t)
+;;   ;; Enable flashing mode-line on errors
+;;   (doom-themes-visual-bell-config)
+;;   ;; Corrects (and improves) org-mode's native fontification
+;;   (doom-themes-org-config))
+
+(use-package modus-themes
+  :init
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-fringes 'subtle
+        modus-themes-no-mixed-fonts t
+        modus-themes-scale-headings t
+        modus-themes-subtle-line-numbers t)
+  (setq modus-themes-mode-line 'borderless-3d)
+  (setq modus-themes-org-blocks 'tinted-gray)
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :custom
+  (modus-themes-operandi-color-overrides
+   '((bg-main . "#F0F2F7")
+     (fg-main . "#101010")
+     (fg-window-divider-inner . "#FAFAFA")))
+  (modus-themes-vivendi-color-overrides
+   '((bg-main . "#101010")
+     (fg-main . "#FAFAFA")
+     (fg-window-divider-inner . "#101010")))
+  :config
+  (modus-themes-load-operandi)
+  ;; (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 ;; (setq modus-themes-vivendi-color-overrides nil)
 ;; (setq modus-themes-vivendi-color-overrides
@@ -318,7 +318,6 @@ NAME and ARGS are in `use-package'."
         evil-want-Y-yank-to-eol t
         evil-want-keybinding nil)
   :config
-  (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
   (evil-mode t))
 
 (use-package evil-collection
@@ -335,7 +334,24 @@ NAME and ARGS are in `use-package'."
                                simple
                                ))
   :config
+  (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
+  (evil-define-key 'visual 'global "g<" #'evil-visual-shift-left)
+  (evil-define-key 'visual 'global "g>" #'evil-visual-shift-right)
   (evil-collection-init))
+
+(defun evil-visual-shift-left()
+  (interactive)
+  ;; (call-interactively #'evil-shift-left)
+  (evil-shift-left (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
+
+(defun evil-visual-shift-right()
+  (interactive)
+  ;; (call-interactively #'evil-shift-right)
+  (evil-shift-right (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
 
 ;; Will re-use these keys
 (with-eval-after-load 'evil-maps
@@ -756,6 +772,8 @@ NAME and ARGS are in `use-package'."
   (lsp-headerline-breadcrumb-enable t)
   (lsp-headerline-breadcrumb-segments '(project file symbols))
   (lsp-lens-enable nil)
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-show-with-cursor nil)
   :init
   (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
   :config
@@ -773,10 +791,6 @@ NAME and ARGS are in `use-package'."
                    (require 'lsp-pyright)
                    (lsp-deferred))))
 
-(use-package yaml-mode
-  :defer t
-  :mode ("\\.ya?ml\\'" . js2-mode))
-
 (use-package js2-mode
   :defer t
   :mode ("\\.js\\'" . js2-mode)
@@ -788,6 +802,18 @@ NAME and ARGS are in `use-package'."
   (setq js2-mode-assume-strict t
         js2-strict-missing-semi-warning nil
         js2-strict-trailing-comma-warning nil))
+
+(use-package typescript-mode
+  :defer t
+  :mode ("\\.ts\\'" . typescript-mode))
+
+(use-package yaml-mode
+  :defer t
+  :mode ("\\.ya?ml\\'" . yaml-mode))
+
+(use-package pug-mode
+  :defer t
+  :mode ("\\.pug\\'" . pug-mode))
 
 ;; I don't want ESC as a modifier
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -887,6 +913,7 @@ NAME and ARGS are in `use-package'."
     ;;
     "x" '(:ignore t :wk "Text")
     "xh"  'mark-whole-buffer
+    "xr"  'reverse-region
     "xs"  'counsel-grep-or-swiper
     "xl"  'sort-lines))
 
