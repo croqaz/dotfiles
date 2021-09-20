@@ -35,6 +35,6 @@ alias 'rm-pyco'='rm --interactive=once -r `find . -name __pycache__` && rm --int
 alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'
 
-# Docker images
-alias 'start-splash'='docker run -d --rm --name splash --net=host -p 8050:8050 --cpus 0.5 --memory-reservation 1GB scrapinghub/splash:3.4csp --disable-browser-caches'
+# Docker/ Podman images
+alias 'start-splash'='docker run -d --rm --name splash --restart always --net=host -p 8050:8050 --memory-reservation 1GB --memory 4G scrapinghub/splash:3.4csp --disable-browser-caches'
 alias 'stop-splash'='docker stop splash'
