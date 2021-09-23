@@ -625,6 +625,31 @@ NAME and ARGS are in `use-package'."
   :after org
   :hook ((org-mode . evil-org-mode)))
 
+
+(setq org-publish-project-alist
+      '(("memex"
+         :base-directory "~/org/mem/"
+         :base-extension "org"
+         :publishing-directory "/tmp/mem/"
+         :publishing-function org-html-publish-to-html
+         :html-doctype "html5"
+         :html-head ""
+         :html-head-extra ""
+         :html-head-include-default-style nil
+         :html-head-include-scripts nil
+         :html-link-home ""
+         :html-link-up ""
+         :html-postamble nil
+         :html-preamble nil
+         :html-style nil
+         :html-use-infojs nil
+         :html-xml-declaration nil
+         :section-numbers nil
+         :with-creator nil
+         :with-timestamps nil
+         :with-title nil
+         :with-toc nil)))
+
 (use-package markdown-mode
   :defer t
   :mode ("README\\(?:\\.md\\)?\\'" . gfm-mode)
@@ -787,6 +812,7 @@ NAME and ARGS are in `use-package'."
 ;; https://github.com/microsoft/pyright
 (use-package lsp-pyright
   :hook
+  ;; (typescript-mode . lsp-deferred)
   (python-mode . (lambda ()
                    (require 'lsp-pyright)
                    (lsp-deferred))))
@@ -811,9 +837,15 @@ NAME and ARGS are in `use-package'."
   :defer t
   :mode ("\\.ya?ml\\'" . yaml-mode))
 
-(use-package pug-mode
+;; (use-package pug-mode
+;;   :defer t
+;;   :mode ("\\.pug\\'" . pug-mode))
+
+(use-package lua-mode
   :defer t
-  :mode ("\\.pug\\'" . pug-mode))
+  :mode ("\\.lua\\'" . lua-mode)
+  :init
+  (setq lua-indent-level 2))
 
 ;; I don't want ESC as a modifier
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -912,9 +944,12 @@ NAME and ARGS are in `use-package'."
     "wx"  'evil-window-delete
     ;;
     "x" '(:ignore t :wk "Text")
+    "jj"  'json-pretty-print
+    "jo"  'json-pretty-print-ordered
     "xh"  'mark-whole-buffer
     "xr"  'reverse-region
     "xs"  'counsel-grep-or-swiper
+    "xx"  'delete-duplicate-lines
     "xl"  'sort-lines))
 
 ;; (use-package treemacs
@@ -1028,17 +1063,37 @@ affects the sort order."
 ;; From: https://www.emacswiki.org/emacs/InsertingTodaysDate
 ;;
 (defun date-now (arg)
-   (interactive "P")
-   (insert (if arg
-               (format-time-string "%d.%m.%Y")
-             (format-time-string "%Y-%m-%d"))))
+  (interactive "P")
+  (insert (if arg
+              (format-time-string "%d.%m.%Y")
+            (format-time-string "%Y-%m-%d"))))
 
 (defun timestamp-now ()
-   (interactive)
-   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
 
 (defalias 'dt 'date-now)
 (defalias 'ts 'timestamp-now)
+
+;; From: https://stackoverflow.com/questions/18812938/copy-full-file-path-into-copy-paste-clipboard
+;;
+(defun copy-file-name-as-kill (choice)
+  "Copy the buffer file name to the kill-ring"
+  (interactive "cCopy Buffer Name (F) Full, (D) Directory, (N) Name")
+  (let ((new-kill-string)
+        (name (if (eq major-mode 'dired-mode)
+                  (dired-get-filename)
+                (or (buffer-file-name) ""))))
+    (cond ((eq choice ?f)
+           (setq new-kill-string name))
+          ((eq choice ?d)
+           (setq new-kill-string (file-name-directory name)))
+          ((eq choice ?n)
+           (setq new-kill-string (file-name-nondirectory name)))
+          (t (message "Quit")))
+    (when new-kill-string
+      (message "%s copied" new-kill-string)
+      (kill-new new-kill-string))))
 
 ;; Ask y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)

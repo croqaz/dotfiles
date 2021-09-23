@@ -1137,6 +1137,7 @@ I'm not entirely sure if I need both.
     "xh"  'mark-whole-buffer
     "xr"  'reverse-region
     "xs"  'counsel-grep-or-swiper
+    "xx"  'delete-duplicate-lines
     "xl"  'sort-lines))
 #+end_src
 
