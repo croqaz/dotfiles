@@ -511,12 +511,13 @@ Asynchronous processing lib. Not sure if it does anything...?
   (define-key evil-insert-state-map (kbd "M-d") 'evil-multiedit-toggle-marker-here)
   ;; Same as M-d but in reverse
   (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-and-prev)
-  (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-and-prev)
-  ;; For moving between edit regions
-  (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
-  (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
-  (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
-  (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev))
+  (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-and-prev))
+
+;; For moving between edit regions?
+;; (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
+;; (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
+;; (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
+;; (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
 
 (use-package evil-surround
   :after evil
@@ -710,6 +711,8 @@ Save recent files, history and sessions.
 
 ** Projects
 
+I don't use any of the projectile features yet.
+
 #+begin_src emacs-lisp
 ;; (use-package projectile
 ;;   :defer t
@@ -868,15 +871,20 @@ Save recent files, history and sessions.
 (use-package git-gutter-fringe
   :after magit
   :init
-  (setq git-gutter:disabled-modes '(fundamental-mode vterm-mode image-mode pdf-view-mode))
+  (setq indicate-buffer-boundaries nil
+        indicate-empty-lines nil)
+  (setq git-gutter:disabled-modes '(fundamental-mode
+                                    help-mode
+                                    vterm-mode
+                                    image-mode
+                                    pdf-view-mode
+                                    ))
   ;; Only enable the backends that are available, so it doesn't have to check
   ;; when opening each buffer
   (setq git-gutter:handled-backends
         (cons 'git (cl-remove-if-not
                     #'executable-find (list 'hg 'svn 'bzr)
                     :key #'symbol-name)))
-  (setq indicate-buffer-boundaries nil
-        indicate-empty-lines nil)
   :config
   ;; Thin fringe bitmaps
   (define-fringe-bitmap 'git-gutter-fr:added
@@ -888,14 +896,13 @@ Save recent files, history and sessions.
 
   ;; Enable only for specific modes
   (add-hook 'prog-mode-hook 'git-gutter-mode)
-  (add-hook 'org-mode-hook 'git-gutter-mode)
-  (add-hook 'markdown-mode-hook 'git-gutter-mode)
+  (add-hook 'text-mode-hook 'git-gutter-mode)
 
+  ;; Update git-gutter on focus (in case of using git externally)
+  (add-hook 'focus-in-hook #'git-gutter:update-all-windows)
   ;; Update git-gutter when using magit commands
   (advice-add #'magit-stage-file   :after #'+vc-gutter-update-h)
-  (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h)
-  ;; Update git-gutter on focus (in case of using git externally)
-  (add-hook 'focus-in-hook #'git-gutter:update-all-windows))
+  (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h))
 #+end_src
 
 ** Checkers

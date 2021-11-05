@@ -232,4 +232,4 @@ exec --no-startup-id "xss-lock -- $HOME/.local/scripts/lock2.sh"
 exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
 
 # Warm screen at night (Dublin Ireland)
-exec --no-startup-id "redshift -l 53.356:-6.243"
+# exec --no-startup-id "redshift -l 53.356:-6.243"
