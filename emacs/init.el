@@ -821,7 +821,6 @@ NAME and ARGS are in `use-package'."
 ;; https://github.com/microsoft/pyright
 (use-package lsp-pyright
   :hook
-  ;; (typescript-mode . lsp-deferred)
   (python-mode . (lambda ()
                    (require 'lsp-pyright)
                    (lsp-deferred))))
@@ -830,17 +829,23 @@ NAME and ARGS are in `use-package'."
   :defer t
   :mode ("\\.js\\'" . js2-mode)
   :init
-  (setq css-indent-offset 4
+  (setq js2-basic-offset 2
+        css-indent-offset 4
         js-indent-level 4
         javascript-indent-level 4
         typescript-indent-level 4)
   (setq js2-mode-assume-strict t
+        js2-mode-show-strict-warnings nil
         js2-strict-missing-semi-warning nil
         js2-strict-trailing-comma-warning nil))
 
 (use-package typescript-mode
   :defer t
-  :mode ("\\.ts\\'" . typescript-mode))
+  :mode ("\\.ts\\'" . typescript-mode)
+  :init
+  (setq javascript-indent-level 4
+        typescript-indent-level 4)
+  :hook (typescript-mode . lsp-deferred))
 
 (use-package yaml-mode
   :defer t
