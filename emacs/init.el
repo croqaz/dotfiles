@@ -376,6 +376,7 @@ NAME and ARGS are in `use-package'."
   (text-mode . origami-mode))
 
 ;; Select and edit matches interactively
+;; Use C-n for next and C-p for previous regions
 ;;
 (use-package evil-multiedit
   :after evil
@@ -391,12 +392,6 @@ NAME and ARGS are in `use-package'."
   (define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-and-prev)
   (define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-match-and-prev))
 
-;; For moving between edit regions?
-;; (define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
-;; (define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
-;; (define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
-;; (define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
-
 (use-package evil-surround
   :after evil
   :config
@@ -409,7 +404,10 @@ NAME and ARGS are in `use-package'."
 
 (use-package expand-region
   :after evil
-  :bind ("C-=" . er/expand-region))
+  :config
+  (define-key evil-normal-state-map (kbd "C-=") 'er/expand-region)
+  (define-key evil-visual-state-map (kbd "C-=") 'er/expand-region)
+  (define-key evil-visual-state-map (kbd "C--") 'er/contract-region))
 
 ;; Pretty eye candy 🍬
 (use-package evil-goggles
@@ -538,34 +536,37 @@ NAME and ARGS are in `use-package'."
 (use-package savehist
   :hook (emacs-startup . savehist-mode)
   :init
-  (setq history-length 10000
-        savehist-autosave-interval nil     ; save on kill only
-        savehist-save-minibuffer-history t
-        savehist-file (expand-file-name "etc/savehist" my-emacs-d)
-        savehist-additional-variables
+  (setq savehist-additional-variables
         '(kill-ring                        ; persist clipboard
           register-alist                   ; persist macros
           search-ring regexp-search-ring)) ; persist searches
-  )
+  (setq history-length 10000
+        savehist-autosave-interval nil     ; save on kill only
+        savehist-save-minibuffer-history t
+        savehist-file (expand-file-name "etc/savehist" my-emacs-d)))
 
-;; ;; Save Emacs Session
-;; (use-feature desktop
-;;   :bind ("C-c s" . desktop-save-in-desktop-dir)
-;;   :hook
-;;   (after-init . desktop-read)
-;;   (after-init . desktop-save-mode)
-;;   :init
-;;   (setq desktop-files-not-to-save "^$"
-;;         desktop-load-locked-desktop t
-;;         desktop-restore-eager 3
-;;         desktop-restore-frames nil
-;;         desktop-path '("~/.emacs.default/"))
-;;   (add-to-list 'desktop-modes-not-to-save 'dired-mode)
-;;   (add-to-list 'desktop-modes-not-to-save 'help-mode)
-;;   (add-to-list 'desktop-modes-not-to-save 'magit-mode)
-;;   (add-to-list 'desktop-modes-not-to-save 'special-mode)
-;;   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-;;   (add-to-list 'desktop-modes-not-to-save 'completion-list-mode))
+;; Save Emacs Session
+;;
+(use-feature desktop
+  :hook
+  (after-init . desktop-save-mode)
+  (after-init . desktop-read)
+  :init
+  (setq desktop-files-not-to-save "^$"
+        desktop-base-file-name "desktop"
+        desktop-restore-eager 3
+        desktop-restore-frames nil
+        desktop-load-locked-desktop t
+        desktop-path '("~/.emacs.default/etc" "~" "."))
+  :config
+  (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+  (add-to-list 'desktop-modes-not-to-save 'help-mode)
+  (add-to-list 'desktop-modes-not-to-save 'info-mode)
+  (add-to-list 'desktop-modes-not-to-save 'magit-mode)
+  (add-to-list 'desktop-modes-not-to-save 'simple-mode)
+  (add-to-list 'desktop-modes-not-to-save 'special-mode)
+  (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+  (add-to-list 'desktop-modes-not-to-save 'completion-list-mode))
 
 ;; (use-package projectile
 ;;   :defer t
