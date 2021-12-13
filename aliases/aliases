@@ -36,5 +36,5 @@ alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'
 
 # Docker/ Podman images
-alias 'start-splash'='docker run -d --rm --name splash --restart always --net=host -p 8050:8050 --memory-reservation 1GB --memory 4G scrapinghub/splash:3.4csp --disable-browser-caches'
+alias 'start-splash'='docker run -d --rm --name splash --restart always --net=host -p 8050:8050 --memory-reservation 1GB --memory 4G scrapinghub/splash:3.5 --disable-browser-caches'
 alias 'stop-splash'='docker stop splash'

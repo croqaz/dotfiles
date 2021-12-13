@@ -157,22 +157,6 @@ NAME and ARGS are in `use-package'."
   (dired-async-mode t)
   (async-bytecomp-package-mode t))
 
-;; (use-package doom-themes
-;;   :init
-;;   (setq doom-theme 'doom-sourcerer
-;;         doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;;   :config
-;;   (load-theme doom-theme t)
-;;   ;; Enable flashing mode-line on errors
-;;   (doom-themes-visual-bell-config)
-;;   ;; Corrects (and improves) org-mode's native fontification
-;;   (doom-themes-org-config))
-
-;; (use-package solo-jazz-theme
-;;  :config
-;;  (load-theme 'solo-jazz t))
-
 (use-package modus-themes
   :init
   (setq modus-themes-slanted-constructs t
@@ -215,13 +199,6 @@ NAME and ARGS are in `use-package'."
 ;;         (fg-unfocused . "#9a9aab")))
 ;; (load-theme 'modus-vivendi t)
 
-;; Resolve symlinks when opening files
-(use-feature files
-  :init
-  (setq require-final-newline t
-        find-file-visit-truename t
-        find-file-suppress-same-file-warnings t))
-
 ;; Builtin dired config
 (use-feature dired
   :init
@@ -233,16 +210,31 @@ NAME and ARGS are in `use-package'."
         dired-create-destination-dirs 'ask
         ;; Human readable units
         dired-listing-switches "-alh -v --group-directories-first")
+  :hook
+  (dired-mode . (lambda () (centaur-tabs-local-mode t)))
   :config
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
   (define-key dired-mode-map (kbd "^") (lambda () (find-alternate-file ".."))))
 
 (use-feature dired-x)
 
-;; Colourful dired
-(use-package diredfl
+;; Ranger instead of Dired
+;;
+(use-package ranger
   :after dired
-  :hook (dired-mode . diredfl-mode))
+  :hook
+  (ranger-mode . (lambda () (centaur-tabs-local-mode t)))
+  :init
+  (setq ranger-cleanup-on-disable t
+        ranger-cleanup-eagerly t
+        ranger-deer-show-details t
+        ranger-excluded-extensions '("mkv" "iso" "mp4")
+        ranger-max-preview-size 10
+        ranger-modify-header nil
+        ranger-show-literal nil
+        ranger-hide-cursor nil)
+  :config
+  (ranger-override-dired-mode t))
 
 ;; Use zsh as default term shell
 (setq-default explicit-shell-file-name "zsh")
@@ -298,21 +290,22 @@ NAME and ARGS are in `use-package'."
   (hl-line-sticky-flag nil))
 
 ;; Automatically refresh the buffer when the file changes
-;; Not enabled yet
 ;;
-;; (use-feature autorevert
-;;   :init
-;;   ;; Only rely on the OS notification mechanism
-;;   (setq auto-revert-avoid-polling t)
-;;   :config
-;;   (global-auto-revert-mode t))
+(use-feature autorevert
+  :init
+  ;; Only rely on the OS notification mechanism
+  (setq auto-revert-avoid-polling t)
+  :config
+  (global-auto-revert-mode t))
+
+(use-package undo-fu)
 
 (use-package evil
   :init
   (setq evil-respect-visual-line-mode t
         evil-kill-on-visual-paste nil
         evil-shift-width 2
-        evil-undo-system 'undo-tree
+        evil-undo-system 'undo-fu
         evil-kbd-macro-suppress-motion-error t
         evil-move-cursor-back nil
         evil-split-window-below  t  ;; move cursor below after split
@@ -322,6 +315,9 @@ NAME and ARGS are in `use-package'."
         evil-want-Y-yank-to-eol t
         evil-want-keybinding nil)
   :config
+  (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
+  (evil-define-key 'visual 'global "g<" #'evil-visual-shift-left)
+  (evil-define-key 'visual 'global "g>" #'evil-visual-shift-right)
   (evil-mode t))
 
 (use-package evil-collection
@@ -338,9 +334,6 @@ NAME and ARGS are in `use-package'."
                                simple
                                ))
   :config
-  (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
-  (evil-define-key 'visual 'global "g<" #'evil-visual-shift-left)
-  (evil-define-key 'visual 'global "g>" #'evil-visual-shift-right)
   (evil-collection-init))
 
 (defun evil-visual-shift-left()
@@ -361,19 +354,6 @@ NAME and ARGS are in `use-package'."
 (with-eval-after-load 'evil-maps
   (define-key evil-motion-state-map (kbd "SPC") nil)
   (define-key evil-motion-state-map (kbd "RET") nil))
-
-(use-package undo-tree
-  :hook
-  (prog-mode . undo-tree-mode)
-  (text-mode . undo-tree-mode)
-  :init
-  (setq undo-tree-visualizer-diff t
-        undo-tree-visualizer-timestamps t))
-
-(use-package origami
-  :hook
-  (prog-mode . origami-mode)
-  (text-mode . origami-mode))
 
 ;; Select and edit matches interactively
 ;; Use C-n for next and C-p for previous regions
@@ -410,6 +390,8 @@ NAME and ARGS are in `use-package'."
   (define-key evil-visual-state-map (kbd "C--") 'er/contract-region))
 
 ;; Pretty eye candy 🍬
+;; Visual hints when editing with evil
+;;
 (use-package evil-goggles
   :after evil
   :config
@@ -452,6 +434,7 @@ NAME and ARGS are in `use-package'."
 ;;   :hook (window-setup . yas-reload-all)
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
+;; Useful for quick snippets!
 (use-package auto-yasnippet
   :defer t)
 
@@ -501,8 +484,10 @@ NAME and ARGS are in `use-package'."
   :config
   (counsel-mode t))
 
-(use-package swiper
-  :after ivy)
+(use-package all-the-icons-ivy-rich
+  :after ivy
+  :config
+  (all-the-icons-ivy-rich-mode t))
 
 (use-package ivy-rich
   :after ivy
@@ -525,7 +510,7 @@ NAME and ARGS are in `use-package'."
         '("\\.?cache" ".cask" "url" "bookmarks" "COMMIT_EDITMSG\\'"
           "\\.\\(?:gz\\|zip\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
           "\\.last$" "/G?TAGS$" "/.elfeed/" "~$" "\\.log$"
-          "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/persp-confs/"
+          "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/Dev/dotfiles/emacs/"
           (lambda (file) (file-in-directory-p file package-user-dir))))
   :config
   (push (expand-file-name recentf-save-file) recentf-exclude)
@@ -554,7 +539,7 @@ NAME and ARGS are in `use-package'."
   :init
   (setq desktop-files-not-to-save "^$"
         desktop-base-file-name "desktop"
-        desktop-restore-eager 3
+        desktop-restore-eager 5
         desktop-restore-frames nil
         desktop-load-locked-desktop t
         desktop-path '("~/.emacs.default/etc" "~" "."))
@@ -567,18 +552,6 @@ NAME and ARGS are in `use-package'."
   (add-to-list 'desktop-modes-not-to-save 'special-mode)
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
   (add-to-list 'desktop-modes-not-to-save 'completion-list-mode))
-
-;; (use-package projectile
-;;   :defer t
-;;   :init
-;;   (setq projectile-project-search-path '("~/Dev/" "~/org/"))
-;;   (setq projectile-completion-system 'ivy))
-
-;; (use-package counsel-projectile
-;;   :after projectile
-;;   :init
-;;   ;; No highlighting visited files
-;;   (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 
 (use-package org
   :defer t
@@ -618,6 +591,7 @@ NAME and ARGS are in `use-package'."
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("js" . "src javascript"))
   ;; Enable these babel languages:
   (org-babel-do-load-languages
    'org-babel-load-languages '(
@@ -754,6 +728,31 @@ NAME and ARGS are in `use-package'."
   ;; Display errors a little quicker
   (setq flycheck-display-errors-delay 0.5))
 
+;; Emacs Language Server Protocol client
+;; https://emacs-lsp.github.io/lsp-mode
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook
+  (lsp-mode . lsp-enable-which-key-integration)
+  :custom
+  (lsp-diagnostics-provider :flycheck)
+  (lsp-enable-text-document-color nil)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-show-with-cursor nil)
+  :init
+  (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
+  :config
+  ;; ignore folders like .git, node_modules, and also:
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.mypy_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.pytest_cache\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\data\\'"))
+
+;; (use-package lsp-ivy
+;;   :after lsp-mode)
+
 ;; My custom python path
 (setq my-python "~/Dev/py-env8/bin/python")
 
@@ -771,54 +770,6 @@ NAME and ARGS are in `use-package'."
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
-(use-package elpy
-  :after python
-  :init
-  (setq python-shell-interpreter "ipython"
-        python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"
-        elpy-formatter 'yapf
-        elpy-rpc-python-command my-python
-        elpy-rpc-virtualenv-path 'current
-        python-indent-guess-indent-offset-verbose nil
-        python-shell-prompt-detect-failure-warning nil)
-  (advice-add 'python-mode :before 'elpy-enable)
-  ;; (reformatter-define black :program "black")
-  ;; (reformatter-define yapf :program "yapf"
-  ;;  :args '("--style='{based_on_style: yapf, column_limit: 100}'"))
-  :config
-  (when (load "flycheck" t t)
-    ;; Remove flymake and django mode from modules
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    (setq elpy-modules (delq 'elpy-module-django elpy-modules))
-    (add-hook 'elpy-mode-hook 'flycheck-mode)))
-
-
-;; Emacs Language Server Protocol client
-;; https://emacs-lsp.github.io/lsp-mode
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook
-  (lsp-mode . lsp-enable-which-key-integration)
-  :custom
-  (lsp-diagnostics-provider :flycheck)
-  (lsp-disabled-clients '((python-mode . pyls)))
-  (lsp-enable-folding nil)
-  (lsp-enable-text-document-color nil)
-  (lsp-headerline-breadcrumb-enable t)
-  (lsp-headerline-breadcrumb-segments '(project file symbols))
-  (lsp-lens-enable nil)
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-doc-show-with-cursor nil)
-  :init
-  (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
-  :config
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.mypy_cache\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.pytest_cache\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\data\\'"))
-
-;; (use-package lsp-ivy
-;;   :after lsp-mode)
-
 ;; https://github.com/microsoft/pyright
 (use-package lsp-pyright
   :hook
@@ -826,12 +777,24 @@ NAME and ARGS are in `use-package'."
                    (require 'lsp-pyright)
                    (lsp-deferred))))
 
+(defun yapf-fmt-code ()
+  "Simple format Python region, or buffer with YAPF."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (setq beg (point-min)
+            end (point-max)))
+    (shell-command-on-region
+     beg end "yapf --style='{based_on_style:pep8, column_limit:120}'"
+     nil t)))
+
 (use-package js2-mode
   :defer t
   :mode ("\\.js\\'" . js2-mode)
   :init
-  (setq js2-basic-offset 2
-        css-indent-offset 4
+  (setq css-indent-offset 4
         js-indent-level 4
         javascript-indent-level 4
         typescript-indent-level 4)
@@ -847,6 +810,19 @@ NAME and ARGS are in `use-package'."
   (setq javascript-indent-level 4
         typescript-indent-level 4)
   :hook (typescript-mode . lsp-deferred))
+
+(defun prettier-fmt-code ()
+  "Simple format region or buffer, with Prettier."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (setq beg (point-min)
+            end (point-max)))
+    (shell-command-on-region
+     beg end "prettier --single-quote --tab-width 4 --print-width 120 --trailing-comma all --stdin-filepath script.js"
+     nil t)))
 
 (use-package yaml-mode
   :defer t
@@ -910,6 +886,7 @@ NAME and ARGS are in `use-package'."
     "ff"  'counsel-find-file  ;; visit or create file
     "fg"  'counsel-git        ;; find file in the current Git repo
     "fr"  'counsel-recentf    ;; find a file in recentf list
+    "fR"  'ranger
     "fs"  'save-buffer
     ;;
     "g" '(:ignore t :wk "G")
@@ -967,34 +944,6 @@ NAME and ARGS are in `use-package'."
     "xx"  'delete-duplicate-lines
     "xl"  'sort-lines))
 
-;; (use-package treemacs
-;;   :defer t
-;;   :init
-;;   (setq treemacs-follow-after-init t
-;;         treemacs-follow-mode nil
-;;         treemacs-sorting 'alphabetic-case-insensitive-asc
-;;         treemacs-width 24) ;; Width of the treemacs window
-;;   :config
-;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
-;;   :bind
-;;   (:map global-map
-;;         ("C-x t 1"   . treemacs-delete-other-windows)
-;;         ("C-x t t"   . treemacs)
-;;         ("C-x t T"   . treemacs-display-current-project-exclusively)
-;;         ("C-x t C-t" . treemacs-find-file)
-;;         ("C-x t M-t" . treemacs-find-tag)))
-
-;; (use-package treemacs-evil
-;;   :after treemacs)
-
-;; (use-package treemacs-icons-dired
-;;   :after treemacs
-;;   :config (treemacs-icons-dired-mode))
-
-;; ;; Tree + Projects = Love
-;; (use-package treemacs-projectile
-;;   :after (treemacs projectile))
-
 (use-package all-the-icons)
 
 ;; Top tabs
@@ -1008,6 +957,10 @@ NAME and ARGS are in `use-package'."
         centaur-tabs-modified-marker "•"
         centaur-tabs-gray-out-icons 'buffer
         centaur-tabs-set-modified-marker t)
+  :bind
+  (:map evil-normal-state-map
+        ("g t" . centaur-tabs-forward-tab)
+        ("g T" . centaur-tabs-backward-tab))
   :config
   (centaur-tabs-headline-match)
   (defun centaur-tabs-buffer-groups ()
@@ -1022,6 +975,7 @@ NAME and ARGS are in `use-package'."
        "Emacs")
       ((or
         (derived-mode-p 'dired-mode)
+        (derived-mode-p 'ranger-mode)
         (derived-mode-p 'image-mode))
        "Explore")
       ((or (derived-mode-p 'text-mode)
@@ -1056,6 +1010,16 @@ NAME and ARGS are in `use-package'."
   :config
   (dimmer-configure-magit)
   (dimmer-configure-which-key))
+
+;; Resolve symlinks when opening files
+;; This MUST BE THE LAST PACKAGE
+;; There are some issues with visit truename
+;; https://github.com/raxod502/straight.el/issues/701
+(use-feature files
+  :init
+  (setq require-final-newline t
+        find-file-visit-truename t
+        find-file-suppress-same-file-warnings t))
 
 ;; From: https://www.emacswiki.org/emacs/SortWords
 ;;
