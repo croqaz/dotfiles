@@ -400,6 +400,9 @@ Asynchronous processing lib. Not sure if it does anything...?
   ;; Trim whitespaces on save
   (before-save . delete-trailing-whitespace))
 
+;; disable with:
+;; (remove-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; Highlight the current line
 ;;
 (use-feature hl-line
@@ -425,6 +428,11 @@ Asynchronous processing lib. Not sure if it does anything...?
 
 #+begin_src emacs-lisp
 (use-package undo-fu)
+
+(use-package origami
+  :hook
+  (prog-mode . origami-mode)
+  (text-mode . origami-mode))
 
 (use-package evil
   :init
@@ -844,6 +852,14 @@ Save recent files, history and sessions.
     '("-t" "Fetch all tags" ("-t" "--tags")))
   (transient-append-suffix 'magit-pull "-r"
     '("-a" "Autostash" "--autostash")))
+#+end_src
+
+#+begin_src emacs-lisp
+;; Use keychain ENV, don't ask for passwords
+;;
+(use-package keychain-environment
+  :after magit
+  :hook (after-init . keychain-refresh-environment))
 
 (use-package git-gutter-fringe
   :after magit
@@ -1217,6 +1233,7 @@ I'm not entirely sure if I need both.
 ** Utils
 
 #+begin_src emacs-lisp
+;; Sorting: https://www.emacswiki.org/emacs/Sorting
 ;; From: https://www.emacswiki.org/emacs/SortWords
 ;;
 (defun sort-words (reverse beg end)

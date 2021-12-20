@@ -13,4 +13,8 @@ pdfextract() {
 
 # Merge PDF files, preserving hyperlinks
 # Usage: `mergepdf input{1,2,3}.pdf`
-alias pdfmerge='gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOutputFile=_merged.pdf'
+alias pdfmerge='gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=_merged.pdf'
+
+# Compress PDF files with /ebook option
+# https://www.ghostscript.com/doc/current/VectorDevices.htm
+alias pdfcompress='gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -dColorImageResolution=72 -dMonoImageResolution=72 -dGrayImageResolution=72 -dEmbedAllFonts=true -dSubsetFonts=true -dNOPAUSE -dBATCH -dSAFER -sOutputFile=_compressed.pdf'

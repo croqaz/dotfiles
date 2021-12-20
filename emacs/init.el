@@ -278,6 +278,9 @@ NAME and ARGS are in `use-package'."
   ;; Trim whitespaces on save
   (before-save . delete-trailing-whitespace))
 
+;; disable with:
+;; (remove-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; Highlight the current line
 ;;
 (use-feature hl-line
@@ -299,6 +302,11 @@ NAME and ARGS are in `use-package'."
   (global-auto-revert-mode t))
 
 (use-package undo-fu)
+
+(use-package origami
+  :hook
+  (prog-mode . origami-mode)
+  (text-mode . origami-mode))
 
 (use-package evil
   :init
@@ -684,6 +692,12 @@ NAME and ARGS are in `use-package'."
   (transient-append-suffix 'magit-pull "-r"
     '("-a" "Autostash" "--autostash")))
 
+;; Use keychain ENV, don't ask for passwords
+;;
+(use-package keychain-environment
+  :after magit
+  :hook (after-init . keychain-refresh-environment))
+
 (use-package git-gutter-fringe
   :after magit
   :init
@@ -1021,6 +1035,7 @@ NAME and ARGS are in `use-package'."
         find-file-visit-truename t
         find-file-suppress-same-file-warnings t))
 
+;; Sorting: https://www.emacswiki.org/emacs/Sorting
 ;; From: https://www.emacswiki.org/emacs/SortWords
 ;;
 (defun sort-words (reverse beg end)
