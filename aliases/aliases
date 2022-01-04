@@ -41,4 +41,4 @@ alias 'stop-splash'='docker stop splash'
 
 # Isolated browsers
 alias 'browser-brave'='xhost +local: && podman run -it --rm --cap-add=SYS_PTRACE -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/brave-arch:/home/.config/BraveSoftware/Brave-Browser-Beta:U -v $HOME/Dev:/home/Dev:ro brave-arch'
-alias 'browser-chrom='xhost +local: && podman run -it --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/chrom-arch:/home/.config/chromium:U -v $HOME/Dev:/home/Dev:ro chrom-arch'
+alias 'browser-chrom'='xhost +local: && podman run -it --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/chrom-arch:/home/.config/chromium:U -v $HOME/Dev:/home/Dev:ro chrom-arch'

@@ -408,7 +408,6 @@ Asynchronous processing lib. Not sure if it does anything...?
 (use-feature hl-line
   :defer t
   :hook
-  (dired-mode . hl-line-mode)
   (prog-mode . hl-line-mode)
   (text-mode . hl-line-mode)
   :custom
@@ -1188,6 +1187,7 @@ I'm not entirely sure if I need both.
        "Explore")
       ((or (derived-mode-p 'text-mode)
            (derived-mode-p 'prog-mode)
+           (derived-mode-p 'conf-mode)
            (derived-mode-p 'org-mode)
            (memq major-mode '(org-src-mode
                               org-agenda-mode

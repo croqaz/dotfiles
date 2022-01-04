@@ -286,7 +286,6 @@ NAME and ARGS are in `use-package'."
 (use-feature hl-line
   :defer t
   :hook
-  (dired-mode . hl-line-mode)
   (prog-mode . hl-line-mode)
   (text-mode . hl-line-mode)
   :custom
@@ -994,6 +993,7 @@ NAME and ARGS are in `use-package'."
        "Explore")
       ((or (derived-mode-p 'text-mode)
            (derived-mode-p 'prog-mode)
+           (derived-mode-p 'conf-mode)
            (derived-mode-p 'org-mode)
            (memq major-mode '(org-src-mode
                               org-agenda-mode
