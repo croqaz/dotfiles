@@ -21,7 +21,7 @@ markup=pango
 interval=10
 
 [volume]
-command=$HOME/.local/scripts/vol_pulseaudio.sh -F '${SYMB} ${VOL}%'
+command=$HOME/.local/scripts/vol_pipewire.sh -F '${SYMB} ${VOL}%'
 interval=10
 signal=10
 

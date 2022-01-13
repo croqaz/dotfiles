@@ -325,6 +325,8 @@ NAME and ARGS are in `use-package'."
   (evil-define-key 'normal 'global "zx" #'kill-current-buffer)
   (evil-define-key 'visual 'global "g<" #'evil-visual-shift-left)
   (evil-define-key 'visual 'global "g>" #'evil-visual-shift-right)
+  (evil-define-key 'normal 'global [mouse-8] #'evil-jump-backward)
+  (evil-define-key 'normal 'global [mouse-9] #'evil-jump-forward)
   (evil-mode t))
 
 (use-package evil-collection
