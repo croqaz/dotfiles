@@ -89,7 +89,8 @@
 (setq-default indent-tabs-mode nil
               tab-always-indent nil
               default-tab-width 4
-              tab-width 4)
+              tab-width 4
+              tab-stop-list (number-sequence 4 120 4))
 
 (setq electric-pair-pairs '((?\{ . ?\})
                             (?\( . ?\))
@@ -239,14 +240,14 @@ NAME and ARGS are in `use-package'."
 ;; Use zsh as default term shell
 (setq-default explicit-shell-file-name "zsh")
 
-(use-package vterm
-  :defer t
-  :commands (vterm vterm-other-window)
-  :bind
-  (:map vterm-mode-map
-        ("C-c C-c" . vterm-send-C-c))
-  :config
-  (evil-set-initial-state 'vterm-mode 'emacs))
+;; (use-package vterm
+;;   :defer t
+;;   :commands (vterm vterm-other-window)
+;;   :bind
+;;   (:map vterm-mode-map
+;;         ("C-c C-c" . vterm-send-C-c))
+;;   :config
+;;   (evil-set-initial-state 'vterm-mode 'emacs))
 
 ;; Enable visual-line, line and column almost everywhere
 ;;
@@ -779,9 +780,10 @@ NAME and ARGS are in `use-package'."
   (python-mode . flycheck-mode)
   (python-mode . company-mode)
   (python-mode . yas-minor-mode)
-  :init
-  (setq python-indent 4)
-  (setq python-indent-offset 4)
+  :config
+  (setq evil-shift-width 4
+        python-indent 4
+        python-indent-offset 4)
   (setq python-shell-interpreter "ipython"
         python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
@@ -810,6 +812,7 @@ NAME and ARGS are in `use-package'."
   :mode ("\\.js\\'" . js2-mode)
   :init
   (setq css-indent-offset 4
+        evil-shift-width 4
         js-indent-level 4
         javascript-indent-level 4
         typescript-indent-level 4)

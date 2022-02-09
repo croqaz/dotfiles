@@ -28,4 +28,4 @@ signal=10
 [date_time]
 command=date "+%a %d %b&#183;%H:%M "
 markup=pango
-interval=15
+interval=30
