@@ -33,14 +33,14 @@
 (setq frame-resize-pixelwise t)
 
 ;; Disable startup features
-(setq inhibit-startup-screen t
+(setq inhibit-splash-screen t
+      inhibit-startup-screen t
       inhibit-startup-message t
       initial-scratch-message ";; scratch\n")
 
 ;; Auto-compile options
 (setq load-prefer-newer t)
-(setq auto-compile-mode-line-counter t)
-(setq auto-compile-update-autoloads t)
+;; (setq comp-deferred-compilation nil)
 
 ;; THIS FILE IS TANGLED, DON'T EDIT
 ;;

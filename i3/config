@@ -225,6 +225,7 @@ exec --no-startup-id "setxkbmap -model pc101 -layout us -variant altgr-intl -opt
 
 exec --no-startup-id "sxhkd -m 1"
 exec_always --no-startup-id "picom -b"
+exec_always --no-startup-id "udiskie"
 # exec_always --no-startup-id "systemctl --user restart dunst"
 
 # Setup lock screen and wallpaper

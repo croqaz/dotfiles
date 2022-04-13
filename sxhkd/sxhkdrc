@@ -14,23 +14,8 @@ super + space
 super + Return
 	kitty --single-instance
 
-#super + shift + w
-#	firefox
-
-#super + shift + m
-#	thunderbird
-
-#super + shift + e
-#	emacs
-
 super + shift + n
 	kitty -1 -e nnn
-
-super + shift + i
-	kitty -1 -e htop
-
-super + shift + y
-	kitty -1 -e ipython
 
 @Print
 	scrot -q 85 -e 'mv $f ~/Pictures/' && notify-send "Screenshot saved"

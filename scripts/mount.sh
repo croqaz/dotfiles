@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# This script requires udevil for mounting
-# https://github.com/IgnorantGuru/udevil
+# This script requires udisks for mounting
+# https://freedesktop.org/wiki/Software/udisks
 #
 s=$(lsblk -rpo "name,type,fstype,size,mountpoint" | sort | grep 'part\|rom' | \
   awk '$5==""{printf "%s %s %s\n",$1,$3,$4}' | rofi -dmenu -mesg Mount -i -p '>' \
@@ -10,7 +10,7 @@ s=$(lsblk -rpo "name,type,fstype,size,mountpoint" | sort | grep 'part\|rom' | \
 if [[ $s == /* ]] ;
 then
 	echo "Mounting: $s"
-	out=$(udevil mount -o nosuid,nodev,noexec,noatime $s | awk '{print $4}')
+	out=$(udisksctl mount -b $s | awk '{print $4}')
 	echo "Mounted: $out"
 	nnn $out
 else
