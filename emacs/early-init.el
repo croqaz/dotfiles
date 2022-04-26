@@ -40,7 +40,6 @@
 
 ;; Auto-compile options
 (setq load-prefer-newer t)
-;; (setq comp-deferred-compilation nil)
 
 ;; THIS FILE IS TANGLED, DON'T EDIT
 ;;

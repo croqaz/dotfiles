@@ -1,9 +1,3 @@
-alias -g ..='cd ..'
-alias -g ...='cd ../..'
-alias -g ....='cd ../../..'
-alias -g .....='cd ../../../..'
-alias -g ......='cd ../../../../..'
-
 alias rcp='rsync -hptv --progress'
 alias rmv='rsync -hptv --progress --remove-source-files'
 
@@ -11,7 +5,6 @@ alias reload="source $HOME/.zshrc"
 alias brewsky='brew update && brew upgrade && brew cleanup -s --prune=3'
 alias 'apt-update'='sudo apt update && sudo apt autoclean && sudo apt autoremove'
 
-# alias o='handlr open'
 alias pac='sudo pacman'
 
 alias vi=nvim
@@ -29,8 +22,11 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[
 
 # Dev stuff
 alias 'py-env'='source ${HOME}/Dev/py-env8/bin/activate'
+alias 'py-imdb'='source ${HOME}/Dev/py-imdb/bin/activate'
 # alias 'py-env9'='source ${HOME}/Dev/py-env9/bin/activate'
 alias 'rm-pyco'='rm --interactive=once -r `find . -name __pycache__` && rm --interactive=once -f `find . -type f -name "*.py[co]"`'
+
+alias ipy='ipython -i --colors=Linux --no-confirm-exit'
 
 alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'

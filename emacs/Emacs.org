@@ -43,14 +43,13 @@
 (setq frame-resize-pixelwise t)
 
 ;; Disable startup features
-(setq inhibit-startup-screen t
+(setq inhibit-splash-screen t
+      inhibit-startup-screen t
       inhibit-startup-message t
       initial-scratch-message ";; scratch\n")
 
 ;; Auto-compile options
 (setq load-prefer-newer t)
-(setq auto-compile-mode-line-counter t)
-(setq auto-compile-update-autoloads t)
 
 ;; THIS FILE IS TANGLED, DON'T EDIT
 ;;
@@ -118,9 +117,9 @@
 
 #+begin_src emacs-lisp
 (setq my-font "JetBrains Mono Light")
-(set-face-attribute 'default nil :family my-font :height 105)
-(set-face-attribute 'fixed-pitch nil :family my-font :height 105)
-(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 105)
+(set-face-attribute 'default nil :family my-font :height 108)
+(set-face-attribute 'fixed-pitch nil :family my-font :height 108)
+(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 108)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
@@ -211,7 +210,7 @@ Install packages with straight.el and use-package.el.
 
 (setq package-enable-at-startup nil
       straight-use-package-by-default t
-      straight-check-for-modifications '(check-on-save)
+      straight-check-for-modifications nil
       straight-vc-git-default-clone-depth 1
       straight-vc-git-default-protocol 'https)
 
@@ -268,47 +267,67 @@ Asynchronous processing lib. Not sure if it does anything...?
 ** Theme
 
 #+begin_src emacs-lisp
+;; (disable-theme)
 (use-package modus-themes
   :init
-  (setq modus-themes-slanted-constructs t
+  (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes 'subtle
         modus-themes-no-mixed-fonts t
         modus-themes-scale-headings t
         modus-themes-subtle-line-numbers t)
-  (setq modus-themes-mode-line 'borderless-3d)
-  (setq modus-themes-org-blocks 'tinted-gray)
+  (setq modus-themes-mode-line '(accented 3d))
+  (setq modus-themes-org-blocks 'gray-background)
+  (setq modus-themes-syntax '(faint))
+  (setq modus-themes-links '(faint neutral-underline))
+  (setq modus-themes-inhibit-reload nil)
   ;; Load the theme files before enabling a theme
   (modus-themes-load-themes)
   :custom
   (modus-themes-operandi-color-overrides
-   '((bg-main . "#F0F2F7")
-     (fg-main . "#101010")
-     (fg-window-divider-inner . "#FAFAFA")))
-  (modus-themes-vivendi-color-overrides
-   '((bg-main . "#101010")
-     (fg-main . "#FAFAFA")
-     (fg-window-divider-inner . "#101010")))
-  :config
-  (modus-themes-load-operandi)
-  ;; (modus-themes-load-vivendi)
-  :bind ("<f5>" . modus-themes-toggle))
+   '((bg-main . "#f7f7f7")
+     (bg-dim . "#f2f2f2")
+     (bg-alt . "#e8e8e8")
+     (bg-hl-line . "#eaeaef")
+     (bg-active . "#e0e0e0")
+     (bg-inactive . "#e6e6e6")
+     (bg-region . "#b5b5b5")
+     (bg-header . "#e4e4e4")
+     (bg-tab-bar . "#d1d1d4")
+     (bg-tab-active . "#f5f5f5")
+     (bg-tab-inactive . "#c0c0c0")))
 
-;; (setq modus-themes-vivendi-color-overrides nil)
-;; (setq modus-themes-vivendi-color-overrides
-;;       '((bg-main . "#282828") (fg-main . "#fdf4c1")
-;;         (bg-dim . "#32302f") (fg-dim . "#f4e8ba")
-;;         (bg-alt . "#3c3836") (fg-alt . "#ebdbb2")
-;;         (bg-hl-line . "#191628")
-;;         (bg-active . "#282e46")
-;;         (bg-inactive . "#1a1e39")
-;;         (bg-region . "#393a53")
-;;         (bg-header . "#202037")
-;;         (bg-tab-bar . "#262b41")
-;;         (bg-tab-active . "#120f18")
-;;         (bg-tab-inactive . "#3a3a5a")
-;;         (fg-unfocused . "#9a9aab")))
-;; (load-theme 'modus-vivendi t)
+  ;; (darktooth-dark0_hard    . "#1D2021")
+  ;; (darktooth-dark0         . "#282828")
+  ;; (darktooth-dark0_soft    . "#32302F")
+  ;; (darktooth-dark1         . "#3C3836")
+  ;; (darktooth-dark2         . "#504945")
+  ;; (darktooth-dark3         . "#665C54")
+  ;; (darktooth-dark4         . "#7C6F64")
+
+  ;; (darktooth-light0_hard   . "#FFFFC8")
+  ;; (darktooth-light0        . "#FDF4C1")
+  ;; (darktooth-light0_soft   . "#F4E8BA")
+  ;; (darktooth-light1        . "#EBDBB2")
+  ;; (darktooth-light2        . "#D5C4A1")
+  ;; (darktooth-light3        . "#BDAE93")
+  ;; (darktooth-light4        . "#A89984")
+
+  ;; (darktooth-white          . "#FFFFFF")
+  ;; (darktooth-black          . "#000000")
+  ;; (darktooth-sienna         . "#DD6F48")
+  ;; (darktooth-darkslategray4 . "#528B8B")
+  ;; (darktooth-lightblue4     . "#66999D")
+  ;; (darktooth-burlywood4     . "#BBAA97")
+  ;; (darktooth-aquamarine4    . "#83A598")
+  ;; (darktooth-turquoise4     . "#61ACBB")
+
+  (modus-themes-vivendi-color-overrides
+   '((bg-main . "#282828")
+     (fg-main . "#FDF4C1")
+     ))
+  :config
+  (modus-themes-load-operandi))
 #+end_src
 
 ** Files
@@ -325,13 +344,17 @@ Asynchronous processing lib. Not sure if it does anything...?
         dired-create-destination-dirs 'ask
         ;; Human readable units
         dired-listing-switches "-alh -v --group-directories-first")
+  (setq image-dired-thumb-size 128)
   :hook
   (dired-mode . (lambda () (centaur-tabs-local-mode t)))
   :config
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
   (define-key dired-mode-map (kbd "^") (lambda () (find-alternate-file ".."))))
 
-(use-feature dired-x)
+(use-feature dired-x
+  :init
+  (setq dired-omit-verbose nil
+        dired-clean-confirm-killing-deleted-buffers nil))
 
 ;; Ranger instead of Dired
 ;;
@@ -343,7 +366,6 @@ Asynchronous processing lib. Not sure if it does anything...?
   (setq ranger-cleanup-on-disable t
         ranger-cleanup-eagerly t
         ranger-deer-show-details t
-        ranger-excluded-extensions '("mkv" "iso" "mp4")
         ranger-max-preview-size 10
         ranger-modify-header nil
         ranger-show-literal nil
@@ -356,7 +378,8 @@ Asynchronous processing lib. Not sure if it does anything...?
 
 #+begin_src emacs-lisp
 ;; Use zsh as default term shell
-(setq-default explicit-shell-file-name "zsh")
+(setq-default shell-file-name "zsh"
+              explicit-shell-file-name "zsh")
 
 ;; (use-package vterm
 ;;   :defer t
@@ -419,7 +442,8 @@ Asynchronous processing lib. Not sure if it does anything...?
 (use-feature autorevert
   :init
   ;; Only rely on the OS notification mechanism
-  (setq auto-revert-avoid-polling t)
+  (setq auto-revert-avoid-polling t
+        auto-revert-verbose t)
   :config
   (global-auto-revert-mode t))
 #+end_src
@@ -663,9 +687,9 @@ Save recent files, history and sessions.
         recentf-save-file (expand-file-name "etc/recentf" my-emacs-d)
         recentf-exclude
         '("\\.?cache" ".cask" "url" "bookmarks" "COMMIT_EDITMSG\\'"
-          "\\.\\(?:gz\\|zip\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+          "\\.\\(?:gz\\|zip\\|svg\\|gif\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
           "\\.last$" "/G?TAGS$" "/.elfeed/" "~$" "\\.log$"
-          "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/Dev/dotfiles/emacs/"
+          "^/ssh:" "^/tmp/" "^/var/folders/" "^/usr/lib/" "^/Dev/dotfiles/emacs/"
           (lambda (file) (file-in-directory-p file package-user-dir))))
   :config
   (push (expand-file-name recentf-save-file) recentf-exclude)
@@ -723,9 +747,8 @@ Save recent files, history and sessions.
         org-directory "~/org/"
         ;; Show entities in \name form
         org-pretty-entities nil
-        ;; Hide the emphasis marker characters
-        org-ellipsis "…"
         org-hide-emphasis-markers t
+        org-fontify-whole-heading-line t
         org-edit-src-content-indentation 0
         org-tags-column -66
         ;; invisible region before inserting or deleting a char
@@ -746,15 +769,17 @@ Save recent files, history and sessions.
         ;; Indentation per level in number of characters
         org-indent-indentation-per-level 1
         ;; Turn on indent for all org files
-        org-startup-indented t)
+        org-startup-indented t
+        ;; interpret "_" and "^" for display
+        org-use-sub-superscripts '{})
   :config
   ;; Enable org structure templates
   (add-to-list 'org-modules 'org-tempo t)
   ;; Add a few more templates
-  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python"))
   (add-to-list 'org-structure-template-alist '("js" . "src javascript"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   ;; Enable these babel languages:
   (org-babel-do-load-languages
    'org-babel-load-languages '(
@@ -1036,11 +1061,19 @@ I'm not entirely sure if I need both.
 ** LUA
 
 #+begin_src emacs-lisp
-(use-package lua-mode
+;; (use-package lua-mode
+;;   :defer t
+;;   :mode ("\\.lua\\'" . lua-mode)
+;;   :init
+;;   (setq lua-indent-level 2))
+#+end_src
+
+** Docker
+
+#+begin_src emacs-lisp
+(use-feature text-mode
   :defer t
-  :mode ("\\.lua\\'" . lua-mode)
-  :init
-  (setq lua-indent-level 2))
+  :mode ("/Dockerfile\\(?:\\.[^/\\]*\\)?\\'" . text-mode))
 #+end_src
 
 ** Keybindings
@@ -1048,6 +1081,10 @@ I'm not entirely sure if I need both.
 #+begin_src emacs-lisp
 ;; I don't want ESC as a modifier
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(defun switch-to-previous-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 (use-package general
   :demand t
@@ -1064,13 +1101,15 @@ I'm not entirely sure if I need both.
     ";"  'eval-expression
     ":"  'counsel-M-x
     "."  'counsel-projectile-find-file
+    "u"  '(universal-argument :wk "universal")
     "SPC" 'counsel-file-jump
     ;;
     "b" '(:ignore t :wk "Buffer")
+    "b TAB" 'switch-to-previous-buffer
     "bB"  'ibuffer-other-window
     "bI"  'counsel-ibuffer
-    "bM"  '((lambda () (switch-to-buffer "*Messages*")) :which-key "messages-buffer")
-    "bS"  '((lambda () (switch-to-buffer "*scratch*"))  :which-key "scratch-buffer")
+    "bM"  '((lambda () (interactive) (switch-to-buffer "*Messages*")) :wk "switch to Messages")
+    "bS"  '((lambda () (interactive) (switch-to-buffer "*scratch*")) :wk "switch to Scratch")
     "bb"  'counsel-switch-buffer
     "bk"  'kill-buffer
     "bn"  'next-buffer
@@ -1114,9 +1153,10 @@ I'm not entirely sure if I need both.
     "nw"  'widen
     ;;
     "o" '(:ignore t :wk "O")
-    "op"  'treemacs
-    "ot"  'org-babel-tangle
+    "oP"  '((lambda () (interactive) (org-publish-all t)) :wk "org publish all projects")
     "oT"  'org-babel-tangle-file
+    "op"  'org-publish-current-file
+    "ot"  'org-babel-tangle
     ;;
     "t" '(:ignore t :wk "T")
     "t."  'vterm
