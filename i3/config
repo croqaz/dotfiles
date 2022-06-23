@@ -104,9 +104,9 @@ bindsym $mod+b          split horizontal
 bindsym $mod+Control+t  bar mode toggle
 
 # change gaps between windows (requires i3-gaps)
-bindsym $mod+z         gaps inner current plus 5
-# bindsym $mod+Shift+z gaps inner current minus 5
-bindsym $mod+Control+z gaps inner current set 0; gaps outer current set 0
+bindsym $mod+plus   gaps inner current plus 5
+bindsym $mod+minus  gaps inner current minus 5
+bindsym $mod+0      gaps inner current set 0; gaps outer current set 0
 
 # kill focused window
 bindsym $meh+q       [con_id="__focused__"] kill

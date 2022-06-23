@@ -285,15 +285,15 @@ Asynchronous processing lib. Not sure if it does anything...?
   (modus-themes-load-themes)
   :custom
   (modus-themes-operandi-color-overrides
-   '((bg-main . "#f7f7f7")
-     (bg-dim . "#f2f2f2")
+   '((bg-main . "#f3f9f3")
+     (bg-dim . "#f1f5f1")
      (bg-alt . "#e8e8e8")
      (bg-hl-line . "#eaeaef")
      (bg-active . "#e0e0e0")
      (bg-inactive . "#e6e6e6")
      (bg-region . "#b5b5b5")
      (bg-header . "#e4e4e4")
-     (bg-tab-bar . "#d1d1d4")
+     (bg-tab-bar . "#c3c9c3")
      (bg-tab-active . "#f5f5f5")
      (bg-tab-inactive . "#c0c0c0")))
 
@@ -453,6 +453,13 @@ Asynchronous processing lib. Not sure if it does anything...?
 #+begin_src emacs-lisp
 (use-package undo-fu)
 
+;; (use-feature hideshow
+;;   :commands (hs-toggle-hiding
+;;              hs-hide-block
+;;              hs-hide-level
+;;              hs-show-all
+;;              hs-hide-all))
+
 (use-package origami
   :hook
   (prog-mode . origami-mode)
@@ -514,6 +521,15 @@ Asynchronous processing lib. Not sure if it does anything...?
 (with-eval-after-load 'evil-maps
   (define-key evil-motion-state-map (kbd "SPC") nil)
   (define-key evil-motion-state-map (kbd "RET") nil))
+
+;; (use-package vimish-fold
+;;   :after evil)
+
+;; (use-package evil-vimish-fold
+;;   :after vimish-fold
+;;   :hook ((text-mode conf-mode prog-mode) . evil-vimish-fold-mode)
+;;   :init
+;;   (setq vimish-fold-indication-mode 'right-fringe))
 
 ;; Select and edit matches interactively
 ;; Use C-n for next and C-p for previous regions
@@ -793,7 +809,7 @@ Save recent files, history and sessions.
   :after org
   :hook ((org-mode . evil-org-mode)))
 
-
+;; Org publish projects
 (setq org-publish-project-alist
       '(("memex"
          :base-directory "~/org/mem/"
@@ -1015,10 +1031,9 @@ I'm not entirely sure if I need both.
 (use-package js2-mode
   :defer t
   :mode ("\\.js\\'" . js2-mode)
+  :hook (js2-mode . lsp-deferred)
   :init
-  (setq css-indent-offset 4
-        evil-shift-width 4
-        js-indent-level 4
+  (setq evil-shift-width 4
         javascript-indent-level 4
         typescript-indent-level 4)
   (setq js2-mode-assume-strict t
@@ -1029,10 +1044,23 @@ I'm not entirely sure if I need both.
 (use-package typescript-mode
   :defer t
   :mode ("\\.ts\\'" . typescript-mode)
+  :hook (typescript-mode . lsp-deferred)
   :init
   (setq javascript-indent-level 4
-        typescript-indent-level 4)
-  :hook (typescript-mode . lsp-deferred))
+        typescript-indent-level 4))
+
+(use-package web-mode
+  :defer t
+  :mode ("\\.html?\\'" . web-mode)
+  :init
+  (setq web-mode-enable-html-entities-fontification t
+        web-mode-auto-close-style 1
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-markup-indent-offset 2
+        web-mode-block-padding 0
+        web-mode-style-padding 0
+        web-mode-script-padding 0))
 
 (defun prettier-fmt-code ()
   "Simple format region or buffer, with Prettier."
@@ -1058,14 +1086,21 @@ I'm not entirely sure if I need both.
 ;;   :mode ("\\.pug\\'" . pug-mode))
 #+end_src
 
+** Go
+
+#+begin_src emacs-lisp
+(use-package go-mode
+  :defer t
+  :mode ("\\.go\\'" . go-mode)
+  :hook (go-mode . lsp-deferred))
+#+end_src
+
 ** LUA
 
 #+begin_src emacs-lisp
 ;; (use-package lua-mode
 ;;   :defer t
-;;   :mode ("\\.lua\\'" . lua-mode)
-;;   :init
-;;   (setq lua-indent-level 2))
+;;   :mode ("\\.lua\\'" . lua-mode))
 #+end_src
 
 ** Docker
@@ -1164,7 +1199,6 @@ I'm not entirely sure if I need both.
     "tn"  'centaur-tabs-forward
     "tp"  'centaur-tabs-backward
     "tr"  'counsel-evil-registers
-    "tt"  'vterm-other-window
     "tu"  'undo-tree-visualize
     ;;
     "w" '(:ignore t :wk "Window")
