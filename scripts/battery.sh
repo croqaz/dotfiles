@@ -71,7 +71,7 @@ else
     CHARGE_ICON=$_SYMBOL_UNKNOWN
 fi
 
-_SPACE=" "
+_SPACE=" "
 
 if [ -n "$VALUE_COLOR" ]; then
 	ICON_SPAN="<span color=\"${VALUE_COLOR}\">$LABEL_ICON"

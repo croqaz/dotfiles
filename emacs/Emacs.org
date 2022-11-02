@@ -622,8 +622,8 @@ It uses pluggable back-ends and front-ends to retrieve and display completion ca
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;; Useful for quick snippets!
-(use-package auto-yasnippet
-  :defer t)
+;; (use-package auto-yasnippet
+;;   :defer t)
 #+end_src
 
 ** Utilities
@@ -941,6 +941,23 @@ Save recent files, history and sessions.
   (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h))
 #+end_src
 
+** Lisp & Sly
+
+#+begin_src emacs-lisp
+;; (use-package sly
+;;   :defer t
+;;   :init
+;;   (setq inferior-lisp-program "sbcl --noinform")
+;;   :config
+;;   (setq sly-kill-without-query-p t
+;;         sly-net-coding-system 'utf-8-unix))
+
+;; (use-package sly-repl-ansi-color
+;;   :defer t
+;;   :init
+;;   (add-to-list 'sly-contribs 'sly-repl-ansi-color))
+#+end_src
+
 ** Checkers
 
 I only use Flycheck for programming modes and I specifically call it.
@@ -986,9 +1003,6 @@ Using the builtin Python mode + Elpy.
 I'm not entirely sure if I need both.
 
 #+begin_src emacs-lisp
-;; My custom python path
-(setq my-python "~/Dev/py-env8/bin/python")
-
 ;; The package is "python" but the mode is "python-mode"
 (use-feature python
   :defer t
@@ -1054,6 +1068,8 @@ I'm not entirely sure if I need both.
   :mode ("\\.html?\\'" . web-mode)
   :init
   (setq web-mode-enable-html-entities-fontification t
+        web-mode-enable-current-element-highlight t
+        web-mode-enable-current-column-highlight t
         web-mode-auto-close-style 1
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2
@@ -1062,7 +1078,7 @@ I'm not entirely sure if I need both.
         web-mode-style-padding 0
         web-mode-script-padding 0))
 
-(defun prettier-fmt-code ()
+(defun prettier-js-fmt-code ()
   "Simple format region or buffer, with Prettier."
   (interactive)
   (let (beg end)
@@ -1073,6 +1089,19 @@ I'm not entirely sure if I need both.
             end (point-max)))
     (shell-command-on-region
      beg end "prettier --single-quote --tab-width 4 --print-width 120 --trailing-comma all --stdin-filepath script.js"
+     nil t)))
+
+(defun standard-js-fmt-code ()
+  "Simple format region or buffer, with Standard."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (setq beg (point-min)
+            end (point-max)))
+    (shell-command-on-region
+     beg end "standard --stdin --global --fix"
      nil t)))
 #+end_src
 
@@ -1089,10 +1118,10 @@ I'm not entirely sure if I need both.
 ** Go
 
 #+begin_src emacs-lisp
-(use-package go-mode
-  :defer t
-  :mode ("\\.go\\'" . go-mode)
-  :hook (go-mode . lsp-deferred))
+;; (use-package go-mode
+;;   :defer t
+;;   :mode ("\\.go\\'" . go-mode)
+;;   :hook (go-mode . lsp-deferred))
 #+end_src
 
 ** LUA
@@ -1220,6 +1249,8 @@ I'm not entirely sure if I need both.
     "x" '(:ignore t :wk "Text")
     "jj"  'json-pretty-print
     "jo"  'json-pretty-print-ordered
+    "js"  'prettier-js-fmt-code
+    "jS"  'standard-js-fmt-code
     "xh"  'mark-whole-buffer
     "xr"  'reverse-region
     "xs"  'counsel-grep-or-swiper
@@ -1284,9 +1315,10 @@ I'm not entirely sure if I need both.
   :hook (after-init . doom-modeline-mode)
   :init
   (setq doom-modeline-height 24
-        doom-modeline-irc nil
         doom-modeline-gnus nil
-        doom-modeline-mu4e nil))
+        doom-modeline-irc nil
+        doom-modeline-mu4e nil
+        doom-modeline-time nil))
 
 ;; Dimm inactive buffers
 (use-package dimmer
@@ -1308,6 +1340,9 @@ I'm not entirely sure if I need both.
         find-file-visit-truename t
         find-file-suppress-same-file-warnings t))
 #+end_src
+
+#+RESULTS:
+: files
 
 ** Utils
 
@@ -1386,6 +1421,9 @@ affects the sort order."
             (setq gc-cons-threshold 33554432 ; 32MB
                   gc-cons-percentage 0.2)
             (garbage-collect)))
+
+;; Force GC to run when the focus moves away from Emacs
+(add-hook 'focus-out-hook 'garbage-collect)
 
 ;; Display benchmark message at startup
 (add-hook 'window-setup-hook

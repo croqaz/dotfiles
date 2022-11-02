@@ -486,8 +486,8 @@ NAME and ARGS are in `use-package'."
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;; Useful for quick snippets!
-(use-package auto-yasnippet
-  :defer t)
+;; (use-package auto-yasnippet
+;;   :defer t)
 
 ;; Very helpful
 (use-package helpful
@@ -778,6 +778,19 @@ NAME and ARGS are in `use-package'."
   (advice-add #'magit-stage-file   :after #'+vc-gutter-update-h)
   (advice-add #'magit-unstage-file :after #'+vc-gutter-update-h))
 
+;; (use-package sly
+;;   :defer t
+;;   :init
+;;   (setq inferior-lisp-program "sbcl --noinform")
+;;   :config
+;;   (setq sly-kill-without-query-p t
+;;         sly-net-coding-system 'utf-8-unix))
+
+;; (use-package sly-repl-ansi-color
+;;   :defer t
+;;   :init
+;;   (add-to-list 'sly-contribs 'sly-repl-ansi-color))
+
 (use-package flycheck
   :defer 3
   :init
@@ -810,9 +823,6 @@ NAME and ARGS are in `use-package'."
 
 ;; (use-package lsp-ivy
 ;;   :after lsp-mode)
-
-;; My custom python path
-(setq my-python "~/Dev/py-env8/bin/python")
 
 ;; The package is "python" but the mode is "python-mode"
 (use-feature python
@@ -875,6 +885,8 @@ NAME and ARGS are in `use-package'."
   :mode ("\\.html?\\'" . web-mode)
   :init
   (setq web-mode-enable-html-entities-fontification t
+        web-mode-enable-current-element-highlight t
+        web-mode-enable-current-column-highlight t
         web-mode-auto-close-style 1
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2
@@ -883,7 +895,7 @@ NAME and ARGS are in `use-package'."
         web-mode-style-padding 0
         web-mode-script-padding 0))
 
-(defun prettier-fmt-code ()
+(defun prettier-js-fmt-code ()
   "Simple format region or buffer, with Prettier."
   (interactive)
   (let (beg end)
@@ -896,6 +908,19 @@ NAME and ARGS are in `use-package'."
      beg end "prettier --single-quote --tab-width 4 --print-width 120 --trailing-comma all --stdin-filepath script.js"
      nil t)))
 
+(defun standard-js-fmt-code ()
+  "Simple format region or buffer, with Standard."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (setq beg (point-min)
+            end (point-max)))
+    (shell-command-on-region
+     beg end "standard --stdin --global --fix"
+     nil t)))
+
 (use-package yaml-mode
   :defer t
   :mode ("\\.ya?ml\\'" . yaml-mode))
@@ -904,10 +929,10 @@ NAME and ARGS are in `use-package'."
 ;;   :defer t
 ;;   :mode ("\\.pug\\'" . pug-mode))
 
-(use-package go-mode
-  :defer t
-  :mode ("\\.go\\'" . go-mode)
-  :hook (go-mode . lsp-deferred))
+;; (use-package go-mode
+;;   :defer t
+;;   :mode ("\\.go\\'" . go-mode)
+;;   :hook (go-mode . lsp-deferred))
 
 ;; (use-package lua-mode
 ;;   :defer t
@@ -1023,6 +1048,8 @@ NAME and ARGS are in `use-package'."
     "x" '(:ignore t :wk "Text")
     "jj"  'json-pretty-print
     "jo"  'json-pretty-print-ordered
+    "js"  'prettier-js-fmt-code
+    "jS"  'standard-js-fmt-code
     "xh"  'mark-whole-buffer
     "xr"  'reverse-region
     "xs"  'counsel-grep-or-swiper
@@ -1083,9 +1110,10 @@ NAME and ARGS are in `use-package'."
   :hook (after-init . doom-modeline-mode)
   :init
   (setq doom-modeline-height 24
-        doom-modeline-irc nil
         doom-modeline-gnus nil
-        doom-modeline-mu4e nil))
+        doom-modeline-irc nil
+        doom-modeline-mu4e nil
+        doom-modeline-time nil))
 
 ;; Dimm inactive buffers
 (use-package dimmer
@@ -1177,6 +1205,9 @@ affects the sort order."
             (setq gc-cons-threshold 33554432 ; 32MB
                   gc-cons-percentage 0.2)
             (garbage-collect)))
+
+;; Force GC to run when the focus moves away from Emacs
+(add-hook 'focus-out-hook 'garbage-collect)
 
 ;; Display benchmark message at startup
 (add-hook 'window-setup-hook
