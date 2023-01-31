@@ -276,26 +276,7 @@ Asynchronous processing lib. Not sure if it does anything...?
         modus-themes-no-mixed-fonts t
         modus-themes-scale-headings t
         modus-themes-subtle-line-numbers t)
-  (setq modus-themes-mode-line '(accented 3d))
   (setq modus-themes-org-blocks 'gray-background)
-  (setq modus-themes-syntax '(faint))
-  (setq modus-themes-links '(faint neutral-underline))
-  (setq modus-themes-inhibit-reload nil)
-  ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
-  :custom
-  (modus-themes-operandi-color-overrides
-   '((bg-main . "#f3f9f3")
-     (bg-dim . "#f1f5f1")
-     (bg-alt . "#e8e8e8")
-     (bg-hl-line . "#eaeaef")
-     (bg-active . "#e0e0e0")
-     (bg-inactive . "#e6e6e6")
-     (bg-region . "#b5b5b5")
-     (bg-header . "#e4e4e4")
-     (bg-tab-bar . "#c3c9c3")
-     (bg-tab-active . "#f5f5f5")
-     (bg-tab-inactive . "#c0c0c0")))
 
   ;; (darktooth-dark0_hard    . "#1D2021")
   ;; (darktooth-dark0         . "#282828")
@@ -322,12 +303,26 @@ Asynchronous processing lib. Not sure if it does anything...?
   ;; (darktooth-aquamarine4    . "#83A598")
   ;; (darktooth-turquoise4     . "#61ACBB")
 
-  (modus-themes-vivendi-color-overrides
-   '((bg-main . "#282828")
-     (fg-main . "#FDF4C1")
-     ))
+  (setq modus-themes-common-palette-overrides
+        '((builtin magenta-cooler)
+          (comment yellow-faint)
+          (constant magenta-warmer)
+          (fnname blue-warmer)
+          (keyword magenta)
+          (preprocessor red-cooler)
+          (docstring magenta-faint)
+          (string green-cooler)
+          (type cyan-cooler)
+          (variable cyan-warmer)
+
+          (border-mode-line-active unspecified)
+          (border-mode-line-inactive unspecified)
+
+          ;; Expand the preset
+          ,@modus-themes-preset-overrides-faint))
+
   :config
-  (modus-themes-load-operandi))
+  (load-theme 'modus-operandi-tinted :no-confirm))
 #+end_src
 
 ** Files
@@ -1113,6 +1108,15 @@ I'm not entirely sure if I need both.
 ;; (use-package pug-mode
 ;;   :defer t
 ;;   :mode ("\\.pug\\'" . pug-mode))
+#+end_src
+
+** Rust
+
+#+begin_src emacs-lisp
+;; (use-package rustic
+;;   :defer t
+;;   :mode ("\\.rs\\'" . rustic-mode)
+;;   :hook (rustic-mode . lsp-deferred))
 #+end_src
 
 ** Go
