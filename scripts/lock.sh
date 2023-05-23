@@ -1,51 +1,12 @@
 #!/usr/bin/env sh
 
-# Colors from  srcery
-B='#55555555'  # blank
-C='#0AAEB3FF'  # clear ish
-D='#2C78BFFF'  # default
-T='#0AAEB3FF'  # text
-W='#FF5F00FF'  # wrong
-V='#519F50FF'  # verifying
-#
-# This script requires i3lock color
-# https://github.com/Raymo111/i3lock-color
-#
-sleep 0.1&& i3lock \
---radius 75        \
---indpos="w/2:h/2" \
---timepos="w/2:h/2-200" \
---datepos="w/2:h/2-120" \
---greeterpos="w/2:h/2" \
---insidevercolor=$B   \
---ringvercolor=$V     \
---ring-width=6        \
-\
---insidewrongcolor=$W \
---ringwrongcolor=$C   \
-\
---insidecolor=$B      \
---ringcolor=$D        \
---linecolor=$B        \
---separatorcolor=$D   \
-\
---verifcolor=$V       \
---wrongcolor=$C       \
---timecolor=$C        \
---datecolor=$C        \
---layoutcolor=$T      \
---keyhlcolor=$V       \
---bshlcolor=$W        \
-\
---screen 1            \
---blur 24             \
---clock               \
---indicator           \
---timestr="%H:%M"     \
---datestr="%A %d %b"  \
---wrongtext="incorrect!" \
---veriftext="verifying"  \
---timesize=90  \
---datesize=45  \
---verifsize=20 \
---wrongsize=20
+export XSECURELOCK_SHOW_DATETIME=1
+export XSECURELOCK_DATETIME_FORMAT='%a %d %b %H:%M:%S'
+export XSECURELOCK_AUTH_BACKGROUND_COLOR=#262626
+export XSECURELOCK_AUTH_FOREGROUND_COLOR=#D0BFA1
+export XSECURELOCK_AUTH_WARNING_COLOR=#FF5F00
+export XSECURELOCK_FONT='Hack Nerd Font'
+
+#export XSECURELOCK_FORCE_GRAB=1
+
+xsecurelock

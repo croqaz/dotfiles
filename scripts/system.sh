@@ -1,32 +1,28 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-c=$(echo -e "\uf023 Lock\n\uf08b Logout\n\uf9b1 Suspend\n\uf01e Reboot\n\uf011 Shutdown" | rofi \
+c=$(echo -e "\uf023 Lock\n\uf08b Logout\n\uf7ae Suspend\n\uf01e Reboot\n\uf011 Shutdown" | rofi \
   -dmenu -i -no-custom -p '>' -lines 6 -width 20 -format s | awk '{print $2}')
 echo $c
 
 case $c in
   Lock)
-    $HOME/.local/scripts/lock2.sh
+    $HOME/.local/scripts/lock.sh
   ;;
 
   Logout)
-    i3-msg exit
+    bspc quit
   ;;
 
   Suspend)
-    systemctl suspend
-  ;;
-
-  Hibernate)
-    systemctl hibernate
+    loginctl suspend
   ;;
 
   Reboot)
-    systemctl reboot
+    loginctl reboot
   ;;
 
   Shutdown)
-    systemctl poweroff -i
+    loginctl poweroff
   ;;
 
   *) echo "Invalid: $c"; exit 1 ;;

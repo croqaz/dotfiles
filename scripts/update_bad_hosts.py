@@ -88,7 +88,7 @@ def save_result(*funcs):
                 # fd.write(f'0.0.0.0 {x}\n')
             fd.write('\n')
             all_hosts.update(hosts)
-    print(f'Written {len(hosts)} hosts in {OUTPUT}')
+    print(f'Written {len(all_hosts)} hosts in {OUTPUT}')
 
 
 if __name__ == '__main__':
