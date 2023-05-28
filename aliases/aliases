@@ -1,15 +1,26 @@
 alias reload="source $HOME/.zshrc"
 
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......='cd ../../../../..'
+
 alias vi=nvim
 alias vim=nvim
 alias svim=sudoedit
 
-alias rcp='rsync -hptv --progress'
-alias rmv='rsync -hptv --progress --remove-source-files'
+alias pki='sudo xbps-install'
+alias pkx='sudo xbps-remove'
+alias pkX='sudo xbps-remove -Oo'
+alias pkq='xbps-query'
 
-alias img=sxiv
+# alias img=sxiv
 
 alias ksh="kitty +kitten ssh"
+
+alias rcp='rsync -hptv --progress'
+alias rmv='rsync -hptv --progress --remove-source-files'
 
 alias dateslug='date "+%Y-%m-%d %H:%M"'
 alias dateiso='date -u +"%Y-%m-%dT%H:%M:%S.%Z"'
@@ -17,8 +28,8 @@ alias dateiso='date -u +"%Y-%m-%dT%H:%M:%S.%Z"'
 alias ip-public="curl http://ipecho.net/plain; echo"
 
 # Dev stuff
-alias 'py-env'='source ${HOME}/Dev/py-env10/bin/activate'
-alias 'py-imdb'='source ${HOME}/Dev/py-imdb/bin/activate'
+# alias 'py-env'='source ${HOME}/Dev/py-env10/bin/activate'
+# alias 'py-imdb'='source ${HOME}/Dev/py-imdb/bin/activate'
 alias 'rm-pyco'='rm --interactive=once -r `find . -name __pycache__` && rm --interactive=once -f `find . -type f -name "*.py[co]"`'
 
 alias ipy='ipython -i --colors=Linux --no-confirm-exit'

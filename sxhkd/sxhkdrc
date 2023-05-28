@@ -3,20 +3,19 @@
 #
 
 # Reload sxhkd config
-# control + alt + k
-#	kill -SIGUSR1 $(pidof sxhkd) && notify-send "SxHkD config reloaded"
-
-# make sxhkd reload its configuration files:
 # super + Escape
-#	pkill -USR1 -x sxhkd
+#	pkill -USR1 -x sxhkd && notify-send "SxHkD config reloaded"
 
 # terminal emulator
 super + Return
 	kitty --single-instance
 
+super + alt + Return
+	alacritty
+
 # program launcher
 super + @space
-	rofi -show-icons -combi-modi window,drun -show combi -modi combi
+	rofi -font 'Hack 16' -show-icons -combi-modi window,drun -show combi -modi combi
 
 # lock, reboot, poweroff menu
 super + Escape
@@ -62,13 +61,17 @@ super + ctrl + {m,x,y,z}
 # focus/swap
 #
 
-# focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
-
 # focus follow the node
 super + shift + {Left,Right}
 	bspc node -s {west,east} --follow
+
+# focus left/ right
+super + {Left,Right}
+	bspc node -f {west,east}
+
+# focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
 
 # focus the node for the given path jump
 super + {p,b,comma,period}

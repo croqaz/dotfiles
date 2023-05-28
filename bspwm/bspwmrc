@@ -38,16 +38,15 @@ xsetroot -cursor_name left_ptr
 # StandbyTime SuspendTime OffTime
 xset dpms 180 180 300
 # Key initial delay, rate delay
-xset r rate 333 75
+xset r rate 369 39
 
 # Start services
 #
-pipewire &
+dbus-run-session pipewire &
 pipewire-pulse &
-(sleep 9 && wireplumber) &
 
 kitty &
 picom &
 
-(sleep 10 && bash ~/Dev/dotfiles/polybar/launch.sh) &
+(sleep 3 && bash ~/Dev/dotfiles/polybar/launch.sh) &
 

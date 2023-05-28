@@ -26,26 +26,32 @@
 window:
   # Window dimensions (changes require restart)
   #
-  # Number of lines/columns (not pixels) in the terminal. The number of columns
-  # must be at least `2`, while using a value of `0` for columns and lines will
-  # fall back to the window manager's recommended size.
-  dimensions:
-    columns: 120
-    lines: 48
+  # Number of lines/columns (not pixels) in the terminal. Both lines and columns
+  # must be non-zero for this to take effect. The number of columns must be at
+  # least `2`, while using a value of `0` for columns and lines will fall back
+  # to the window manager's recommended size
+  #dimensions:
+  #  columns: 0
+  #  lines: 0
+
+  # Window position (changes require restart)
+  #
+  # Specified in number of pixels.
+  # If the position is not set, the window manager will handle the placement.
+  #position:
+  #  x: 0
+  #  y: 0
 
   # Window padding (changes require restart)
   #
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 5
-    y: 3
+    x: 8
+    y: 0
 
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: true
-
-  # Allow terminal applications to change Alacritty's window title.
-  dynamic_title: true
 
   # Window decorations
   #
@@ -58,6 +64,12 @@ window:
   #     - buttonless: Title bar, transparent background and no title bar buttons
   #decorations: full
 
+  # Background opacity
+  #
+  # Window opacity as a floating point number from `0.0` to `1.0`.
+  # The value `0.0` is completely transparent and `1.0` is opaque.
+  #opacity: 1.0
+
   # Startup Mode (changes require restart)
   #
   # Values for `startup_mode`:
@@ -69,6 +81,9 @@ window:
   #   - SimpleFullscreen
   #startup_mode: Windowed
 
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
+
   # Window class (Linux/BSD only):
   class:
     # Application instance name
@@ -76,11 +91,32 @@ window:
     # General application class
     general: Alacritty
 
-  # GTK theme variant (Linux/BSD only)
+  # Decorations theme variant
   #
-  # Override the variant of the GTK theme. Commonly supported values are `dark`
-  # and `light`. Set this to `None` to use the default theme variant.
-  #gtk_theme_variant: None
+  # Override the variant of the System theme/GTK theme/Wayland client side
+  # decorations. Commonly supported values are `Dark`, `Light`, and `None` for
+  # auto pick-up. Set this to `None` to use the default theme variant.
+  #decorations_theme_variant: None
+
+  # Resize increments
+  #
+  # Prefer resizing window by discrete steps equal to cell dimensions.
+  #resize_increments: false
+
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  #option_as_alt: None
+
+scrolling:
+  # Maximum number of lines in the scrollback buffer.
+  # Specifying '0' will disable scrolling.
+  history: 100000
+
+  # Scrolling distance multiplier.
+  #multiplier: 3
 
 # Font configuration
 font:
@@ -92,10 +128,10 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: JetBrainsMono Nerd Font
+    family: JetBrains Mono
 
     # The `style` can be specified to pick a specific face.
-    style: Regular
+    #style: Regular
 
   # Bold font face
   bold:
@@ -103,10 +139,10 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: JetBrainsMono Nerd Font
+    family: JetBrains Mono
 
     # The `style` can be specified to pick a specific face.
-    style: Extra Bold
+    #style: Bold
 
   # Italic font face
   italic:
@@ -114,10 +150,10 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: JetBrainsMono Nerd Font
+    family: JetBrains Mono
 
     # The `style` can be specified to pick a specific face.
-    style: Italic
+    #style: Italic
 
   # Bold italic font face
   bold_italic:
@@ -125,27 +161,37 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: JetBrainsMono Nerd Font
+    family: JetBrains Mono
 
     # The `style` can be specified to pick a specific face.
     style: Extra Bold Italic
 
   # Point size
-  size: 11
+  size: 12
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
   # spacing.
-  offset:
-    x: 0
-    y: 0
+  #offset:
+  #  x: 0
+  #  y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the
   # right, increasing `y` moves the glyph upward.
-  glyph_offset:
-    x: 0
-    y: 0
+  #glyph_offset:
+  #  x: 0
+  #  y: 0
+
+  # Use built-in font for box drawing characters.
+  #
+  # If `true`, Alacritty will use a custom built-in font for box drawing
+  # characters (Unicode points 2500 - 259f).
+  #
+  #builtin_box_drawing: true
+
+# If `true`, bold text is drawn using the bright color variants.
+#draw_bold_text_with_bright_colors: false
 
 # Colors (Srcery)
 colors:
@@ -153,6 +199,11 @@ colors:
   primary:
     background: '#1c1b19'
     foreground: '#fce8c3'
+
+  # Cursor colors
+  cursor:
+    text: CellBackground
+    cursor: '#fbb829'
 
   # Normal colors
   normal:
@@ -163,7 +214,7 @@ colors:
     blue:    '#2c78bf'
     magenta: '#e02c6d'
     cyan:    '#0aaeb3'
-    white:   '#d0bfa1'
+    white:   '#baa67f'
 
   # Bright colors
   bright:
@@ -173,7 +224,7 @@ colors:
     yellow:  '#fed06e'
     blue:    '#68a8e4'
     magenta: '#ff5c8f'
-    cyan:    '#53fde9'
+    cyan:    '#2be4d0'
     white:   '#fce8c3'
 
 # Bell
@@ -199,7 +250,7 @@ bell:
 
   # Duration of the visual bell flash in milliseconds. A `duration` of `0` will
   # disable the visual bell animation.
-  duration: 0
+  #duration: 0
 
   # Visual bell animation color.
   #color: '#ffffff'
@@ -217,12 +268,6 @@ bell:
   #
   #command: None
 
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.95
-
 #selection:
   # This string contains all characters that are used as separators for
   # "semantic words" in Alacritty.
@@ -233,14 +278,14 @@ background_opacity: 0.95
 
 cursor:
   # Cursor style
-  style:
+  #style:
     # Cursor shape
     #
     # Values for `shape`:
     #   - ▇ Block
     #   - _ Underline
     #   - | Beam
-    shape: Block
+    #shape: Block
 
     # Cursor blinking state
     #
@@ -249,7 +294,7 @@ cursor:
     #   - Off: Disable blinking by default
     #   - On: Enable blinking by default
     #   - Always: Force the cursor to always blink
-    blinking: On
+    blinking:  on
 
   # Vi mode cursor style
   #
@@ -260,11 +305,16 @@ cursor:
   #vi_mode_style: None
 
   # Cursor blinking interval in milliseconds.
-  blink_interval: 750
+  #blink_interval: 750
+
+  # Time after which cursor stops blinking, in seconds.
+  #
+  # Specifying '0' will disable timeout for blinking.
+  #blink_timeout: 5
 
   # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
-  unfocused_hollow: true
+  #unfocused_hollow: true
 
   # Thickness of the cursor relative to the cell width as floating point number
   # from `0.0` to `1.0`.
@@ -280,8 +330,7 @@ cursor:
 # shell.
 #
 # Default:
-#   - (macOS) /bin/bash --login
-#   - (Linux/BSD) user login shell
+#   - (Linux/BSD/macOS) `$SHELL` or the user's login shell, if `$SHELL` is unset
 #   - (Windows) powershell
 #shell:
 #  program: /bin/bash
@@ -294,8 +343,8 @@ cursor:
 # directory of the parent process will be used.
 #working_directory: None
 
-# Send ESC (\x1b) before characters when alt is pressed.
-#alt_send_esc: true
+# Offer IPC using `alacritty msg` (unix only)
+#ipc_socket: true
 
 mouse:
   # Click settings
@@ -309,31 +358,55 @@ mouse:
   # If this is `true`, the cursor is temporarily hidden when typing.
   hide_when_typing: true
 
-# Keyboard regex hints
+# Hints
 #
-hints:
-  url:
-    # URL launcher
-    #
-    # This program is executed when clicking on a text which is recognized as a
-    # URL. The URL is always added to the command as the last parameter.
-    #
-    # When set to `launcher: None`, URL launching will be disabled completely.
-    #
-    # Default:
-    #   - (macOS) open
-    #   - (Linux/BSD) xdg-open
-    #   - (Windows) explorer
-    launcher:
-      program: xdg-open
-      # better handlr open
+# Terminal hints can be used to find text or hyperlink in the visible part of
+# the terminal and pipe it to other applications.
+#hints:
+  # Keys used for the hint labels.
+  #alphabet: "jfkdls;ahgurieowpq"
 
-    # URL modifiers
-    #
-    # These are the modifiers that need to be held down for opening URLs when
-    # clicking on them. The available modifiers are documented in the key
-    # binding section.
-    #modifiers: None
+  # List with all available hints
+  #
+  # Each hint must have any of `regex` or `hyperlinks` field and either an
+  # `action` or a `command` field. The fields `mouse`, `binding` and
+  # `post_processing` are optional.
+  #
+  # The `hyperlinks` option will cause OSC 8 escape sequence hyperlinks to be
+  # highlighted.
+  #
+  # The fields `command`, `binding.key`, `binding.mods`, `binding.mode` and
+  # `mouse.mods` accept the same values as they do in the `key_bindings` section.
+  #
+  # The `mouse.enabled` field controls if the hint should be underlined while
+  # the mouse with all `mouse.mods` keys held or the vi mode cursor is above it.
+  #
+  # If the `post_processing` field is set to `true`, heuristics will be used to
+  # shorten the match if there are characters likely not to be part of the hint
+  # (e.g. a trailing `.`). This is most useful for URIs and applies only to
+  # `regex` matches.
+  #
+  # Values for `action`:
+  #   - Copy
+  #       Copy the hint's text to the clipboard.
+  #   - Paste
+  #       Paste the hint's text to the terminal or search.
+  #   - Select
+  #       Select the hint's text.
+  #   - MoveViModeCursor
+  #       Move the vi mode cursor to the beginning of the hint.
+  #enabled:
+  # - regex: "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+  #           [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+  #   hyperlinks: true
+  #   command: xdg-open
+  #   post_processing: true
+  #   mouse:
+  #     enabled: true
+  #     mods: None
+  #   binding:
+  #     key: U
+  #     mods: Control|Shift
 
 # Mouse bindings
 #
@@ -353,13 +426,20 @@ hints:
 #   - Right
 #   - Numeric identifier such as `5`
 #
-# - `action` (see key bindings)
+# - `action` (see key bindings for actions not exclusive to mouse mode)
+#
+# - Mouse exclusive actions:
+#
+#   - ExpandSelection
+#       Expand the selection to the current mouse cursor location.
 #
 # And optionally:
 #
 # - `mods` (see key bindings)
-mouse_bindings:
-  - { mouse: Middle, action: PasteSelection }
+#mouse_bindings:
+#  - { mouse: Right,                 action: ExpandSelection }
+#  - { mouse: Right,  mods: Control, action: ExpandSelection }
+#  - { mouse: Middle, mode: ~Vi,     action: PasteSelection  }
 
 # Key bindings
 #
@@ -377,7 +457,7 @@ mouse_bindings:
 #    - Key0-Key9
 #
 #    A full list with available key codes can be found here:
-#    https://docs.rs/glutin/*/glutin/event/enum.VirtualKeyCode.html#variants
+#    https://docs.rs/winit/*/winit/event/enum.VirtualKeyCode.html#variants
 #
 #    Instead of using the name of the keys, the `key` field also supports using
 #    the scancode of the desired key. Scancodes have to be specified as a
@@ -426,8 +506,11 @@ mouse_bindings:
 #   - Quit
 #       Quit Alacritty.
 #   - ToggleFullscreen
+#   - ToggleMaximized
 #   - SpawnNewInstance
 #       Spawn a new instance of Alacritty.
+#   - CreateNewWindow
+#       Create a new Alacritty window from the current process.
 #   - ClearLogNotice
 #       Clear Alacritty's UI warning and error notice.
 #   - ClearSelection
@@ -438,13 +521,15 @@ mouse_bindings:
 # - Vi mode exclusive actions:
 #
 #   - Open
-#       Open URLs at the cursor location with the launcher configured in
-#       `url.launcher`.
+#       Perform the action of the first matching hint under the vi mode cursor
+#       with `mouse.enabled` set to `true`.
 #   - ToggleNormalSelection
 #   - ToggleLineSelection
 #   - ToggleBlockSelection
 #   - ToggleSemanticSelection
 #       Toggle semantic selection based on `selection.semantic_escape_chars`.
+#   - CenterAroundViCursor
+#       Center view around vi mode cursor
 #
 # - Vi mode exclusive cursor motion actions:
 #
@@ -512,6 +597,10 @@ mouse_bindings:
 #   - SearchHistoryNext
 #       Go to the next regex in the search history.
 #
+# - macOS exclusive actions:
+#   - ToggleSimpleFullscreen
+#       Enter fullscreen without occupying another space.
+#
 # - Linux/BSD exclusive actions:
 #
 #   - CopySelection
@@ -561,20 +650,65 @@ mouse_bindings:
 #
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
-#
-# Default bindings: https://github.com/alacritty/alacritty/blob/master/alacritty/src/config/bindings.rs
-# functions: pub fn default_key_bindings() , fn common_keybindings()
-#
-key_bindings:
+#key_bindings:
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
   #- { key: L,         mods: Control,                    action: ClearLogNotice }
   #- { key: L,         mods: Control, mode: ~Vi|~Search, chars: "\x0c"          }
-  #- { key: PageUp,    mods: Shift,                      action: ScrollPageUp,  }
-  #- { key: PageDown,  mods: Shift,                      action: ScrollPageDown }
-  #- { key: Home,      mods: Shift,                      action: ScrollToTop,   }
-  #- { key: End,       mods: Shift,                      action: ScrollToBottom }
-  - { key: Return,  mods: Control|Shift, action: SpawnNewInstance }
+  #- { key: PageUp,    mods: Shift,   mode: ~Alt,        action: ScrollPageUp   }
+  #- { key: PageDown,  mods: Shift,   mode: ~Alt,        action: ScrollPageDown }
+  #- { key: Home,      mods: Shift,   mode: ~Alt,        action: ScrollToTop    }
+  #- { key: End,       mods: Shift,   mode: ~Alt,        action: ScrollToBottom }
+
+  # Vi Mode
+  #- { key: Space,  mods: Shift|Control, mode: ~Search,    action: ToggleViMode            }
+  #- { key: Space,  mods: Shift|Control, mode: Vi|~Search, action: ScrollToBottom          }
+  #- { key: Escape,                      mode: Vi|~Search, action: ClearSelection          }
+  #- { key: I,                           mode: Vi|~Search, action: ToggleViMode            }
+  #- { key: I,                           mode: Vi|~Search, action: ScrollToBottom          }
+  #- { key: C,      mods: Control,       mode: Vi|~Search, action: ToggleViMode            }
+  #- { key: Y,      mods: Control,       mode: Vi|~Search, action: ScrollLineUp            }
+  #- { key: E,      mods: Control,       mode: Vi|~Search, action: ScrollLineDown          }
+  #- { key: G,                           mode: Vi|~Search, action: ScrollToTop             }
+  #- { key: G,      mods: Shift,         mode: Vi|~Search, action: ScrollToBottom          }
+  #- { key: B,      mods: Control,       mode: Vi|~Search, action: ScrollPageUp            }
+  #- { key: F,      mods: Control,       mode: Vi|~Search, action: ScrollPageDown          }
+  #- { key: U,      mods: Control,       mode: Vi|~Search, action: ScrollHalfPageUp        }
+  #- { key: D,      mods: Control,       mode: Vi|~Search, action: ScrollHalfPageDown      }
+  #- { key: Y,                           mode: Vi|~Search, action: Copy                    }
+  #- { key: Y,                           mode: Vi|~Search, action: ClearSelection          }
+  #- { key: Copy,                        mode: Vi|~Search, action: ClearSelection          }
+  #- { key: V,                           mode: Vi|~Search, action: ToggleNormalSelection   }
+  #- { key: V,      mods: Shift,         mode: Vi|~Search, action: ToggleLineSelection     }
+  #- { key: V,      mods: Control,       mode: Vi|~Search, action: ToggleBlockSelection    }
+  #- { key: V,      mods: Alt,           mode: Vi|~Search, action: ToggleSemanticSelection }
+  #- { key: Return,                      mode: Vi|~Search, action: Open                    }
+  #- { key: Z,                           mode: Vi|~Search, action: CenterAroundViCursor    }
+  #- { key: K,                           mode: Vi|~Search, action: Up                      }
+  #- { key: J,                           mode: Vi|~Search, action: Down                    }
+  #- { key: H,                           mode: Vi|~Search, action: Left                    }
+  #- { key: L,                           mode: Vi|~Search, action: Right                   }
+  #- { key: Up,                          mode: Vi|~Search, action: Up                      }
+  #- { key: Down,                        mode: Vi|~Search, action: Down                    }
+  #- { key: Left,                        mode: Vi|~Search, action: Left                    }
+  #- { key: Right,                       mode: Vi|~Search, action: Right                   }
+  #- { key: Key0,                        mode: Vi|~Search, action: First                   }
+  #- { key: Key4,   mods: Shift,         mode: Vi|~Search, action: Last                    }
+  #- { key: Key6,   mods: Shift,         mode: Vi|~Search, action: FirstOccupied           }
+  #- { key: H,      mods: Shift,         mode: Vi|~Search, action: High                    }
+  #- { key: M,      mods: Shift,         mode: Vi|~Search, action: Middle                  }
+  #- { key: L,      mods: Shift,         mode: Vi|~Search, action: Low                     }
+  #- { key: B,                           mode: Vi|~Search, action: SemanticLeft            }
+  #- { key: W,                           mode: Vi|~Search, action: SemanticRight           }
+  #- { key: E,                           mode: Vi|~Search, action: SemanticRightEnd        }
+  #- { key: B,      mods: Shift,         mode: Vi|~Search, action: WordLeft                }
+  #- { key: W,      mods: Shift,         mode: Vi|~Search, action: WordRight               }
+  #- { key: E,      mods: Shift,         mode: Vi|~Search, action: WordRightEnd            }
+  #- { key: Key5,   mods: Shift,         mode: Vi|~Search, action: Bracket                 }
+  #- { key: Slash,                       mode: Vi|~Search, action: SearchForward           }
+  #- { key: Slash,  mods: Shift,         mode: Vi|~Search, action: SearchBackward          }
+  #- { key: N,                           mode: Vi|~Search, action: SearchNext              }
+  #- { key: N,      mods: Shift,         mode: Vi|~Search, action: SearchPrevious          }
 
   # Search Mode
   #- { key: Return,                mode: Search|Vi,  action: SearchConfirm         }
@@ -602,3 +736,58 @@ key_bindings:
   #- { key: NumpadAdd,      mods: Control,                         action: IncreaseFontSize }
   #- { key: Minus,          mods: Control,                         action: DecreaseFontSize }
   #- { key: NumpadSubtract, mods: Control,                         action: DecreaseFontSize }
+
+  # (Windows only)
+  #- { key: Return,   mods: Alt,           action: ToggleFullscreen }
+
+  # (macOS only)
+  #- { key: K,              mods: Command, mode: ~Vi|~Search, chars: "\x0c"                 }
+  #- { key: K,              mods: Command, mode: ~Vi|~Search, action: ClearHistory          }
+  #- { key: Key0,           mods: Command,                    action: ResetFontSize         }
+  #- { key: Equals,         mods: Command,                    action: IncreaseFontSize      }
+  #- { key: Plus,           mods: Command,                    action: IncreaseFontSize      }
+  #- { key: NumpadAdd,      mods: Command,                    action: IncreaseFontSize      }
+  #- { key: Minus,          mods: Command,                    action: DecreaseFontSize      }
+  #- { key: NumpadSubtract, mods: Command,                    action: DecreaseFontSize      }
+  #- { key: V,              mods: Command,                    action: Paste                 }
+  #- { key: C,              mods: Command,                    action: Copy                  }
+  #- { key: C,              mods: Command, mode: Vi|~Search,  action: ClearSelection        }
+  #- { key: H,              mods: Command,                    action: Hide                  }
+  #- { key: H,              mods: Command|Alt,                action: HideOtherApplications }
+  #- { key: M,              mods: Command,                    action: Minimize              }
+  #- { key: Q,              mods: Command,                    action: Quit                  }
+  #- { key: W,              mods: Command,                    action: Quit                  }
+  #- { key: N,              mods: Command,                    action: CreateNewWindow       }
+  #- { key: F,              mods: Command|Control,            action: ToggleFullscreen      }
+  #- { key: F,              mods: Command, mode: ~Search,     action: SearchForward         }
+  #- { key: B,              mods: Command, mode: ~Search,     action: SearchBackward        }
+
+#debug:
+  # Display the time it takes to redraw each frame.
+  #render_timer: false
+
+  # Keep the log file after quitting Alacritty.
+  #persistent_logging: false
+
+  # Log level
+  #
+  # Values for `log_level`:
+  #   - Off
+  #   - Error
+  #   - Warn
+  #   - Info
+  #   - Debug
+  #   - Trace
+  #log_level: Warn
+
+  # Renderer override.
+  #   - glsl3
+  #   - gles2
+  #   - gles2_pure
+  #renderer: None
+
+  # Print all received window events.
+  #print_events: false
+
+  # Highlight window damage information.
+  #highlight_damage: false

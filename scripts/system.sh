@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-c=$(echo -e "\uf023 Lock\n\uf08b Logout\n\uf7ae Suspend\n\uf01e Reboot\n\uf011 Shutdown" | rofi \
-  -dmenu -i -no-custom -p '>' -lines 6 -width 20 -format s | awk '{print $2}')
+c=$(echo -e "\uF023 Lock\n\uF2F5 Logout\n\uF7AE Suspend\n\uF2F9 Reboot\n\uF011 Shutdown" | rofi \
+  -font 'la-solid-900 16' -dmenu -i -no-custom -p '>' -lines 6 -width 12 -format s | awk '{print $2}')
 echo $c
 
 case $c in
