@@ -1,5 +1,4 @@
 alacritty-0.12.1_1
-arc-icon-theme-20161122_1
 aws-cli-1.22.88_2
 base-system-0.114_1
 bluez-5.66_1
@@ -9,6 +8,7 @@ curl-8.0.1_1
 direnv-2.32.2_2
 elogind-246.10_3
 emacs-x11-28.2_2
+exfat-utils-1.4.0_1
 ffmpeg-4.4.4_1
 font-emoji-one-color-1.4_1
 font-firacode-6.2_1
@@ -30,6 +30,7 @@ intel-video-accel-1_2
 iwd-2.5_1
 iwgtk-0.9_1
 kitty-0.26.5_2
+ldm-0.7_1
 libavcodec-4.4.4_1
 libavif-0.11.1_3
 libjack-pipewire-0.3.71_1
@@ -48,6 +49,8 @@ nodejs-16.19.0_2
 noto-fonts-emoji-2.038_1
 noto-fonts-ttf-23.5.1_1
 noto-fonts-ttf-extra-23.5.1_1
+ntfs-3g-2022.10.3_1
+numix-themes-2.6.7_2
 openresolv-3.12.0_1
 p7zip-22.01_2
 pavucontrol-5.0_2
@@ -58,6 +61,7 @@ pinentry-gtk-1.2.1_1
 pipewire-0.3.71_1
 podman-4.4.4_2
 podman-compose-1.0.3_2
+polkit-121_1
 polybar-3.6.3_1
 psmisc-23.6_1
 python3-lsp-server-1.7.2_2
@@ -72,6 +76,7 @@ sxhkd-0.6.2_1
 telegram-desktop-4.8.1_3
 the_silver_searcher-2.2.0_1
 twemoji-14.0.2_1
+udisks2-2.9.4_1
 unzip-6.0_15
 upower-1.90.0_1
 vivaldi-6.0.2979.22_1

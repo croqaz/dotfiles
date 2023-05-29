@@ -3,57 +3,45 @@
 # Must define INTERN_SCREEN and EXTERN_SCREEN
 #
 
-while [[ "$#" -gt 0 ]]; do
-	case $1 in
-		-e|--extern) option="extern"; break ;;
-		-i|--intern) option="intern"; break ;;
-		-m|--mirror) option="mirror"; break ;;
-		--pe) option="pe"; break ;;
-		--pi) option="pi"; break ;;
-		--ei) option="ei"; break ;;
-		--ie) option="ie"; break ;;
-		*) echo "Unknown parameter: $1"; exit 1 ;;
-	esac
-	shift
-done
+c=$(echo -e "Extern\nIntern\nMirror\nExtern -> Intern\nIntern -> Extern" | rofi \
+  -font 'JetBrainsMono NerdFont 16' -dmenu -i -no-custom -p '>' -lines 5 -format s)
+echo $c ...
 
-case $option in
+#while [[ "$#" -gt 0 ]]; do
+#	case $1 in
+#		-e|--extern) option="extern"; break ;;
+#		-i|--intern) option="intern"; break ;;
+#		-m|--mirror) option="mirror"; break ;;
+#		--pe) option="pe"; break ;;
+#		--pi) option="pi"; break ;;
+#		--ei) option="ei"; break ;;
+#		--ie) option="ie"; break ;;
+#		*) echo "Unknown parameter: $1"; exit 1 ;;
+#	esac
+#	shift
+#done
 
-	"extern")
-		if xrandr -q | grep "$EXTERN_SCREEN disconnected"; then
-			echo "Extern monitor is disconnected, using intern"
-			xrandr --output "$EXTERN_SCREEN" --off --output "$INTERN_SCREEN" --auto
-		else
-			echo "Monitor extern only"
-			xrandr --output "$INTERN_SCREEN" --off --output "$EXTERN_SCREEN" --auto
-		fi
-    ;;
+case $c in
 
-	"intern")
+	"Extern")
+		echo "Monitor extern only"
+		xrandr --output "$INTERN_SCREEN" --off --output "$EXTERN_SCREEN" --auto
+		bspc monitor -d 1 2 3 4 5 6 7 8 9
+	;;
+
+	"Intern")
 		echo "Monitor intern only"
 		xrandr --output "$EXTERN_SCREEN" --off --output "$INTERN_SCREEN" --auto
+		bspc monitor -d 1 2 3 4 5 6 7 8 9
 	;;
 
-	"mirror")
+	"Mirror")
 		echo "Monitor start mirror"
 		xrandr --output "$INTERN_SCREEN" --auto --output "$EXTERN_SCREEN" --auto --same-as "$INTERN_SCREEN"
+		bspc monitor -d 1 2 3 4 5 6 7 8 9
 	;;
 
-	"pe")
-		if xrandr -q | grep "$EXTERN_SCREEN disconnected"; then
-			echo "Extern monitor is disconnected"
-		else
-			echo "Monitor primary extern"
-			xrandr --output "$EXTERN_SCREEN" --primary
-		fi
-	;;
-
-	"pi")
-		echo "Monitor primary intern"
-		xrandr --output "$INTERN_SCREEN" --primary
-	;;
-
-	"ei")
+	"Extern -> Intern")
 		if xrandr -q | grep "$EXTERN_SCREEN connected"; then
 			echo "Monitor extern-intern"
 			xrandr --output "$EXTERN_SCREEN" --auto --left-of "$INTERN_SCREEN" --auto
@@ -62,7 +50,7 @@ case $option in
 		fi
 	;;
 
-	"ie")
+	"Intern -> Extern")
 		if xrandr -q | grep "$EXTERN_SCREEN connected"; then
 			echo "Monitor intern-extern"
 			xrandr --output "$INTERN_SCREEN" --auto --left-of "$EXTERN_SCREEN" --auto
@@ -71,6 +59,6 @@ case $option in
 		fi
 	;;
 
-	*) echo "Option not implemented: $option"; exit 1 ;;
+	*) echo "Invalid option: $c"; exit 1 ;;
 
 esac
