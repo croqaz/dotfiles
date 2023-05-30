@@ -21,6 +21,9 @@ super + @space
 super + Escape
 	$HOME/.local/scripts/system.sh
 
+@Print
+	scrot -q 85 -e 'mv $f ~/Pictures/'
+
 #
 # bspwm hotkeys
 #
