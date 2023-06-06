@@ -4,22 +4,8 @@
 #
 
 c=$(echo -e "Extern\nIntern\nMirror\nExtern -> Intern\nIntern -> Extern" | rofi \
-  -font 'JetBrainsMono NerdFont 16' -dmenu -i -no-custom -p '>' -lines 5 -format s)
+  -font 'Hack Nerd Font 16' -dmenu -i -no-custom -p '>' -lines 5 -format s)
 echo $c ...
-
-#while [[ "$#" -gt 0 ]]; do
-#	case $1 in
-#		-e|--extern) option="extern"; break ;;
-#		-i|--intern) option="intern"; break ;;
-#		-m|--mirror) option="mirror"; break ;;
-#		--pe) option="pe"; break ;;
-#		--pi) option="pi"; break ;;
-#		--ei) option="ei"; break ;;
-#		--ie) option="ie"; break ;;
-#		*) echo "Unknown parameter: $1"; exit 1 ;;
-#	esac
-#	shift
-#done
 
 case $c in
 

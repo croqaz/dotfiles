@@ -1,11 +1,5 @@
 alias reload="source $HOME/.zshrc"
 
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ......='cd ../../../../..'
-
 alias vi=nvim
 alias vim=nvim
 alias svim=sudoedit
