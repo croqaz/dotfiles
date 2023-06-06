@@ -1,0 +1,65 @@
+# Default config for imv
+
+[options]
+
+# Suppress built-in key bindings, and specify them explicitly in this config file
+suppress_default_binds = true
+
+[aliases]
+# Define aliases here. Any arguments passed to an alias are appended to the command
+# alias = command to run
+
+[binds]
+# Define some key bindings
+q = quit
+<Escape> = quit
+# y = exec echo working!
+
+# Image navigation
+<Left> = prev
+<Prior> = prev
+<Right> = next
+<Next> = next
+<Home> = goto 1
+<End> = goto -1
+gg = goto 1
+<Shift+G> = goto -1
+
+# Panning
+j = pan 0 -50
+k = pan 0 50
+h = pan 50 0
+l = pan -50 0
+
+# Zooming
+<Up> = zoom 2
+<Down> = zoom -2
+<Shift+plus> = zoom 1
+<minus> = zoom -1
+i = zoom 1
+o = zoom -1
+
+# Rotate by 90 degrees
+<Ctrl+r> = rotate by 90
+<Ctrl+Shift+R> = rotate by -90
+
+# Other commands
+x = close
+f = fullscreen
+d = overlay
+p = exec echo $imv_current_file
+c = center
+s = scaling next
+<Shift+S> = upscaling next
+0 = zoom actual
+a = zoom actual
+r = reset
+<equal> = reset
+
+# Gif playback
+<period> = next_frame
+<space> = toggle_playing
+
+# Slideshow control
+t = slideshow +1
+<Shift+T> = slideshow -1

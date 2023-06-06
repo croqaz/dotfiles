@@ -116,14 +116,15 @@
 ** Fonts
 
 #+begin_src emacs-lisp
-(setq my-font "JetBrains Mono Light")
-(set-face-attribute 'default nil :family my-font :height 108)
-(set-face-attribute 'fixed-pitch nil :family my-font :height 108)
-(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 108)
+(setq my-font "PragmataPro Mono Liga 13")
+(set-face-attribute 'default nil :family my-font)
+(set-face-attribute 'fixed-pitch nil :family my-font)
+(set-face-attribute 'variable-pitch nil :family my-font)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
-(set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'prepend)
+;; (set-fontset-font t 'unicode (font-spec :family "JetBrainsMono NF Light") nil 'append)
+(set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'append)
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 #+end_src
 
@@ -605,10 +606,11 @@ It uses pluggable back-ends and front-ends to retrieve and display completion ca
 
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :disabled
-  ;; :commands yas-global-mode
-  :custom
-  (yas-verbosity 3))
+  :init
+  (defvar yas-verbosity 2)
+  :hook
+  (prog-mode . yas-minor-mode)
+  (text-mode . yas-minor-mode))
 
 ;; Loading the doom snippets takes forever
 ;; (use-package doom-snippets
@@ -617,8 +619,8 @@ It uses pluggable back-ends and front-ends to retrieve and display completion ca
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;; Useful for quick snippets!
-;; (use-package auto-yasnippet
-;;   :defer t)
+(use-package auto-yasnippet
+  :defer t)
 #+end_src
 
 ** Utilities
@@ -994,9 +996,6 @@ I only use Flycheck for programming modes and I specifically call it.
 
 ** Python
 
-Using the builtin Python mode + Elpy.
-I'm not entirely sure if I need both.
-
 #+begin_src emacs-lisp
 ;; The package is "python" but the mode is "python-mode"
 (use-feature python
@@ -1014,6 +1013,7 @@ I'm not entirely sure if I need both.
         python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
 ;; https://github.com/microsoft/pyright
+;; python3-lsp-server + pyright
 (use-package lsp-pyright
   :hook
   (python-mode . (lambda ()
@@ -1101,9 +1101,9 @@ I'm not entirely sure if I need both.
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :defer t
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+;; (use-package yaml-mode
+;;  :defer t
+;;  :mode ("\\.ya?ml\\'" . yaml-mode))
 
 ;; (use-package pug-mode
 ;;   :defer t
@@ -1404,6 +1404,15 @@ affects the sort order."
     (when new-kill-string
       (message "%s copied" new-kill-string)
       (kill-new new-kill-string))))
+
+;; Fold indented text
+(defun fold-indented-text-selective-display (&optional level)
+"Fold text indented same of more than the cursor. If level is set, set the indent level to LEVEL.
+If 'selective-display' is already set to LEVEL, calling the func again will unset 'selective-display' by setting it to 0."
+  (interactive "P")
+  (if (eq selective-display (1+ (current-column)))
+      (set-selective-display 0)
+    (set-selective-display (or level (1+ (current-column))))))
 #+end_src
 
 ** Extra

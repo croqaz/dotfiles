@@ -23,6 +23,7 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle     true
 
 bscp rule -a polybar manage=off
+bspc rule -a Firefox desktop='^3'
 bspc rule -a Chromium desktop='^9'
 bspc rule -a Screenkey manage=off
 
@@ -44,9 +45,10 @@ xset r rate 369 39
 #
 dbus-run-session pipewire &
 pipewire-pulse &
-
-kitty &
+#
 picom &
+dunst &
+kitty &
 
-(sleep 3 && bash ~/Dev/dotfiles/polybar/launch.sh) &
+(sleep 2 && bash ~/Dev/dotfiles/polybar/launch.sh) &
 
