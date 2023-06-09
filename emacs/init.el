@@ -42,14 +42,15 @@
 ;; Set window title
 (setq-default frame-title-format '("%F - %b"))
 
-(setq my-font "PragmataPro Mono Liga 13")
+(setq my-font "PragmataPro Mono Liga-12")
+;; (setq my-font "JetBrainsMono Nerd Font Light 10")
 (set-face-attribute 'default nil :family my-font)
 (set-face-attribute 'fixed-pitch nil :family my-font)
 (set-face-attribute 'variable-pitch nil :family my-font)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
-;; (set-fontset-font t 'unicode (font-spec :family "JetBrainsMono NF Light") nil 'append)
+;; (set-fontset-font t 'unicode (font-spec :family "PragmataPro Mono Liga") nil 'append)
 (set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'append)
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 
