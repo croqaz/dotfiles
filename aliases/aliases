@@ -31,7 +31,7 @@ alias ipy='ipython -i --colors=Linux --no-confirm-exit'
 alias kex='kubectl exec -it'
 
 # DevBox
-alias devx='podman run --rm -it --name devbox --net=host \
+alias devx='podman run --rm -it --hostname DevBox --net=host \
   -v $HOME/.ssh:/root/.ssh:ro \
   -v $HOME/.gnupg:/root/.gnupg \
   -v $HOME/.aws:/root/.aws \
