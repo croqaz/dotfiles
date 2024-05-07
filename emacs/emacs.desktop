@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Emacs editor
+GenericName=Text editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;
+Exec=emacs %f
+Icon=accessories-text-editor
+Type=Application
+Terminal=false
+Categories=TextEditor;
+StartupWMClass=Emacs

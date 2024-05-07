@@ -42,14 +42,16 @@
 ;; Set window title
 (setq-default frame-title-format '("%F - %b"))
 
-(setq my-font "JetBrains Mono Light")
-(set-face-attribute 'default nil :family my-font :height 108)
-(set-face-attribute 'fixed-pitch nil :family my-font :height 108)
-(set-face-attribute 'variable-pitch nil :family "Inter Light" :height 108)
+(setq my-font "PragmataPro Mono Liga-12")
+;; (setq my-font "JetBrainsMono Nerd Font Light 10")
+(set-face-attribute 'default nil :family my-font)
+(set-face-attribute 'fixed-pitch nil :family my-font)
+(set-face-attribute 'variable-pitch nil :family my-font)
 (set-frame-font my-font nil t)
 
 ;; Display symbols and emojis
-(set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'prepend)
+;; (set-fontset-font t 'unicode (font-spec :family "PragmataPro Mono Liga") nil 'append)
+(set-fontset-font t 'unicode (font-spec :family "Noto Sans Symbols") nil 'append)
 (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
 
 (setq uniquify-buffer-name-style 'reverse
@@ -469,10 +471,11 @@ NAME and ARGS are in `use-package'."
         company-auto-complete-chars nil))
 
 (use-package yasnippet
-  :disabled
-  ;; :commands yas-global-mode
-  :custom
-  (yas-verbosity 3))
+  :init
+  (defvar yas-verbosity 2)
+  :hook
+  (prog-mode . yas-minor-mode)
+  (text-mode . yas-minor-mode))
 
 ;; Loading the doom snippets takes forever
 ;; (use-package doom-snippets
@@ -481,8 +484,8 @@ NAME and ARGS are in `use-package'."
 ;;   :straight (:host github :repo "hlissner/doom-snippets" :files ("*.el" "*")))
 
 ;; Useful for quick snippets!
-;; (use-package auto-yasnippet
-;;   :defer t)
+(use-package auto-yasnippet
+  :defer t)
 
 ;; Very helpful
 (use-package helpful
@@ -835,6 +838,7 @@ NAME and ARGS are in `use-package'."
         python-shell-interpreter-args "-i --colors=Linux --no-confirm-exit"))
 
 ;; https://github.com/microsoft/pyright
+;; python3-lsp-server + pyright
 (use-package lsp-pyright
   :hook
   (python-mode . (lambda ()
@@ -916,9 +920,9 @@ NAME and ARGS are in `use-package'."
      beg end "standard --stdin --global --fix"
      nil t)))
 
-(use-package yaml-mode
-  :defer t
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+;; (use-package yaml-mode
+;;  :defer t
+;;  :mode ("\\.ya?ml\\'" . yaml-mode))
 
 ;; (use-package pug-mode
 ;;   :defer t
@@ -1188,6 +1192,15 @@ affects the sort order."
     (when new-kill-string
       (message "%s copied" new-kill-string)
       (kill-new new-kill-string))))
+
+;; Fold indented text
+(defun fold-indented-text-selective-display (&optional level)
+"Fold text indented same of more than the cursor. If level is set, set the indent level to LEVEL.
+If 'selective-display' is already set to LEVEL, calling the func again will unset 'selective-display' by setting it to 0."
+  (interactive "P")
+  (if (eq selective-display (1+ (current-column)))
+      (set-selective-display 0)
+    (set-selective-display (or level (1+ (current-column))))))
 
 ;; Ask y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)

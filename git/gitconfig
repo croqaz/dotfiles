@@ -1,24 +1,27 @@
 [user]
 	name = Cristi Constantin
 	email = ...
+	signingkey = ...
 [credential]
-	helper = cache --timeout 28800
-
-[core]
-	pager = delta
-[interactive]
-	diffFilter = delta --color-only
-
+	helper = cache --timeout=28800
 [init]
 	defaultBranch = main
+[diff]
+	tool = nvim
+	algorithm = patience
+[commit]
+	verbose = true
+	gpgsign = true
 [fetch]
 	prune = true
 [pull]
 	rebase = false
-[diff]
-	algorithm = patience
+[push]
+	default = current
+	autoSetupRemote = true
 [rebase]
 	autosquash = true
+	autostash = true
 
 [alias]
 	s    = status
@@ -26,6 +29,7 @@
 	co   = checkout
 	pu   = push
 	pl   = pull
+	gx   = gc --aggressive
 	tags = tag -l
 	pusf = push --force-with-lease
 	unstage = reset HEAD --

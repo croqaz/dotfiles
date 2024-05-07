@@ -1,0 +1,54 @@
+#! /bin/sh
+
+# When refreshing bspwm, remove all previous rules
+#
+bspc rule -r "*"
+
+if xrandr -q | grep "^$EXTERN_SCREEN connected"; then
+  echo "Extern monitor is connected, using multi-monitor setup"
+  xrandr --output "$EXTERN_SCREEN" --primary
+  xrandr --output "$EXTERN_SCREEN" --auto --left-of "$INTERN_SCREEN" --auto
+  bspc monitor $EXTERN_SCREEN -d 1 2 3 4 5 6
+  bspc monitor $INTERN_SCREEN -d 7 8 9
+else
+  echo "Extern monitor is disconnected, using intern only"
+  bspc monitor -d 1 2 3 4 5 6 7 8 9
+fi
+
+bspc config border_width        2
+bspc config window_gap          12
+bspc config split_ratio         0.52
+
+bspc config borderless_monocle  true
+bspc config gapless_monocle     true
+
+bscp rule -a polybar manage=off
+bspc rule -a Firefox desktop='^3'
+bspc rule -a Chromium desktop='^9'
+bspc rule -a Screenkey manage=off
+
+# Configurations when hotplugging monitors
+#
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+bspc config merge_overlapping_monitors true
+
+# X setup
+#
+xsetroot -cursor_name left_ptr
+# StandbyTime SuspendTime OffTime
+xset dpms 180 180 300
+# Key initial delay, rate delay
+xset r rate 369 39
+
+# Start services
+#
+dbus-run-session pipewire &
+pipewire-pulse &
+#
+picom &
+dunst &
+kitty &
+
+(sleep 2 && bash ~/Dev/dotfiles/polybar/launch.sh) &
+
