@@ -27,10 +27,10 @@
 (setq inhibit-compacting-font-caches t)
 
 ;; Inhibit resizing frame
-(setq frame-inhibit-implied-resize t)
+;; (setq frame-inhibit-implied-resize t)
 
 ;; Frame sizes can increase/decrease by one pixel
-(setq frame-resize-pixelwise t)
+;; (setq frame-resize-pixelwise t)
 
 ;; Disable startup features
 (setq inhibit-splash-screen t

@@ -4,11 +4,11 @@ alias rmv='rsync -hptv --progress --remove-source-files'
 alias reload="source $HOME/.zshrc"
 
 # Arch only
-alias pac='sudo pacman'
-# macOS only
+#alias pac='sudo pacman'
+# Brew only
 #alias brewsky='brew update && brew upgrade && brew cleanup -s --prune=3'
 # Apt only
-#alias 'apt-update'='sudo apt update && sudo apt autoclean && sudo apt autoremove'
+alias 'apt-update'='sudo apt update && sudo apt autoclean && sudo apt autoremove'
 
 alias vi=nvim
 alias vim=nvim
@@ -30,14 +30,20 @@ alias 'py-env'='source ${HOME}/Dev/py-env10/bin/activate'
 alias 'py-imdb'='source ${HOME}/Dev/py-imdb/bin/activate'
 alias 'rm-pyco'='rm --interactive=once -r `find . -name __pycache__` && rm --interactive=once -f `find . -type f -name "*.py[co]"`'
 
-alias ipy='ipython -i --colors=Linux --no-confirm-exit'
+alias ipy='python3 -m IPython -i --colors=Linux --no-confirm-exit'
 
+alias vm='podman'
 alias kpod='kubectl get pods'
 alias kex='kubectl exec -it'
 
+# DevBox
+alias devx='vm run --rm -it --name DevBox-$RANDOM --hostname DevBox --privileged --pid=host --net=host \
+  -v $HOME/.aws:/root/.aws -v $HOME/.config/gcloud:/root/.config/gcloud \
+  -v $HOME/Dev:/root/Dev:rw -v $HOME/Dev/DEVBOX:/root:rw -v $PWD:/root/PWD:rw virt-devbox'
+
 # Isolated browsers
-alias 'browser-brave'='xhost +local: && podman run -it --rm --cap-add=SYS_PTRACE -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/brave-arch:/home/.config/BraveSoftware/Brave-Browser-Beta:U -v $HOME/Dev:/home/Dev:ro brave-arch'
-alias 'browser-chrom'='xhost +local: && podman run -it --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/chrom-arch:/home/.config/chromium:U -v $HOME/Dev:/home/Dev:ro chrom-arch'
+#alias 'browser-brave'='xhost +local: && vm run -it --rm --cap-add=SYS_PTRACE -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/brave-arch:/home/.config/BraveSoftware/Brave-Browser-Beta:U -v $HOME/Dev:/home/Dev:ro brave-arch'
+#alias 'browser-chrom'='xhost +local: && vm run -it --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined -e DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix:ro -v $XAUTHORITY:/home/.Xauthority:ro -v $HOME/Documents/VOLUMES/chrom-arch:/home/.config/chromium:U -v $HOME/Dev:/home/Dev:ro chrom-arch'
 
 # sync website
 alias 'sync-crlf'='(cd ~/Dev/crlf && rsync -rzv --delete ~/Dev/crlf/website/ "cro@stat.crlf.link:~/Dev/website/")'

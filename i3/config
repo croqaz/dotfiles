@@ -51,26 +51,26 @@ bindsym $mod+Shift+Up    move up
 bindsym $mod+Shift+Right move right
 
 # switch to specific workspace
-bindsym $mod+q workspace $ws1
-bindsym $mod+w workspace $ws2
-bindsym $mod+e workspace $ws3
-bindsym $mod+r workspace $ws4
-bindsym $mod+t workspace $ws5
-bindsym $mod+y workspace $ws6
-bindsym $mod+u workspace $ws7
-bindsym $mod+i workspace $ws8
-bindsym $mod+o workspace $ws9
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
 
 # move focused container to workspace
-bindsym $mod+Shift+q move container to workspace $ws1
-bindsym $mod+Shift+w move container to workspace $ws2
-bindsym $mod+Shift+e move container to workspace $ws3
-bindsym $mod+Shift+r move container to workspace $ws4
-bindsym $mod+Shift+t move container to workspace $ws5
-bindsym $mod+Shift+y move container to workspace $ws6
-bindsym $mod+Shift+u move container to workspace $ws7
-bindsym $mod+Shift+i move container to workspace $ws8
-bindsym $mod+Shift+o move container to workspace $ws9
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
 
 # workspace navigation
 bindsym $mod+Tab      workspace back_and_forth
@@ -132,7 +132,7 @@ mode "resize" {
   bindsym Escape    mode "default"
   bindsym z         mode "default"
 }
-bindsym $mod+Shift+z mode "resize"
+bindsym $mod+r mode "resize"
 
 # --- Organize --- #
 
@@ -219,9 +219,9 @@ bar {
 # Start the rest of the apps
 
 # Turn off screen after X seconds and faster key repeat
-exec_always --no-startup-id "xset dpms 180 180 300  &&  xset r rate 400 40"
+# exec_always --no-startup-id "xset dpms 180 180 300  &&  xset r rate 400 40"
 # Keyboard layout
-exec --no-startup-id "setxkbmap -model pc101 -layout us -variant altgr-intl -option -option lv3=ralt_switch -option compose=rctrl -option terminate=ctrl_alt_bksp"
+# exec --no-startup-id "setxkbmap -model pc101 -layout us -variant altgr-intl -option -option lv3=ralt_switch -option compose=rctrl -option terminate=ctrl_alt_bksp"
 
 exec --no-startup-id "sxhkd -m 1"
 exec_always --no-startup-id "picom -b"
@@ -229,8 +229,8 @@ exec_always --no-startup-id "udiskie"
 # exec_always --no-startup-id "systemctl --user restart dunst"
 
 # Setup lock screen and wallpaper
-exec --no-startup-id "xss-lock -- $HOME/.local/scripts/lock2.sh"
-exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
+# exec --no-startup-id "xss-lock -- $HOME/.local/scripts/lock2.sh"
+# exec_always --no-startup-id "xwallpaper --zoom $HOME/Pictures/wall.jpg"
 
 # Warm screen at night (Dublin Ireland)
 # exec --no-startup-id "redshift -l 53.356:-6.243"
